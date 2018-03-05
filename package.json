@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "NODE_ENV=dev node app.js",
-    "prod": "NODE_ENV=prod node app.js"
+    "prod": "NODE_ENV=prod node app.js",
+    "standard": "standard --verbose | snazzy",
+    "precommit": "npm run standard"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -15,5 +17,10 @@
     "morgan": "~1.8.1",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2"
+  },
+  "devDependencies": {
+    "snazzy": "~7.0",
+    "standard": "~10.0",
+    "husky": "~0.14"
   }
 }
