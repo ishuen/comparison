@@ -13,6 +13,9 @@ class TopologicalSort {
       var csvrow = array[0].split(',')
       if (count === 0) {
         for (var i = 0; i < csvrow.length; i++) {
+          if (csvrow[i] === '') {
+            csvrow[i] = 'id'
+          }
           keys.push(csvrow[i])
         }
       } else {

@@ -1,0 +1,9 @@
+.graph {
+  float: left;
+  width: 50%;
+}
+
+.table {
+  float: right;
+  width: 50%;
+}
