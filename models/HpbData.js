@@ -1,4 +1,4 @@
-class TopologicalSort {
+class HpbData {
   constructor () {
     const fs = require('fs')
     const parse = require('csv-parse')
@@ -35,6 +35,11 @@ class TopologicalSort {
   showData () {
     return this.foodData
   }
+
+  randomData (num) {
+    const _ = require('lodash')
+    return _.sampleSize(this.foodData, num)
+  }
 }
 
-module.exports = new TopologicalSort()
+module.exports = new HpbData()

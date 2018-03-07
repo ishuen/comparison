@@ -1,4 +1,4 @@
-const TopologicalSort = require('../models/TopologicalSort')
+const TopologicalSort = require('../models/HpbData')
 class TopologicalSortController {
   showData (req, res) {
     const data = TopologicalSort.showData()
@@ -11,6 +11,12 @@ class TopologicalSortController {
     // calculate how to draw path here
 
     res.render('topologicalSort', {data: data})
+  }
+
+  randomData (req, res) {
+    const number = req.params.number
+    const data = TopologicalSort.randomData(number)
+    res.send(data)
   }
 }
 
