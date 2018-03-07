@@ -7,4 +7,5 @@ router.get('/', function (req, res, next) {
 })
 
 router.use('/topologicalSort', require('./topologicalSort'))
+router.use('/paretoFrontier', require('./paretoFrontier'))
 module.exports = router
