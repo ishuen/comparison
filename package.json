@@ -6,9 +6,12 @@
     "start": "NODE_ENV=dev node app.js",
     "prod": "NODE_ENV=prod node app.js",
     "standard": "standard --verbose | snazzy",
-    "precommit": "npm run standard"
+    "precommit": "npm run standard",
+    "apidoc": "apidoc -i ./controllers -o public/apidoc/"
   },
   "dependencies": {
+    "apidoc": "~0.17",
+    "grunt-apidoc":"~0.11",
     "body-parser": "~1.17.1",
     "cookie-parser": "~1.4.3",
     "config": "~1.30.0",
@@ -25,5 +28,17 @@
     "snazzy": "~7.0",
     "standard": "~10.0",
     "husky": "~0.14"
+  },
+  "standard": {
+    "ignore": [
+      "/public/apidoc",
+      "/public/scripts"
+    ]
+  },
+  "apidoc": {
+    "name": "apidoc - comparison",
+    "version": "0.0.0",
+    "description": "api doc for comparison between different ranking methods",
+    "title": "apidoc - comparison"
   }
 }
