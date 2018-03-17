@@ -17,6 +17,20 @@ for production
 npm run prod
 ```
 
+genetic sort
+
+```
+/geneticSort/data
+/geneticSort/path
+```
+
+topological sort
+
+```
+/topologicalSort/data
+/topologicalSort/path
+```
+
 ## notice
 
 * impement MVC structure

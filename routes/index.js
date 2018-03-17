@@ -7,4 +7,8 @@ router.get('/', function (req, res, next) {
 })
 
 router.use('/topologicalSort', require('./topologicalSort'))
+
+/* Genetic Algorithm */
+router.use('/geneticSort', require('./geneticSort'))
+
 module.exports = router
