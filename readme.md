@@ -17,14 +17,14 @@ for production
 npm run prod
 ```
 
-genetic sort
+## genetic sort
 
 ```
 /geneticSort/data
 /geneticSort/path
 ```
 
-topological sort
+## topological sort
 
 ```
 /topologicalSort/data
