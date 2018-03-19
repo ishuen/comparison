@@ -1,0 +1,37 @@
+{
+    "1": {
+        "Food Name": 5.0,
+        "Taste Value": 0.7040102429446691,
+        "Health Value": 0.1998783925708916
+    },
+    "2": {
+        "Food Name": 1.0,
+        "Taste Value": 0.7374545136737061,
+        "Health Value": 0.4320927035254837
+    },
+    "3": {
+        "Food Name": 3.0,
+        "Taste Value": 0.9030064423765212,
+        "Health Value": 0.5073170731707317
+    },
+    "4": {
+        "Food Name": 10.0,
+        "Taste Value": 0.7796466376089664,
+        "Health Value": 0.6851063829787234
+    },
+    "5": {
+        "Food Name": 9.0,
+        "Taste Value": 0.6908659556112638,
+        "Health Value": 0.6618272186253349
+    },
+    "6": {
+        "Food Name": 4.0,
+        "Taste Value": 0.9571459322834209,
+        "Health Value": 0.8106501227866098
+    },
+    "7": {
+        "Food Name": 8.0,
+        "Taste Value": 0.8295225439882697,
+        "Health Value": 0.8547645670269597
+    }
+}
