@@ -35,8 +35,10 @@ npm run prod
 
 * impement MVC structure
 * no database connection, only use csv as data input
-* apply es6 standard: If the code doesn't follow it, git commit will be blocked.
+* apply es6 standard: If the code doesn't follow it, git commit will be blocked. When you finish correcting the code, you have to use the command **git add .** and then commit again.
 * when developing new pages or functions, please create a new branch and then merge after developing
+* when finish editing apidoc, run **npm run apidoc**
+* the completed API can be checked on apidoc **\<hostname\>:\<port\>/apidoc**
 
 ## for other contributors - topological sort
 

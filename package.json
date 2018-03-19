@@ -6,9 +6,11 @@
     "start": "cross-env NODE_ENV=dev node app.js",
     "prod": "cross-env NODE_ENV=prod node app.js",
     "standard": "standard --verbose | snazzy",
-    "precommit": "npm run standard"
+    "precommit": "npm run standard",
+    "apidoc": "apidoc -i ./controllers -o public/apidoc/"
   },
   "dependencies": {
+    "apidoc": "~0.17",
     "body-parser": "~1.17.1",
     "config": "~1.30.0",
     "cookie-parser": "~1.4.3",
@@ -16,7 +18,10 @@
     "csv-parse": "~2.0.4",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "grunt-apidoc":"~0.11",
+    "lodash":"~4.17.5",
     "morgan": "~1.8.1",
+    "pareto-frontier":"~1.1.1",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2"
   },
@@ -24,5 +29,17 @@
     "snazzy": "~7.0",
     "standard": "~10.0",
     "husky": "~0.14"
+  },
+  "standard": {
+    "ignore": [
+      "/public/apidoc",
+      "/public/scripts"
+    ]
+  },
+  "apidoc": {
+    "name": "apidoc - comparison",
+    "version": "0.0.0",
+    "description": "api doc for comparison between different ranking methods",
+    "title": "apidoc - comparison"
   }
 }

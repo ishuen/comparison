@@ -11,4 +11,6 @@ router.use('/topologicalSort', require('./topologicalSort'))
 /* Genetic Algorithm */
 router.use('/geneticSort', require('./geneticSort'))
 
+router.use('/paretoFrontier', require('./paretoFrontier'))
+
 module.exports = router
