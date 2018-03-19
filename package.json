@@ -5,6 +5,8 @@
   "scripts": {
     "start": "cross-env NODE_ENV=dev node app.js",
     "prod": "cross-env NODE_ENV=prod node app.js",
+    "start-u": "NODE_ENV=dev node app.js",
+    "prod-u": "NODE_ENV=prod node app.js",
     "standard": "standard --verbose | snazzy",
     "precommit": "npm run standard",
     "apidoc": "apidoc -i ./controllers -o public/apidoc/"
