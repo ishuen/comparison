@@ -4,6 +4,6 @@ const topologicalSort = require('../controllers/topologicalSort')
 
 router.get('/data', topologicalSort.showData)
 router.get('/data/random/:number', topologicalSort.randomData)
-router.get('/path', topologicalSort.showPath)
+router.get('/path/random/:number/:threLower/:threUpper', topologicalSort.showPath)
 
 module.exports = router
