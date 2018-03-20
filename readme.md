@@ -50,7 +50,7 @@ What you have to do in this phase is separate your original html page into 3 par
 
 * You can modify the css file as you want.
 
-##How to decide thresholds of topological sort
+## How to decide thresholds of topological sort
 
 *threLower: The path will not include the point(health_value, taste_value) if a*health_value + b*teaste_value < threLower 
 *threUpper: The path will connect the point(health_value, taste_value) on both sides(connect it twice) if a*health_value + b*teaste_value > threUpper
