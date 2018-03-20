@@ -209,7 +209,7 @@ html
                 svg.selectAll("polyline").remove()
                 d3.select("body").select("table").remove()
                 // rebuild the path
-                path = findPath(vertex_dict,mid_name,vertex_dict,0.5,0.5,threLower,threUpper)
+                path = findPath(mid_name,vertex_dict,0.5,0.5,threLower,threUpper)
                 drawPath(mid_name,path)
                 drawTable(csvdata,mid_name,path)
             })
