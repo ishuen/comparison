@@ -9,9 +9,9 @@ class TopologicalSortController {
     const number = req.params.number
     const csvdata = TopologicalSort.randomData(number)
     var data = {}
-    data["csvdata"] = csvdata
-    data["threUpper"] = req.params.threUpper
-    data["threLower"] = req.params.threLower
+    data['csvdata'] = csvdata
+    data['threUpper'] = req.params.threUpper
+    data['threLower'] = req.params.threLower
     res.render('topologicalSort', {data: data})
   }
 
