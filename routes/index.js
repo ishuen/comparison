@@ -12,5 +12,6 @@ router.use('/topologicalSort', require('./topologicalSort'))
 router.use('/geneticSort', require('./geneticSort'))
 
 router.use('/paretoFrontier', require('./paretoFrontier'))
+router.use('/behavioralRank', require('./behavioralRank'))
 
 module.exports = router
