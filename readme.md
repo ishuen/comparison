@@ -8,13 +8,21 @@ Compare the ranking results coming from different methods.
 for develop environment
 
 ```
+# win system
 npm run start
+
+# linux/ unix
+npm run start-u
 ```
 
 for production
 
 ```
+# win system
 npm run prod
+
+# linux/ unix
+npm run prod-u
 ```
 
 ## genetic sort
