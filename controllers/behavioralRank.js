@@ -2,14 +2,9 @@ const BehavioralRank = require('../models/HpbData')
 const _ = require('lodash')
 class BehavioralRankController {
   /**
-  * @api {get} /behavioralRank/path/:number Request the ranking based on behavior theories
-  * @apiName ShowPathBehavioral
-  * @apiGroup Behavioral
-  *
-  * @apiParam {Number} number the size of set to rank
-  *
+  * @apiDefine successArrayOfItemData
   * @apiSuccess {Object[]} data ranking result
-  *
+  * @apiSuccess {Object} defaultPoint starting point
   * @apiSuccessExample {json} Success-Response:
   * {
   *   "data": [
@@ -96,11 +91,52 @@ class BehavioralRankController {
   *   }
   * }
   */
-  showPath (req, res) {
+  /**
+  * @api {get} /behavioralRank/path/random/:number RandomPathBehavioral
+  * @apiName RandomPathBehavioral
+  * @apiGroup Behavioral
+  * @apiDescription Request the ranking based on behavior theories with randomly generated default point
+  *
+  * @apiParam {Number} number the size of set to rank
+  *
+  * @apiUse successArrayOfItemData
+  */
+  randomPath (req, res) {
     const number = req.params.number
     let data = BehavioralRank.randomData(number)
     const defaultPoint = _.sample(data)
     data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
+    const obj = groupData(data, defaultPoint)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    tGroup = _.sortBy(tGroup, [function (o) { return o['T\'c'] }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return o['RRR\''] }])
+    let resData = tGroup.concat(hGroup)
+    res.send({data: resData, defaultPoint: defaultPoint})
+  }
+
+  /**
+  * @api {get} /behavioralRank/path/select/:number SelectedPathBehavioral
+  * @apiName SelectedPathBehavioral
+  * @apiGroup Behavioral
+  * @apiDescription Request the ranking based on behavior theories with selected default point
+  *
+  * @apiParam {Number} number the size of set to rank
+  * @apiParam {String} itemId of the defult item
+  *
+  * @apiUse successArrayOfItemData
+  *
+  */
+
+  showPath (req, res) {
+    const number = req.params.number
+    const itemId = req.params.itemId
+    let dbData = BehavioralRank.randomFixOne(number, itemId)
+    let data = dbData.data
+    const defaultPoint = dbData.item
+    data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
+    data.push(defaultPoint)
     const obj = groupData(data, defaultPoint)
     let tGroup = obj.tGroup
     let hGroup = obj.hGroup

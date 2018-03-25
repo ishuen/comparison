@@ -40,6 +40,14 @@ class HpbData {
     const _ = require('lodash')
     return _.sampleSize(this.foodData, num)
   }
+
+  randomFixOne (num, itemId) {
+    const _ = require('lodash')
+    let data = _.sampleSize(this.foodData, num)
+    let item = _.find(this.foodData, ['id', itemId])
+    console.log(item)
+    return {data: data, item: item}
+  }
 }
 
 module.exports = new HpbData()
