@@ -39,3 +39,37 @@ function drawTable (csvdata, mid_name, path) {
     }
   }
 }
+
+function drawTableObjectArr(data, mid) {
+  var table = d3.select('body').append('table')
+    .attr('border','1')
+  let attr = Object.keys(mid)
+  attr.push('Rank')
+  var tr = table.append('tr')
+  tr.selectAll('th')
+    .data(attr)
+    .enter()
+    .append('th')
+    .text(function (d, i) { return d })
+  var bgcolor = 'red'
+  let count = 0
+  for (let index in data) {
+    let row = Object.values(data[index])
+    if (data[index].id == mid.id) {
+      console.log('middle')
+      bgcolor = 'yellow'
+    } else if(data[index]['RRR\''] >= mid['RRR\'']) {
+      bgcolor = 'red'
+    } else {
+      bgcolor = 'green'
+    }
+    row.push(Number(index) + 1)
+    table.append('tr')
+      .attr('bgcolor', bgcolor)
+      .selectAll('td')
+      .data(row)
+      .enter()
+      .append('td')
+      .text(function (d, i) { return d })
+  }
+}

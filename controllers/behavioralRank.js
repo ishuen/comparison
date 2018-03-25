@@ -146,7 +146,8 @@ class BehavioralRankController {
     tGroup = tGroup.reverse()
     hGroup = _.sortBy(hGroup, [function (o) { return o['RRR\''] }])
     let resData = tGroup.concat(hGroup)
-    res.send({data: resData, defaultPoint: defaultPoint})
+    // res.send({data: resData, defaultPoint: defaultPoint})
+    res.render('behavioralRank', {data: resData, defaultPoint: defaultPoint})
   }
 }
 
