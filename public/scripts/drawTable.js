@@ -80,6 +80,7 @@ function removeMeasurementProperties (data) {
     delete item['RRR']
     delete item['TOri']
     delete item['T\'']
+    delete item['rank']
   }
   return data
 }
