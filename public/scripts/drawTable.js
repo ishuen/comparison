@@ -1,4 +1,5 @@
 function drawTable (csvdata, mid_name, path) {
+  csvdata = removeMeasurementProperties(csvdata)
   // draw table
   var colomn_set = []
   for (var colomn in csvdata[0]) {
@@ -41,9 +42,10 @@ function drawTable (csvdata, mid_name, path) {
 }
 
 function drawTableObjectArr(data, mid) {
+  data = removeMeasurementProperties(data)
   var table = d3.select('body').append('table')
     .attr('border','1')
-  let attr = Object.keys(mid)
+  let attr = Object.keys(data[0])
   attr.push('Rank')
   var tr = table.append('tr')
   tr.selectAll('th')
@@ -56,7 +58,6 @@ function drawTableObjectArr(data, mid) {
   for (let index in data) {
     let row = Object.values(data[index])
     if (data[index].id == mid.id) {
-      console.log('middle')
       bgcolor = 'yellow'
     } else if(data[index]['RRR\''] >= mid['RRR\'']) {
       bgcolor = 'red'
@@ -72,4 +73,13 @@ function drawTableObjectArr(data, mid) {
       .append('td')
       .text(function (d, i) { return d })
   }
+}
+
+function removeMeasurementProperties (data) {
+  for (item of data) {
+    delete item['RRR']
+    delete item['TOri']
+    delete item['T\'']
+  }
+  return data
 }
