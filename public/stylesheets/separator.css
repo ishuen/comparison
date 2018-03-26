@@ -1,9 +1,11 @@
 .graph {
   float: left;
   width: 50%;
+  font-size:180%;
 }
 
 .table {
   float: right;
   width: 50%;
+  font-size:300%;
 }

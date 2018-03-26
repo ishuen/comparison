@@ -2,14 +2,9 @@ const BehavioralRank = require('../models/HpbData')
 const _ = require('lodash')
 class BehavioralRankController {
   /**
-  * @api {get} /behavioralRank/path/:number Request the ranking based on behavior theories
-  * @apiName ShowPathBehavioral
-  * @apiGroup Behavioral
-  *
-  * @apiParam {Number} number the size of set to rank
-  *
+  * @apiDefine successArrayOfItemData
   * @apiSuccess {Object[]} data ranking result
-  *
+  * @apiSuccess {Object} defaultPoint starting point
   * @apiSuccessExample {json} Success-Response:
   * {
   *   "data": [
@@ -96,12 +91,23 @@ class BehavioralRankController {
   *   }
   * }
   */
-  showPath (req, res) {
+  /**
+  * @api {get} /behavioralRank/path/random/:number RandomPathBehavioral
+  * @apiName RandomPathBehavioral
+  * @apiGroup Behavioral
+  * @apiDescription Request the ranking based on behavior theories with randomly generated default point
+  *
+  * @apiParam {Number} number the size of set to rank
+  *
+  * @apiUse successArrayOfItemData
+  */
+  randomPath (req, res) {
     const number = req.params.number
-    let data = BehavioralRank.randomData(number)
+    // get more sample data to prevent from filter out too many items
+    let data = BehavioralRank.randomData(number * 3)
     const defaultPoint = _.sample(data)
     data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
-    const obj = groupData(data, defaultPoint)
+    const obj = groupData(data, defaultPoint, number)
     let tGroup = obj.tGroup
     let hGroup = obj.hGroup
     tGroup = _.sortBy(tGroup, [function (o) { return o['T\'c'] }])
@@ -110,11 +116,44 @@ class BehavioralRankController {
     let resData = tGroup.concat(hGroup)
     res.send({data: resData, defaultPoint: defaultPoint})
   }
+
+  /**
+  * @api {get} /behavioralRank/path/select/:number SelectedPathBehavioral
+  * @apiName SelectedPathBehavioral
+  * @apiGroup Behavioral
+  * @apiDescription Request the ranking based on behavior theories with selected default point
+  *
+  * @apiParam {Number} number the size of set to rank
+  * @apiParam {String} itemId of the defult item
+  *
+  * @apiUse successArrayOfItemData
+  *
+  */
+
+  showPath (req, res) {
+    const number = req.params.number
+    const itemId = req.params.itemId
+    // get more sample data to prevent from filter out too many items
+    let dbData = BehavioralRank.randomFixOne(number * 3, itemId)
+    let data = dbData.data
+    const defaultPoint = dbData.item
+    data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
+    data.push(defaultPoint)
+    const obj = groupData(data, defaultPoint, number)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    tGroup = _.sortBy(tGroup, [function (o) { return o['T\'c'] }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return o['RRR\''] }])
+    let resData = tGroup.concat(hGroup)
+    // res.send({data: resData, defaultPoint: defaultPoint})
+    res.render('behavioralRank', {data: resData, defaultPoint: defaultPoint})
+  }
 }
 
 module.exports = new BehavioralRankController()
 
-function groupData (data, mid) {
+function groupData (data, mid, number) {
   let tGroup = []
   let hGroup = []
   for (let item of data) {
@@ -124,9 +163,29 @@ function groupData (data, mid) {
       tGroup.push(item)
     }
   }
-  let obj = {
-    tGroup: tGroup,
-    hGroup: hGroup
-  }
+  let obj = checkLength(tGroup, hGroup, mid, number)
   return obj
+}
+
+function checkLength (tGroup, hGroup, mid, number) {
+  // mid point is already grouped into hGroup
+  // if the result list is too long, delete some items
+  let tMax = 0
+  if (number % 2 === 1) {
+    tMax = (number - 1) / 2
+  } else {
+    tMax = number / 2
+  }
+  let hMax = number - tMax
+  if (tGroup.length > tMax) {
+    tGroup = _.sampleSize(tGroup, tMax)
+  }
+  if (hGroup.length > hMax) {
+    let temp = _.sampleSize(hGroup, hMax)
+    while (!_.find(temp, mid)) {
+      temp = _.sampleSize(hGroup, hMax)
+    }
+    hGroup = temp
+  }
+  return {tGroup: tGroup, hGroup: hGroup}
 }
