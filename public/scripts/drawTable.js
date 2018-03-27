@@ -81,6 +81,12 @@ function removeMeasurementProperties (data) {
     delete item['TOri']
     delete item['T\'']
     delete item['rank']
+    delete item['FoodSubGroup']
+    delete item['PerServingHouseholdMeasure']
+    for (let k of Object.keys(item)){
+      let re = /%/
+      if (k.match(re)) { delete item[k] }
+    }
   }
   return data
 }
