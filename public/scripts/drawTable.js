@@ -60,9 +60,9 @@ function drawTableObjectArr(data, mid) {
     if (data[index].id == mid.id) {
       bgcolor = 'yellow'
     } else if(data[index]['RRR\''] >= mid['RRR\'']) {
-      bgcolor = 'red'
-    } else {
       bgcolor = 'green'
+    } else {
+      bgcolor = 'red'
     }
     row.push(Number(index) + 1)
     table.append('tr')
