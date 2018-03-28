@@ -45,6 +45,7 @@ function drawTableObjectArr(data, mid) {
   data = removeMeasurementProperties(data)
   var table = d3.select('body').append('table')
     .attr('border','1')
+    .style('border-collapse', 'collapse')
   let attr = Object.keys(data[0])
   attr.push('Rank')
   var tr = table.append('tr')
@@ -52,17 +53,18 @@ function drawTableObjectArr(data, mid) {
     .data(attr)
     .enter()
     .append('th')
+    .attr('bgcolor', '#dddddd')
     .text(function (d, i) { return d })
-  var bgcolor = 'red'
+  var bgcolor = ''
   let count = 0
   for (let index in data) {
     let row = Object.values(data[index])
     if (data[index].id == mid.id) {
-      bgcolor = 'yellow'
+      bgcolor = '#FAFDAB' //yellow
     } else if(data[index]['RRR\''] >= mid['RRR\'']) {
-      bgcolor = 'green'
+      bgcolor = '#A1E3B7' //green
     } else {
-      bgcolor = 'red'
+      bgcolor = '#FEB0B0' //red
     }
     row.push(Number(index) + 1)
     table.append('tr')
