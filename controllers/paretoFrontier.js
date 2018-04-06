@@ -76,7 +76,9 @@ class ParetoFrontierController {
     let result = left.concat(right.reverse())
     result = [].concat.apply([], result)
     let resData = reorderData(result, data)
-    res.send({data: resData})
+    let defaultPoint = resData[number / 2]
+    // res.send({data: resData})
+    res.render('pareto', {data: resData, defaultPoint: defaultPoint})
   }
 }
 

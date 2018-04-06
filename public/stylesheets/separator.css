@@ -9,3 +9,8 @@
   width: 50%;
   font-size:300%;
 }
+
+.table table, th, td {
+  border: 1px solid #dddddd;
+  text-align: center;
+}
