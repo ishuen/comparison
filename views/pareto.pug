@@ -1,0 +1,21 @@
+doctype html
+html
+  head
+    title= behavioralRank
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/separator.css')
+    link(rel='stylesheet', href='/stylesheets/axisStyle.css')
+  body
+    div(class= 'graph')
+      script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+      script(src='/scripts/drawGraph.js', type='text/javascript')
+      script.
+        let data = !{JSON.stringify(data)}
+        let defaultPoint = !{JSON.stringify(defaultPoint)}
+        drawItemPath(data, defaultPoint)
+
+    div(class= 'dualYGraph')
+      script.
+        drawDualYGraph(data, defaultPoint)
+    div(class= 'table')
+      include table.pug

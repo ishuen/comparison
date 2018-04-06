@@ -59,9 +59,10 @@ function drawTableObjectArr(data, mid) {
   let count = 0
   for (let index in data) {
     let row = Object.values(data[index])
-    if (data[index].id == mid.id) {
+    const midIn = data.findIndex(ele => ele.id === mid.id)
+    if (index == midIn) {
       bgcolor = '#FAFDAB' //yellow
-    } else if(data[index]['RRR\''] >= mid['RRR\'']) {
+    } else if(index > midIn) {
       bgcolor = '#A1E3B7' //green
     } else {
       bgcolor = '#FEB0B0' //red
