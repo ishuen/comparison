@@ -52,3 +52,6 @@ CREATE TABLE user_criteria(
     cri_id serial REFERENCES criteria_algorithm(cri_id),
     user_id serial REFERENCES user_data(user_id),
     algorithm INT NOT NULL);
+
+ALTER TABLE user_criteria
+ADD COLUMN time_stamp timestamp;
