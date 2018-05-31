@@ -13,7 +13,7 @@ class SgFoodsController {
     res.send(data)
   }
 
-  showPathByMeal (req, res) {
+  showPathByMealP (req, res) {
     const meal = req.params.meal
     const data = SgFoods.showByMeal(meal)
     const number = data.length
@@ -45,6 +45,38 @@ class SgFoodsController {
     res.send({data: resData})
     // res.render('pareto', {data: resData, defaultPoint: defaultPoint})
   }
+
+  showPathByMealH (req, res) {
+    const meal = req.params.meal
+    const data = SgFoods.showByMeal(meal)
+    const number = data.length
+
+    const defaultPoint = _.minBy(data, function (o) { return o['T\'c'] })
+    // data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
+    // data.push(defaultPoint)
+    const obj = groupData(data, defaultPoint, number)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    tGroup = _.sortBy(tGroup, [function (o) { return o['T\'c'] }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return o['RRR\''] }])
+    let resData = tGroup.concat(hGroup)
+    res.send({data: resData})
+    // res.render('behavioralRank', {data: resData, defaultPoint: defaultPoint})
+  }
+}
+
+function groupData (data, mid, number) {
+  let tGroup = []
+  let hGroup = []
+  for (let item of data) {
+    if (item['RRR\''] >= mid['RRR\'']) {
+      hGroup.push(item)
+    } else {
+      tGroup.push(item)
+    }
+  }
+  return {tGroup: tGroup, hGroup: hGroup}
 }
 
 function reorderData (locations, data) {
