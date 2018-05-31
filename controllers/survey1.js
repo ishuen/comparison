@@ -32,7 +32,8 @@ class Survey1Controller {
     const setNum = req.params.num
     Survey1.getQnSet(setNum, function (qnSet) {
       // console.log('qnSet', qnSet)
-      res.send(qnSet)
+      // res.send(qnSet)
+      res.render('survey1', {data: qnSet})
     })
   }
 }

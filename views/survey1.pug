@@ -1,0 +1,14 @@
+doctype html
+html
+  head
+    title= behavioralRank
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='/scripts/questionSets.js', type='text/javascript')
+    script.
+      let data = !{JSON.stringify(data)}
+    - var setDesc = data[0].description // index 0 = display num 0
+    h3 #{setDesc}
+    script.
+      likertTable(data.slice(1))

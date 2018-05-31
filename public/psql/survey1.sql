@@ -6,3 +6,7 @@ VALUES
  (1, 3, 'The taste score of the food reflects my preference.', '5_scale'),
  (1, 4, 'The health score of the food is understandable.', '5_scale'),
  (1, 5, 'The health score of the food reflect my acknowledgement.', '5_scale');
+
+INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
+VALUES
+ (2, 0, 'Modify the attribute values of items if you are not agree with them.', 'NONE');
