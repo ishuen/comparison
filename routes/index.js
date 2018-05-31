@@ -11,5 +11,6 @@ router.use('/geneticSort', require('./geneticSort'))
 router.use('/paretoFrontier', require('./paretoFrontier'))
 router.use('/behavioralRank', require('./behavioralRank'))
 router.use('/survey1', require('./survey1'))
+router.use('/35SgFoods', require('./sgFoods'))
 
 module.exports = router
