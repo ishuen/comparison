@@ -10,11 +10,20 @@ html
       let data = !{JSON.stringify(data)}
       let item = !{JSON.stringify(item)}
     - var foodName = item[0].foodname
+    - var taste = item[0]['T\'c']
+    - var health = item[0]['RRR\'']
     - var imgPath = item[0].path
     - var setDesc = data[0].description // index 0 = display num 0
     div.bigCard
+      h3 #{foodName}
       img(src= imgPath alt= foodName)
-      h4 #{foodName}
+      table.scores
+        tr
+          th.taste Taste
+          th.health Health
+        tr
+          td.taste #{taste}
+          td.health #{health}
     h3 #{setDesc}
     script.
       likertTable(data.slice(1))
