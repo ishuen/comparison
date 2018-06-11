@@ -12,8 +12,9 @@ html
     - var foodName = item[0].foodname
     - var imgPath = item[0].path
     - var setDesc = data[0].description // index 0 = display num 0
-    img(src= imgPath alt= foodName)
-    h4 #{foodName}
+    div.bigCard
+      img(src= imgPath alt= foodName)
+      h4 #{foodName}
     h3 #{setDesc}
     script.
       likertTable(data.slice(1))
