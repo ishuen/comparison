@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= 'experiment 1 - presurvey'
+    title= 'experiment 2 - presurvey'
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
@@ -26,14 +26,4 @@ html
           td.health #{health}
     h3 #{setDesc}
     script.
-      var firstSet = data.filter(d => d.qn_set == 1)
-      likertTable(firstSet.slice(1))
-    - var secondSet = data.filter(d => d.qn_set == 2)
-      console.log(secondSet)
-    - var setDesc2 = secondSet[0].description
-    h3 #{setDesc2}
-    p #{secondSet[1].description}
-    input(type='text' value= taste)
-    p #{secondSet[2].description}
-    input(type='text' value= health)
-
+      likertTable(data.slice(1))
