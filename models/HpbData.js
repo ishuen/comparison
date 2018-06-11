@@ -1,3 +1,4 @@
+const pool = require('../db')
 class HpbData {
   constructor () {
     const fs = require('fs')
@@ -47,6 +48,13 @@ class HpbData {
     let item = _.find(this.foodData, ['id', itemId])
     console.log(item)
     return {data: data, item: item}
+  }
+
+  getOneItem (itemId, callback) {
+    pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
   }
 }
 
