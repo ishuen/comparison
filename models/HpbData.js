@@ -56,6 +56,17 @@ class HpbData {
       callback(res.rows)
     })
   }
+
+  getTrialSet (trialNum, callback) {
+    let itemSet = []
+    if (Number(trialNum) === 1) {
+      itemSet = itemSet.concat([2734, 1340, 1587, 1413, 1888, 2555, 2447, 1589, 1517, 1511])
+    }
+    pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemSet], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 
 module.exports = new HpbData()

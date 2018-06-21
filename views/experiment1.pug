@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title= 'experiment 1'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+    - var count = 0
+    div
+      table.sourcePanel
+        each item in data
+          if count % 5 === 0
+            tr
+          - var foodName = item.foodname
+          - var taste = item['T\'c']
+          - var health = item['RRR\'']
+          - var imgPath = item.path
+          td
+            div.smallCard.card
+              h3 #{foodName}
+              img(src= imgPath alt= foodName)
+              table.scores
+                tr
+                  th.taste Taste
+                  th.health Health
+                tr
+                  td.taste #{taste}
+                  td.health #{health}
+          - count++
+
+    
+    
