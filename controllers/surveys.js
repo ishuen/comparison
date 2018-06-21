@@ -1,4 +1,4 @@
-const Survey1 = require('../models/Survey1')
+const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 // const _ = require('lodash')
 class Survey1Controller {
@@ -9,7 +9,8 @@ class Survey1Controller {
   *
   * @apiParam {Number} num   number of the question set
   * @apiParam {Number} id    id of the question set
-  *
+  * @apiDescription
+  * Used for the pre-survey in experiment 2 (survey2)
   * @apiSuccess {Object[]} array of questions
   *
   * @apiSuccessExample {json} Success-Response:
@@ -99,12 +100,14 @@ class Survey1Controller {
     })
   }
     /**
-  * @api {get} /survey1?num=:num&id=:id Request the survey question set
+  * @api {get} /survey1?num=:num&id=:id Request the survey question sets
   * @apiName SurveyQuestion
   * @apiGroup Survey
   *
-  * @apiParam {Number} num   number of the question set
+  * @apiParam {Number[]} num   number of the question set
   * @apiParam {Number} id    id of the question set
+  * @apiDescription
+  * Used for the pre-survey in experiment 1 (survey 1)
   *
   * @apiSuccess {Object[]} array of questions
   *

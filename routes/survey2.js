@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-const survey2 = require('../controllers/survey1')
+const surveys = require('../controllers/surveys')
 
-router.get('/:num/:id', survey2.showQuestions)
+router.get('/:num/:id', surveys.showQuestions)
 module.exports = router
