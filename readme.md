@@ -57,5 +57,4 @@ npm run prod-u
 
 ## TODO
 
-* Add a table to show the result of genetic algorithm
 * Add one page can show 2 graphs, each by 1 method. Below the graph, there is a table shows the item data and ranking of two results.

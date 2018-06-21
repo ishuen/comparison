@@ -10,3 +10,8 @@ VALUES
 INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES
  (2, 0, 'Modify the attribute values of items if you are not agree with them.', 'NONE');
+
+INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
+VALUES
+ (2, 1, 'Modify the taste score if you are not agree with it.', 'fill'),
+ (2, 2, 'Modify the health score if you are not agree with it.', 'fill');
