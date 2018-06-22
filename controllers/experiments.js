@@ -93,8 +93,20 @@ class ExperimentsController {
         i.path = i.image.toString('utf8')
       })
       // res.send({data: items})
-      res.render('experiment1', {data: items})
+      res.render('experiment1', {data: items, trial: trial})
     })
+  }
+  submitSorting (req, res) {
+    console.log('sdajksl')
+    console.log(req.body)
+    const trial = Number(req.body.trial) + 1
+    // res.send('Post page')
+    // res.render('experiment1', { trial: trial});
+    if (trial === 5) { // last trial + 1
+      res.redirect('/survey3/') // go to post-survey
+    } else {
+      res.redirect('/experiment1/' + trial)
+    }
   }
 }
 

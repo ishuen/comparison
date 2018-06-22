@@ -12,7 +12,9 @@ html
       dragula([getItem('sourcePanel'), getItem('destinationPanel')])
     - var count = 0
     div#destinationPanel
-
+      form(name='sortingResult', action='/experiment1/'+ trial, method='post')
+        input(type='hidden', name='trial', value=trial)
+        button(type='submit', value='submit') I'm done!
 
     div#sourcePanel
       table
@@ -35,6 +37,5 @@ html
                   td.taste #{taste}
                   td.health #{health}
           - count++
-
     
     
