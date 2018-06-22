@@ -5,11 +5,17 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='/scripts/dragula.min.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
+      var getItem = function(c){return document.querySelector(c)}
+      dragula([getItem('sourcePanel'), getItem('destinationPanel')])
     - var count = 0
-    div
-      table.sourcePanel
+    div#destinationPanel
+
+
+    div#sourcePanel
+      table
         each item in data
           if count % 5 === 0
             tr
@@ -18,7 +24,7 @@ html
           - var health = item['RRR\'']
           - var imgPath = item.path
           td
-            div.smallCard.card
+            div.card(id= foodName)
               h3 #{foodName}
               img(src= imgPath alt= foodName)
               table.scores

@@ -10,25 +10,24 @@ a {
 .centerDisplay {
   margin-left: auto;
   margin-right: auto;
-  width: 300px;
-  height: 430px;
 }
 
 .card {
+  width: 300px;
+  height: 430px;
   font-size: 15pt;
   border: black 3px solid;
   text-align: left;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-right: 15px;
-  padding-left: 15px; 
+  padding: 2%;
   background-color: white;
 }
+
 .scores {
-  width: 300px;
-  font-size: 15pt;
+  width: 100%;
+  height: 18%;
   text-align: center;
   padding: 0px;
+  margin: 0px;
 }
 .taste {
   color: blue;
@@ -36,16 +35,25 @@ a {
 .health {
   color: red;
 }
-.smallCard {
-/*  transform: scale(0.5);
-  transform-origin: left;
-*/}
-.smallCard:hover {
-  transform: scale(1.5);
+/*.smallCard {
 }
-.sourcePanel {
-  transform-origin: left top;
-  transform: scale(0.5);
-  padding: 5px;
+*//*.smallCard:hover {
+  transform: scale(1.5);
+}*/
+
+#sourcePanel {
+  /*transform-origin: left top;*/
+  /*transform: scale(0.5);*/
+  width: 90%;
+  height: auto;
   margin: 0px;
+}
+#sourcePanel table {
+  width: 100%;
+  height: auto;
+}
+#destinationPanel {
+  width: 90%;
+  height: 300px;
+  border: black 3px solid;
 }
