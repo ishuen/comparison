@@ -11,11 +11,11 @@ html
       var getItem = function(c){return document.querySelector(c)}
       dragula([getItem('sourcePanel'), getItem('destinationPanel')])
     - var count = 0
-    form(name='sortingResult', action='/experiment1/'+ trial, method='post')
+    form(class='exp', name='sortingResult', action='/experiment1/'+ trial, method='post')
       div#destinationPanel
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='startingTime', value=startingTime)
-      button(type='submit', value='submit') I'm done!
+      button(class='expSubmit', type='submit', value='submit') I'm done!
 
     div#sourcePanel
       table
