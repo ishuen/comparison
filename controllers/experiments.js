@@ -93,15 +93,16 @@ class ExperimentsController {
         i.path = i.image.toString('utf8')
       })
       // res.send({data: items})
-      res.render('experiment1', {data: items, trial: trial})
+      let now = new Date()
+      res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime()})
     })
   }
   submitSorting (req, res) {
-    console.log('sdajksl')
     console.log(req.body)
     const trial = Number(req.body.trial) + 1
-    // res.send('Post page')
-    // res.render('experiment1', { trial: trial});
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    console.log('timeUsed', timeUsed)
     if (trial === 5) { // last trial + 1
       res.redirect('/survey3/') // go to post-survey
     } else {
