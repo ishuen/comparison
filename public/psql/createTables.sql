@@ -21,9 +21,9 @@ CREATE TABLE user_comment(
     user_id serial REFERENCES user_data(user_id),
     description VARCHAR (400) NOT NULL);
 
-ALTER TABLE hpbdata
-  ADD CONSTRAINT hpbdata_pk
-    PRIMARY KEY (id);
+-- ALTER TABLE hpbdata
+--   ADD CONSTRAINT hpbdata_pk
+--     PRIMARY KEY (id);
 
 CREATE TABLE sorting_experiment(
     exp_id serial PRIMARY KEY,
@@ -51,7 +51,7 @@ CREATE TABLE criteria_algorithm(
 CREATE TABLE user_criteria(
     cri_id serial REFERENCES criteria_algorithm(cri_id),
     user_id serial REFERENCES user_data(user_id),
-    algorithm INT NOT NULL);
+    algorithm INT NOT NULL, time_stamp timestamp);
 
-ALTER TABLE user_criteria
-ADD COLUMN time_stamp timestamp;
+-- ALTER TABLE user_criteria
+-- ADD COLUMN time_stamp timestamp;

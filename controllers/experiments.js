@@ -92,6 +92,7 @@ class ExperimentsController {
       _.map(items, function (i) {
         i.path = i.image.toString('utf8')
       })
+      console.log(items)
       // res.send({data: items})
       let now = new Date()
       res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime()})

@@ -22,8 +22,8 @@ html
           if count % 5 === 0
             tr
           - var foodName = item.foodname
-          - var taste = item['T\'c']
-          - var health = item['RRR\'']
+          - var taste = item.taste
+          - var health = item.health
           - var imgPath = item.path
           td(id='cardPanel'+count)
             div.card(id= 'food'+count, name='card')
