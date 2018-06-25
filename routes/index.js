@@ -12,4 +12,5 @@ router.use('/paretoFrontier', require('./paretoFrontier'))
 router.use('/behavioralRank', require('./behavioralRank'))
 router.use('/survey1', require('./survey1'))
 router.use('/survey2', require('./survey2'))
+router.use('/experiment1', require('./experiment1'))
 module.exports = router

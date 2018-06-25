@@ -1,0 +1,70 @@
+doctype html
+html
+  head
+    title= 'experiment 1'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='/scripts/dragula.min.js', type='text/javascript')
+    script.
+      let data = !{JSON.stringify(data)}
+      var max = data.length
+    - var count = 0
+    form(id='sortingResult', class='exp', name='sortingResult', action='/experiment1/'+ trial, method='post', onsubmit="div2form('sortingResult')")
+      div#destinationPanel
+        input(type='hidden', name='trial', value=trial)
+        input(type='hidden', name='startingTime', value=startingTime)
+      button(class='expSubmit', type='submit', value='submit') I'm done!
+    br
+    div#sourcePanel
+      table
+        each item in data
+          if count % 5 === 0
+            tr
+          - var foodName = item.foodname
+          - var taste = item['T\'c']
+          - var health = item['RRR\'']
+          - var imgPath = item.path
+          td(id='cardPanel'+count)
+            div.card(id= 'food'+count, name='card')
+              h3 #{foodName}
+              div(style="visibility: hidden; font-size: 0pt")
+                p(name='foodId') #{item.id}
+              img(src= imgPath alt= foodName)
+              table.scores
+                tr
+                  th.taste Taste
+                  th.health Health
+                tr
+                  td.taste(name='taste') #{taste}
+                  td.health(name='health') #{health}
+          - count++
+    script.
+      var get = function(id){ return document.getElementById(id)}
+      for (var i = 0; i < max; i++) {
+        dragula([get('cardPanel'+i), get('destinationPanel')], {revertOnSpill: true,  direction: 'horizontal'})
+      }
+      function div2form(id) {
+        var form = get(id)
+        if (!form) { return }
+        var divs = form.getElementsByTagName('div')
+        var ndivs = (divs.length - 1) / 2
+        var texta = document.createElement('TEXTAREA')
+        texta.name = 'sorts'
+        texta.style.display = 'none'
+        temp = []
+        for (var i = 0; i < ndivs; i++) {
+          var obj = {
+            ordering: i,
+            foodName: divs[0].getElementsByTagName('h3')[i].innerHTML,
+            foodId: divs[0].getElementsByTagName('p')[i].innerHTML,
+            taste: divs[0].getElementsByTagName('td')[2 * i].innerHTML,
+            health: divs[0].getElementsByTagName('td')[2 * i + 1].innerHTML
+          }
+          var str = JSON.stringify(obj)
+          temp.push(str)
+        }
+        texta.value = temp
+        form.appendChild(texta)
+      }
+    
