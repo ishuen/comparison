@@ -47,13 +47,16 @@ a {
   width: 90%;
   height: auto;
   margin: 0px;
+  border: black 3px solid;
 }
 #sourcePanel table {
   width: 100%;
   height: auto;
+  /*border: black 3px solid;*/
 }
 #destinationPanel {
   width: 100%;
+  /*height: auto;*/
   height: 270px;
   border: black 3px solid;
 }

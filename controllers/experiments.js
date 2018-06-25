@@ -99,6 +99,12 @@ class ExperimentsController {
   }
   submitSorting (req, res) {
     console.log(req.body)
+    let sorts = JSON.parse('[' + req.body.sorts + ']')
+    let ordering = []
+    for (let item of sorts) {
+      ordering.push(item.foodId)
+    }
+    console.log(ordering)
     const trial = Number(req.body.trial) + 1
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
