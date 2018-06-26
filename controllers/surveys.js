@@ -232,7 +232,7 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     let itemOrder = Number(req.body.itemOrder) + 1
     const userId = req.body.userId
-    if (itemOrder === 10) { // last trial + 1
+    if (itemOrder === 11) { // last trial + 1
       res.redirect('/experiment1/' + trial + '/' + userId) // go to experiment
     } else {
       res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)

@@ -35,4 +35,4 @@ VALUES
 INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES
 (5, 1, 'Are you a vegan/ vegetarian? If so, which type of vegetarian diet do you follow?', 'choice'),
-(5, 2, ' If you answered no to the previous question, do you have any other dietary restrictions, e.g., for religious reasons?', 'fill');
+(5, 2, ' If you answered NO to the previous question, do you have any other dietary restrictions, e.g., for religious reasons?', 'fill');
