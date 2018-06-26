@@ -22,6 +22,9 @@ a {
   background-color: white;
 }
 
+.card img {
+  width: 96%;
+}
 .card h3 {
   margin: 2%;
 }
