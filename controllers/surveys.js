@@ -3,12 +3,12 @@ const HpbData = require('../models/HpbData')
 // const _ = require('lodash')
 class Survey1Controller {
   /**
-  * @api {get} /survey2/:num/:id Request the survey question set
+  * @api {get} /survey2/:trial/:itemOrder Request the survey question set
   * @apiName SurveyQuestion
   * @apiGroup Survey
   *
-  * @apiParam {Number} num   number of the question set
-  * @apiParam {Number} id    id of the question set
+  * @apiParam {Number} trial trial number
+  * @apiParam {Number} itemOrder number of item in item list
   * @apiDescription
   * Used for the pre-survey in experiment 2 (survey2)
   * @apiSuccess {Object[]} array of questions
@@ -88,16 +88,27 @@ class Survey1Controller {
   * }
   */
   showQuestions (req, res) {
-    const setNum = req.params.num
-    // let id = '2734'
-    const id = req.params.id
+    const setNum = 1
+    const trial = req.params.trial
+    const itemOrder = req.params.itemOrder
     Survey1.getQnSet(setNum, function (qnSet) {
-      HpbData.getOneItem(id, function (item) {
+      HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey2', {data: qnSet, item: item})
+        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder})
         // res.send({data: qnSet, item: item})
       })
     })
+  }
+
+  agreementSubmit (req, res) {
+    console.log(req.body)
+    let trial = Number(req.body.trial)
+    let itemOrder = Number(req.body.itemOrder) + 1
+    if (itemOrder === 10) { // last trial + 1
+      res.redirect('/experiment2/' + trial) // go to experiment
+    } else {
+      res.redirect('/survey2/' + trial + '/' + itemOrder)
+    }
   }
 
   /**

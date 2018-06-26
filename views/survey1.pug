@@ -5,12 +5,10 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
-    script(src='/scripts/questionSets.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
       let item = !{JSON.stringify(item)}
       let trial = !{JSON.stringify(trial)}
-      console.log(trial)
     - var foodName = item[0].foodname
     - var taste = item[0]['taste']
     - var health = item[0]['health']
@@ -27,7 +25,7 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    form(action='/survey1/'+trial+'/'+itemOrder, method='post')
+    form(action='/survey1/' + trial + '/' + itemOrder, method='post')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='itemOrder', value=itemOrder)
       table.likert

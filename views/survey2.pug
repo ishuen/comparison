@@ -25,5 +25,26 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    script.
-      likertTable(data.slice(1))
+    form(action='/survey2/' + trial + '/' + itemOrder, method='post')
+      input(type='hidden', name='trial', value=trial)
+      input(type='hidden', name='itemOrder', value=itemOrder)
+      table.likert
+        tr
+          th
+          th Strongly disagree
+          th Disagree
+          th Neither agree nor disagree
+          th Agree
+          th Strongly agree
+        - var firstSet = data.filter(d => d.qn_set == 1)
+        - firstSet = firstSet.slice(1)
+        - var count = 0
+        each qn in firstSet
+          - count++
+          tr
+          td #{qn.description}
+          each val in [1, 2, 3, 4, 5]
+            td
+              input(name='qn'+count, type='radio', value= val)
+      br
+      button(class='surSubmit', type='submit', value='submit') Submit
