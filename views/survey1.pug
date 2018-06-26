@@ -9,6 +9,8 @@ html
     script.
       let data = !{JSON.stringify(data)}
       let item = !{JSON.stringify(item)}
+      let trial = !{JSON.stringify(trial)}
+      console.log(trial)
     - var foodName = item[0].foodname
     - var taste = item[0]['taste']
     - var health = item[0]['health']
@@ -25,15 +27,34 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    script.
-      var firstSet = data.filter(d => d.qn_set == 1)
-      likertTable(firstSet.slice(1))
-    - var secondSet = data.filter(d => d.qn_set == 2)
-      console.log(secondSet)
-    - var setDesc2 = secondSet[0].description
-    h3 #{setDesc2}
-    p #{secondSet[1].description}
-    input(type='text' value= taste)
-    p #{secondSet[2].description}
-    input(type='text' value= health)
+    form(action='/survey1/'+trial+'/'+itemOrder, method='post')
+      input(type='hidden', name='trial', value=trial)
+      input(type='hidden', name='itemOrder', value=itemOrder)
+      table.likert
+        tr
+          th
+          th Strongly disagree
+          th Disagree
+          th Neither agree nor disagree
+          th Agree
+          th Strongly agree
+        - var firstSet = data.filter(d => d.qn_set == 1)
+        - firstSet = firstSet.slice(1)
+        - var count = 0
+        each qn in firstSet
+          - count++
+          tr
+          td #{qn.description}
+          each val in [1, 2, 3, 4, 5]
+            td
+              input(name='qn'+count, type='radio', value= val)
+      - var secondSet = data.filter(d => d.qn_set == 2)
+      - var setDesc2 = secondSet[0].description
+      h3 #{setDesc2}
+      p #{secondSet[1].description}
+      input(type='text' value= taste)
+      p #{secondSet[2].description}
+      input(type='text' value= health)
+      br
+      button(class='surSubmit', type='submit', value='submit') Submit
 

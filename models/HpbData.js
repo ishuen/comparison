@@ -60,19 +60,33 @@ class HpbData {
   getTrialSet (trialNum, callback) {
     let itemSet = []
     if (Number(trialNum) === 1) {
-      itemSet = itemSet.concat([2734, 1340, 1587, 1413, 1888, 2555, 2447, 1589, 1517, 1511])
+      itemSet = itemSet.concat(itemSetList[0])
     } else if (Number(trialNum) === 2) {
-      itemSet = itemSet.concat([2046, 1738, 713, 1289, 104, 1147, 2862, 1298, 912, 1302])
+      itemSet = itemSet.concat(itemSetList[1])
     } else if (Number(trialNum) === 3) {
-      itemSet = itemSet.concat([1394, 1399, 878, 448, 1886, 771, 101, 124, 831, 1659])
+      itemSet = itemSet.concat(itemSetList[2])
     } else if (Number(trialNum) === 4) {
-      itemSet = itemSet.concat([2385, 114, 1438, 758, 516, 615, 1040, 2745, 1436, 966])
+      itemSet = itemSet.concat(itemSetList[3])
     }
     pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemSet], (err, res) => {
       if (err) throw err
       callback(res.rows)
     })
   }
+
+  getOneItemFromList (trialNum, itemOrder, callback) {
+    let itemId = itemSetList[trialNum - 1][itemOrder - 1]
+    pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
+      if (err) throw err
+      console.log(res.rows)
+      callback(res.rows)
+    })
+  }
 }
+
+var itemSetList = [[2734, 1340, 1587, 1413, 1888, 2555, 2447, 1589, 1517, 1511],
+[2046, 1738, 713, 1289, 104, 1147, 2862, 1298, 912, 1302],
+[1394, 1399, 878, 448, 1886, 771, 101, 124, 831, 1659],
+[2385, 114, 1438, 758, 516, 615, 1040, 2745, 1436, 966]]
 
 module.exports = new HpbData()

@@ -72,3 +72,19 @@ a {
   font-size: 15pt;
   padding: 15px 32px;
 }
+.likert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+}
+.likert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.likert th {
+  margin: 0px;
+  padding: 0px;
+  border: black 3px solid;
+}
