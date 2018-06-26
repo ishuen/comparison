@@ -14,6 +14,8 @@ html
     - var health = item[0]['health']
     - var imgPath = item[0].path
     - var setDesc = data[0].description // index 0 = display num 0
+    h1 Understanding Food Items
+    h3 We will show you multiple cards, each representing a food item. The scores range from 1 to 100.
     div.centerDisplay.card
       h3 #{foodName}
       img(src= imgPath alt= foodName)
@@ -28,6 +30,7 @@ html
     form(action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='itemOrder', value=itemOrder)
+      input(type='hidden', name='itemId', value=item[0].id)
       input(type='hidden', name='userId', value=userId)
       table.likert
         tr
@@ -51,9 +54,10 @@ html
       - var setDesc2 = secondSet[0].description
       h3 #{setDesc2}
       p #{secondSet[1].description}
-      input(type='text' value= taste)
+      input(type='text', name= 'taste', value= taste)
       p #{secondSet[2].description}
-      input(type='text' value= health)
+      input(type='text', name='health', value= health)
+      br
       br
       button(class='surSubmit', type='submit', value='submit') Submit
 

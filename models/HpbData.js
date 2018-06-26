@@ -78,7 +78,7 @@ class HpbData {
     let itemId = itemSetList[trialNum - 1][itemOrder - 1]
     pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
       if (err) throw err
-      console.log(res.rows)
+      // console.log(res.rows)
       callback(res.rows)
     })
   }
