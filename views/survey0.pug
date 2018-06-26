@@ -1,0 +1,63 @@
+doctype html
+html
+  head
+    title= 'presurvey - Dietary restrictions'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+    - var setDesc = data[0].description // index 0 = display num 0
+    h1 Dietary restrictions
+    h3 #{setDesc}
+    form(action='/survey0/' + userId, method='post')
+      input(type='hidden', name='userId', value=userId)
+      table.likert
+        tr
+          th Food Type
+          th I am OK with this
+          th I am Allergic
+          th I am Intolerant
+          th 
+            | I Choose not to eat
+            br
+            | (e.g., religious, ethical reasons)
+          th I Dislike
+        - var firstSet = data.filter(d => d.qn_set == 4)
+        - firstSet = firstSet.slice(1)
+        - var count = 0
+        each qn in firstSet
+          - count++
+          tr
+          td #{qn.description}
+          each val in [1, 2, 3, 4, 5]
+            td
+              input(name='qn'+count, type='radio', value= val)
+      br
+      - var secondSet = data.filter(d => d.qn_set == 5)
+      h3 #{secondSet[0].description}
+      label 
+        input(type='radio', name='veg', value='0')
+        span Vegan
+      br
+      label 
+        input(type='radio', name='veg', value='1')
+        span Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)
+      br
+      label 
+        input(type='radio', name='veg', value='2')
+        span Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)
+      br
+      label 
+        input(type='radio', name='veg', value='3')
+        span Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)
+      br
+      label 
+        input(type='radio', name='veg', value='4')
+        span Pescatarian
+      br
+      h3 #{secondSet[1].description}
+      textarea(name='others', rows='4' cols='50')
+      br
+      br
+      button(class='surSubmit', type='submit', value='submit') Submit

@@ -27,7 +27,10 @@ CREATE TABLE user_comment(
 
 CREATE TABLE sorting_experiment(
     exp_id serial PRIMARY KEY,
-    food_id varchar REFERENCES hpbdata(id));
+    food_id varchar REFERENCES hpbdata(id),
+    new_health int NOT NULL,
+    new_taste int NOT NULL,
+    user_id serial REFERENCES user_data(user_id));
 
 CREATE TABLE user_sorting(
     exp_id serial REFERENCES sorting_experiment(exp_id),

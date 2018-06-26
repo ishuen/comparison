@@ -88,6 +88,7 @@ class ExperimentsController {
   */
   showItems (req, res) {
     const trial = req.params.trial
+    const userId = req.params.userId
     Experiments.getTrialSet(trial, function (items) {
       _.map(items, function (i) {
         i.path = i.image.toString('utf8')
@@ -95,7 +96,7 @@ class ExperimentsController {
       console.log(items)
       // res.send({data: items})
       let now = new Date()
-      res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime()})
+      res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
   submitSorting (req, res) {
@@ -107,13 +108,14 @@ class ExperimentsController {
     }
     console.log(ordering)
     const trial = Number(req.body.trial) + 1
+    const userId = req.body.userId
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     console.log('timeUsed', timeUsed)
     if (trial === 5) { // last trial + 1
       res.redirect('/survey3/') // go to post-survey
     } else {
-      res.redirect('/experiment1/' + trial)
+      res.redirect('/survey1/' + trial + '/1/' + userId)
     }
   }
 }

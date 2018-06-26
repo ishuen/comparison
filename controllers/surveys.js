@@ -2,6 +2,20 @@ const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 // const _ = require('lodash')
 class Survey1Controller {
+  // survey page for dietary restriction
+  showDietaryConstraint (req, res) {
+    const userId = req.params.userId
+    const setNum = [4, 5]
+    Survey1.getQnSets(setNum, function (qnSet) {
+      res.render('survey0', {data: qnSet, userId: userId})
+      // res.send({data: qnSet})
+    })
+  }
+  dietSubmit (req, res) {
+    console.log(req.body)
+    const userId = req.body.userId
+    res.redirect('/survey1/1/1/' + userId)
+  }
   /**
   * @api {get} /survey2/:trial/:itemOrder Request the survey question set
   * @apiName SurveyQuestion
@@ -88,13 +102,14 @@ class Survey1Controller {
   * }
   */
   showQuestions (req, res) {
+    const userId = req.params.userId
     const setNum = 1
     const trial = req.params.trial
     const itemOrder = req.params.itemOrder
     Survey1.getQnSet(setNum, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder})
+        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId})
         // res.send({data: qnSet, item: item})
       })
     })
@@ -104,10 +119,11 @@ class Survey1Controller {
     console.log(req.body)
     let trial = Number(req.body.trial)
     let itemOrder = Number(req.body.itemOrder) + 1
+    const userId = req.body.userId
     if (itemOrder === 10) { // last trial + 1
-      res.redirect('/experiment2/' + trial) // go to experiment
+      res.redirect('/experiment2/' + trial + '/' + userId) // go to experiment
     } else {
-      res.redirect('/survey2/' + trial + '/' + itemOrder)
+      res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
     }
   }
 
@@ -198,13 +214,14 @@ class Survey1Controller {
   * }
   */
   showQuestionsModValue (req, res) {
+    const userId = req.params.userId
     const trial = req.params.trial
     const itemOrder = req.params.itemOrder
     const setNum2 = [1, 2]
     Survey1.getQnSets(setNum2, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey1', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder})
+        res.render('survey1', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId})
         // res.send({data: qnSet, item: item})
       })
     })
@@ -214,10 +231,11 @@ class Survey1Controller {
     console.log(req.body)
     let trial = Number(req.body.trial)
     let itemOrder = Number(req.body.itemOrder) + 1
+    const userId = req.body.userId
     if (itemOrder === 10) { // last trial + 1
-      res.redirect('/experiment1/' + trial) // go to experiment
+      res.redirect('/experiment1/' + trial + '/' + userId) // go to experiment
     } else {
-      res.redirect('/survey1/' + trial + '/' + itemOrder)
+      res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
     }
   }
 }

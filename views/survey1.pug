@@ -25,9 +25,10 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    form(action='/survey1/' + trial + '/' + itemOrder, method='post')
+    form(action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='itemOrder', value=itemOrder)
+      input(type='hidden', name='userId', value=userId)
       table.likert
         tr
           th
