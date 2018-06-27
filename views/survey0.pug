@@ -31,18 +31,23 @@ html
           - count++
           tr
           td #{qn.description}
+            if count == firstSet.length
+              br
+              input(name='qn' + count + 'end', type='text', style='float: right; width: 90%; margin: 2%') 
           each val in [1, 2, 3, 4, 5]
             td
               input(name='qn'+count, type='radio', value= val)
       br
       - var secondSet = data.filter(d => d.qn_set == 5)
       h3 #{secondSet[0].description}
-      - var veganType = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian']
-      each val in [0, 1, 2, 3, 4] 
+      - var veganType = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian', 'I\'m neither a vegan nor a vegetarian']
+      - var val = 0
+      while val < veganType.length
         label 
           input(type='radio', name='veg', value=val)
           span #{veganType[val]}
         br
+        - val++
       h3 #{secondSet[1].description}
       textarea(name='others', rows='4' cols='50')
       br
