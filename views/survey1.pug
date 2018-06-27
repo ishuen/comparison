@@ -30,7 +30,7 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    form(action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post')
+    form(name='foodForm', action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post', onsubmit='return validateScore()')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='itemOrder', value=itemOrder)
       input(type='hidden', name='itemId', value=item[0].id)
@@ -63,4 +63,18 @@ html
       br
       br
       button(class='surSubmit', type='submit', value='submit') Submit
-
+    script.
+      function validateScore () {
+        let x = document.forms['foodForm']['taste'].value
+        let y = document.forms['foodForm']['health'].value;
+        if (x == '' || y == '') {
+          alert('The score must be filled out.')
+          return false
+        } else if ( x > 100 || y > 100 || x < 1 || y < 1) {
+          alert('The score must range from 1 to 100.')
+          return false
+        } else if (!Number.isInteger(x) || !Number.isInteger(y)) {
+          alert('The score must be integer.')
+          return false
+        }
+      }
