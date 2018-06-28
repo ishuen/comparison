@@ -51,6 +51,6 @@ html
           td #{qn.description}
           each val in [1, 2, 3, 4, 5]
             td
-              input(name='qn'+count, type='radio', value= val)
+              input(name='qn' + qn.qn_id, type='radio', value= val)
       br
       button(class='surSubmit', type='submit', value='submit') Submit

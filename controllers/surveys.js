@@ -124,6 +124,8 @@ class Survey1Controller {
     if (itemOrder === 10) { // last trial + 1
       res.redirect('/experiment2/' + trial + '/' + userId) // go to experiment
     } else {
+      let qn = getQnAns(req.body)
+      Experiments.insertQnAns(qn, function (done) { console.log(done) })
       res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
     }
   }
