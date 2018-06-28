@@ -17,12 +17,17 @@ CREATE TABLE user_rating(
     qn_id serial REFERENCES survey_questions(qn_id),
     user_id serial REFERENCES user_data(user_id),
     rating INT NOT NULL,
-    PRIMARY KEY (user_id, qn_id));
+    rating_id serial PRIMARY KEY,
+    trial INT,
+    item_order INT); -- rating 1 ~ 5
 
 CREATE TABLE user_comment(
     qn_id serial REFERENCES survey_questions(qn_id),
     user_id serial REFERENCES user_data(user_id),
-    description VARCHAR (400) NOT NULL);
+    description VARCHAR (400) NOT NULL,
+    comment_id serial PRIMARY KEY,
+    trial INT,
+    item_order INT);
 
 -- ALTER TABLE hpbdata
 --   ADD CONSTRAINT hpbdata_pk

@@ -243,6 +243,8 @@ class Survey1Controller {
         user_id: req.body.userId,
         trial_num: trial
       }
+      let qn = getQnAns(req.body)
+      Experiments.insertQnAns(qn, function (done) { console.log(done) })
       Experiments.addUserDefinedScores(obj, function (done) {
         console.log(done)
         if (done) res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
@@ -251,3 +253,16 @@ class Survey1Controller {
   }
 }
 module.exports = new Survey1Controller()
+
+function getQnAns (obj) {
+  const userId = obj.userId
+  const trial = obj.trial
+  const itemOrder = obj.itemOrder
+  let qn = Object.keys(obj).filter(k => k.slice(0, 2) === 'qn')
+  let qnAns = []
+  for (let q of qn) {
+    let temp = [q.slice(2), userId, obj[q], trial, itemOrder] // [question id, userId, answer to the question]
+    qnAns.push(temp)
+  }
+  return qnAns
+}
