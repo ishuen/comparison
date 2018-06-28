@@ -9,7 +9,8 @@ INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES
  (2, 0, 'Feel free to edit the Taste or Health score do not agree with them.', 'NONE'),
  (2, 1, 'Taste score', 'fill'),
- (2, 2, 'Health score', 'fill');
+ (2, 2, 'Health score', 'fill'),
+ (2, 3, 'Please justify your changes.', 'fill');
 
 INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES

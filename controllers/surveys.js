@@ -1,5 +1,6 @@
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
+const Experiments = require('../models/Experiments')
 // const _ = require('lodash')
 class Survey1Controller {
   // survey page for dietary restriction
@@ -235,7 +236,17 @@ class Survey1Controller {
     if (itemOrder === 11) { // last trial + 1
       res.redirect('/experiment1/' + trial + '/' + userId) // go to experiment
     } else {
-      res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
+      let obj = {
+        food_id: req.body.itemId,
+        new_health: req.body.health,
+        new_taste: req.body.taste,
+        user_id: req.body.userId,
+        trial_num: trial
+      }
+      Experiments.addUserDefinedScores(obj, function (done) {
+        console.log(done)
+        if (done) res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
+      })
     }
   }
 }

@@ -8,7 +8,10 @@ CREATE TABLE survey_questions(
 CREATE TABLE user_data(
     user_id serial PRIMARY KEY,
     age INT NOT NULL,
-    gender BOOLEAN NOT NULL);
+    gender BOOLEAN NOT NULL,
+    Occupation VARCHAR (50),
+    CoR VARCHAR (50),
+    Ethnicity VARCHAR (50)); -- Country of Residence -> CoR
 
 CREATE TABLE user_rating(
     qn_id serial REFERENCES survey_questions(qn_id),
@@ -30,7 +33,8 @@ CREATE TABLE sorting_experiment(
     food_id varchar REFERENCES hpbdata(id),
     new_health int NOT NULL,
     new_taste int NOT NULL,
-    user_id serial REFERENCES user_data(user_id));
+    user_id serial REFERENCES user_data(user_id),
+    trial_num integer);
 
 CREATE TABLE user_sorting(
     exp_id serial REFERENCES sorting_experiment(exp_id),

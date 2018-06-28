@@ -61,6 +61,9 @@ html
       p #{secondSet[2].description}
       input(type='text', name='health', value= health)
       br
+      p #{secondSet[3].description}
+      textarea(name='justify', rows='4', style='width: 80%;')
+      br
       br
       button(class='surSubmit', type='submit', value='submit') Submit
     script.
@@ -73,7 +76,8 @@ html
         } else if ( x > 100 || y > 100 || x < 1 || y < 1) {
           alert('The score must range from 1 to 100.')
           return false
-        } else if (!Number.isInteger(x) || !Number.isInteger(y)) {
+        } else if (!Number.isInteger(Number(x)) || !Number.isInteger(Number(y))) {
+          console.log(typeof x)
           alert('The score must be integer.')
           return false
         }
