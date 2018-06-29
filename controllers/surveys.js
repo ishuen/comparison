@@ -16,6 +16,12 @@ class Survey1Controller {
   dietSubmit (req, res) {
     console.log(req.body)
     const userId = req.body.userId
+    let combinedForm = JSON.parse(JSON.stringify(req.body))
+    if (combinedForm.hasOwnProperty('others')) {
+      combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
+    }
+    let qn = getQnAns(combinedForm)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
     res.redirect('/survey1/1/1/' + userId)
   }
   /**

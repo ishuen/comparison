@@ -19,7 +19,7 @@ CREATE TABLE user_rating(
     rating INT NOT NULL,
     rating_id serial PRIMARY KEY,
     trial INT,
-    item_order INT); -- rating 1 ~ 5
+    item_order INT); -- rating 1 ~ 5, 5_scale
 
 CREATE TABLE user_comment(
     qn_id serial REFERENCES survey_questions(qn_id),
@@ -27,7 +27,7 @@ CREATE TABLE user_comment(
     description VARCHAR (400) NOT NULL,
     comment_id serial PRIMARY KEY,
     trial INT,
-    item_order INT);
+    item_order INT); -- other ans eg: fill, choice, diet_5
 
 -- ALTER TABLE hpbdata
 --   ADD CONSTRAINT hpbdata_pk
