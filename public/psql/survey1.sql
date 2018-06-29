@@ -15,7 +15,7 @@ VALUES
 INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES
 (3, 0, 'Demographics', 'NONE'),
-(3, 1, 'Gender', 'choice'),
+(3, 1, 'Gender', 'choice'), -- 0 male, 1 female
 (3, 2, 'Age', 'fill'),
 (3, 3, 'Occupation', 'fill'),
 (3, 4, 'Country of Residence', 'fill'),

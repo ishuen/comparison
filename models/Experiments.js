@@ -24,12 +24,21 @@ class Experiments {
       let comment = arr.filter(function (q) { return !likert.includes(q) })
       // insert into rating
       for (let rating of likert) {
-        pool.query('INSERT INTO user_rating (qn_id, user_id, rating, trial, item_order) VALUES ($1, $2, $3, $4, $5)', [rating[0], rating[1], rating[2], rating[3], rating[4]], (err, res) => { if (err) throw err })
+        pool.query('INSERT INTO user_rating (qn_id, user_id, rating, trial, item_order) VALUES ($1, $2, $3, $4, $5)', rating, (err, res) => { if (err) throw err })
       }
       // insert into comment
       for (let co of comment) {
-        pool.query('INSERT INTO user_comment (qn_id, user_id, description, trial, item_order) VALUES ($1, $2, $3, $4, $5)', [co[0], co[1], co[2], co[3], co[4]], (err, res) => { if (err) throw err })
+        pool.query('INSERT INTO user_comment (qn_id, user_id, description, trial, item_order) VALUES ($1, $2, $3, $4, $5)', co, (err, res) => { if (err) throw err })
       }
+      callback(res.rows)
+    })
+  }
+  insertDemog (user, callback) {
+    console.log(user)
+    let arr = [user.Age, user.gender, user.Occupation, user['Country of Residence'], user.Ethnicity, user.userId]
+    console.log(arr)
+    pool.query('UPDATE user_data SET age = $1, gender = $2, occupation = $3, cor = $4, ethnicity = $5 WHERE user_id = $6', arr, (err, res) => {
+      if (err) throw err
       callback(res.rows)
     })
   }

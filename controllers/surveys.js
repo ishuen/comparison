@@ -253,6 +253,23 @@ class Survey1Controller {
       })
     }
   }
+
+  showDemographics (req, res) {
+    const userId = req.params.userId
+    const setNum = 3
+    Survey1.getQnSet(setNum, function (qnSet) {
+      res.render('survey3', {data: qnSet, userId: userId})
+    })
+  }
+
+  demographicsSubmit (req, res) {
+    console.log(req.body)
+    const userData = req.body
+    Experiments.insertDemog(userData, function (done) {
+      console.log(done)
+      res.redirect('/')
+    })
+  }
 }
 module.exports = new Survey1Controller()
 

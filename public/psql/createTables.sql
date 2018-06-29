@@ -55,15 +55,15 @@ CREATE TABLE user_track(
     time_stamp timestamp,
     ordering INT NOT NULL);
 
-CREATE TABLE criteria_algorithm(
-    cri_id serial PRIMARY KEY,
-    high_score INT NOT NULL,
-    low_score INT NOT NULL);
+-- CREATE TABLE criteria_algorithm(
+--     cri_id serial PRIMARY KEY,
+--     high_score INT NOT NULL,
+--     low_score INT NOT NULL);
 
-CREATE TABLE user_criteria(
-    cri_id serial REFERENCES criteria_algorithm(cri_id),
-    user_id serial REFERENCES user_data(user_id),
-    algorithm INT NOT NULL, time_stamp timestamp);
+-- CREATE TABLE user_criteria(
+--     cri_id serial REFERENCES criteria_algorithm(cri_id),
+--     user_id serial REFERENCES user_data(user_id),
+--     algorithm INT NOT NULL, time_stamp timestamp);
 
 -- ALTER TABLE user_criteria
 -- ADD COLUMN time_stamp timestamp;
