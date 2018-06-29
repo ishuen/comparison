@@ -1,6 +1,7 @@
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
+const maxTrial = 5
 // const _ = require('lodash')
 class Survey1Controller {
   // survey page for dietary restriction
@@ -269,6 +270,36 @@ class Survey1Controller {
       console.log(done)
       res.redirect('/')
     })
+  }
+
+  showQnPost1 (req, res) {
+    const userId = req.params.userId
+    const trial = req.params.trial
+    const setNum = [6, 7]
+    Survey1.getQnSets(setNum, function (qnSet) {
+      res.render('survey4', {data: qnSet, trial: trial, userId: userId})
+    })
+  }
+
+  post1Submit (req, res) {
+    console.log(req.body)
+    let trial = Number(req.body.trial)
+    const userId = req.body.userId
+    let combinedForm = JSON.parse(JSON.stringify(req.body))
+    if (!combinedForm.hasOwnProperty('qn34') && combinedForm.others) {
+      combinedForm['qn34'] = 4 + '-' + combinedForm.others
+    } else {
+      combinedForm['qn34'] = combinedForm['qn34'] + '-' + combinedForm.others
+    }
+    console.log(combinedForm)
+    let qn = getQnAns(combinedForm)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
+    trial++
+    if (trial <= maxTrial) {
+      res.redirect('/survey1/' + trial + '/1/' + userId) // go to experiment
+    } else {
+      res.redirect('/survey3/' + userId) // go to demographic
+    }
   }
 }
 module.exports = new Survey1Controller()

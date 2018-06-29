@@ -14,7 +14,7 @@ class Experiments {
       if (err) throw err
       // check the ans type and divide into 2
       let allQns = res.rows
-      console.log(allQns)
+      // console.log(allQns)
       let likert = arr.filter(function (q) {
         let qn = allQns.find(function (p) {
           return Number(p.qn_id) === Number(q[0])
@@ -24,11 +24,17 @@ class Experiments {
       let comment = arr.filter(function (q) { return !likert.includes(q) })
       // insert into rating
       for (let rating of likert) {
-        pool.query('INSERT INTO user_rating (qn_id, user_id, rating, trial, item_order) VALUES ($1, $2, $3, $4, $5)', rating, (err, res) => { if (err) throw err })
+        pool.query('INSERT INTO user_rating (qn_id, user_id, rating, trial, item_order) VALUES ($1, $2, $3, $4, $5) RETURNING rating_id', rating, (err, res) => {
+          if (err) throw err
+          console.log(res.rows)
+        })
       }
       // insert into comment
       for (let co of comment) {
-        pool.query('INSERT INTO user_comment (qn_id, user_id, description, trial, item_order) VALUES ($1, $2, $3, $4, $5)', co, (err, res) => { if (err) throw err })
+        pool.query('INSERT INTO user_comment (qn_id, user_id, description, trial, item_order) VALUES ($1, $2, $3, $4, $5) RETURNING comment_id', co, (err, res) => {
+          if (err) throw err
+          console.log(res.rows)
+        })
       }
       callback(res.rows)
     })

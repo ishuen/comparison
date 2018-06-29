@@ -112,11 +112,7 @@ class ExperimentsController {
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     console.log('timeUsed', timeUsed)
-    if (trial === 5) { // last trial + 1
-      res.redirect('/survey3/') // go to post-survey
-    } else {
-      res.redirect('/survey1/' + trial + '/1/' + userId)
-    }
+    res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
   }
 }
 
