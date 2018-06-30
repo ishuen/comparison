@@ -10,9 +10,10 @@ html
       let data = !{JSON.stringify(data)}
       var max = data.length
     - var count = 0
-    form(id='sortingResult', class='exp', name='sortingResult', action='/experiment1/'+ trial, method='post', onsubmit="div2form('sortingResult')")
+    form(id='sortingResult', class='exp', name='sortingResult', action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="div2form('sortingResult')")
       div#destinationPanel
         input(type='hidden', name='trial', value=trial)
+        input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)
       button(class='expSubmit', type='submit', value='submit') I'm done!
     br
@@ -22,8 +23,8 @@ html
           if count % 5 === 0
             tr
           - var foodName = item.foodname
-          - var taste = item['T\'c']
-          - var health = item['RRR\'']
+          - var taste = item.taste
+          - var health = item.health
           - var imgPath = item.path
           td(id='cardPanel'+count)
             div.card(id= 'food'+count, name='card')

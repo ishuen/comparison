@@ -1,14 +1,37 @@
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
+const Experiments = require('../models/Experiments')
+const maxTrialEx1 = 5
+const maxTrialEx2 = 5
 // const _ = require('lodash')
 class Survey1Controller {
+  // survey page for dietary restriction
+  showDietaryConstraint (req, res) {
+    const userId = req.params.userId
+    const setNum = [4, 5]
+    Survey1.getQnSets(setNum, function (qnSet) {
+      res.render('survey0', {data: qnSet, userId: userId})
+      // res.send({data: qnSet})
+    })
+  }
+  dietSubmit (req, res) {
+    console.log(req.body)
+    const userId = req.body.userId
+    let combinedForm = JSON.parse(JSON.stringify(req.body))
+    if (combinedForm.hasOwnProperty('others')) {
+      combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
+    }
+    let qn = getQnAns(combinedForm)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
+    res.redirect('/survey1/1/1/' + userId)
+  }
   /**
-  * @api {get} /survey2/:num/:id Request the survey question set
+  * @api {get} /survey2/:trial/:itemOrder Request the survey question set
   * @apiName SurveyQuestion
   * @apiGroup Survey
   *
-  * @apiParam {Number} num   number of the question set
-  * @apiParam {Number} id    id of the question set
+  * @apiParam {Number} trial trial number
+  * @apiParam {Number} itemOrder number of item in item list
   * @apiDescription
   * Used for the pre-survey in experiment 2 (survey2)
   * @apiSuccess {Object[]} array of questions
@@ -88,24 +111,40 @@ class Survey1Controller {
   * }
   */
   showQuestions (req, res) {
-    const setNum = req.params.num
-    // let id = '2734'
-    const id = req.params.id
+    const userId = req.params.userId
+    const setNum = 1
+    const trial = req.params.trial
+    const itemOrder = req.params.itemOrder
     Survey1.getQnSet(setNum, function (qnSet) {
-      HpbData.getOneItem(id, function (item) {
+      HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey2', {data: qnSet, item: item})
+        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId})
         // res.send({data: qnSet, item: item})
       })
     })
   }
-    /**
-  * @api {get} /survey1?num=:num&id=:id Request the survey question sets
+
+  agreementSubmit (req, res) {
+    console.log(req.body)
+    let trial = Number(req.body.trial)
+    let itemOrder = Number(req.body.itemOrder) + 1
+    const userId = req.body.userId
+    if (itemOrder === 10) { // last trial + 1
+      res.redirect('/experiment2/' + trial + '/' + userId) // go to experiment
+    } else {
+      let qn = getQnAns(req.body)
+      Experiments.insertQnAns(qn, function (done) { console.log(done) })
+      res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
+    }
+  }
+
+  /**
+  * @api {get} /survey1/:trial/:itemOrder/ Request the survey question sets
   * @apiName SurveyQuestion
   * @apiGroup Survey
   *
-  * @apiParam {Number[]} num   number of the question set
-  * @apiParam {Number} id    id of the question set
+  * @apiParam {Number} trial trial number
+  * @apiParam {Number} itemOrder number of item in item list
   * @apiDescription
   * Used for the pre-survey in experiment 1 (survey 1)
   *
@@ -186,16 +225,131 @@ class Survey1Controller {
   * }
   */
   showQuestionsModValue (req, res) {
-    const setNum2 = JSON.parse(req.query.num)
-    // let id = '2734'
-    const id = req.query.id
+    const userId = req.params.userId
+    const trial = req.params.trial
+    const itemOrder = req.params.itemOrder
+    const setNum2 = [1, 2]
     Survey1.getQnSets(setNum2, function (qnSet) {
-      HpbData.getOneItem(id, function (item) {
+      HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey1', {data: qnSet, item: item})
+        res.render('survey1', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId})
         // res.send({data: qnSet, item: item})
       })
     })
   }
+
+  scoreSubmit (req, res) {
+    console.log(req.body)
+    let trial = Number(req.body.trial)
+    let itemOrder = Number(req.body.itemOrder) + 1
+    const userId = req.body.userId
+    if (itemOrder === 11) { // last trial + 1
+      res.redirect('/experiment1/' + trial + '/' + userId) // go to experiment
+    } else {
+      let obj = {
+        food_id: req.body.itemId,
+        new_health: req.body.health,
+        new_taste: req.body.taste,
+        user_id: req.body.userId,
+        trial_num: trial
+      }
+      let qn = getQnAns(req.body)
+      Experiments.insertQnAns(qn, function (done) { console.log(done) })
+      Experiments.addUserDefinedScores(obj, function (done) {
+        console.log(done)
+        if (done) res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
+      })
+    }
+  }
+
+  showDemographics (req, res) {
+    const userId = req.params.userId
+    const setNum = 3
+    Survey1.getQnSet(setNum, function (qnSet) {
+      res.render('survey3', {data: qnSet, userId: userId})
+    })
+  }
+
+  demographicsSubmit (req, res) {
+    console.log(req.body)
+    const userData = req.body
+    Experiments.insertDemog(userData, function (done) {
+      console.log(done)
+      res.redirect('/')
+    })
+  }
+
+  showQnPost1 (req, res) {
+    const userId = req.params.userId
+    const trial = req.params.trial
+    const setNum = [6, 7]
+    Survey1.getQnSets(setNum, function (qnSet) {
+      res.render('survey4', {data: qnSet, trial: trial, userId: userId})
+    })
+  }
+
+  post1Submit (req, res) {
+    console.log(req.body)
+    let trial = Number(req.body.trial)
+    const userId = req.body.userId
+    let combinedForm = JSON.parse(JSON.stringify(req.body))
+    if (!combinedForm.hasOwnProperty('qn34') && combinedForm.others) {
+      combinedForm['qn34'] = 4 + '-' + combinedForm.others
+    } else {
+      combinedForm['qn34'] = combinedForm['qn34'] + '-' + combinedForm.others
+    }
+    console.log(combinedForm)
+    let qn = getQnAns(combinedForm)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
+    trial++
+    if (trial <= maxTrialEx1) {
+      res.redirect('/survey1/' + trial + '/1/' + userId) // go to experiment
+    } else {
+      res.redirect('/survey3/' + userId) // go to demographic
+    }
+  }
+
+  showQnPost2 (req, res) {
+    const userId = req.params.userId
+    const trial = req.params.trial
+    const setNum = [8, 9]
+    Survey1.getQnSets(setNum, function (qnSet) {
+      res.render('survey5', {data: qnSet, trial: trial, userId: userId})
+    })
+  }
+
+  post2Submit (req, res) {
+    console.log(req.body)
+    let trial = Number(req.body.trial)
+    const userId = req.body.userId
+    let combinedForm = JSON.parse(JSON.stringify(req.body))
+    if (!combinedForm.hasOwnProperty('qn45') && combinedForm.others) {
+      combinedForm['qn45'] = 4 + '-' + combinedForm.others
+    } else {
+      combinedForm['qn45'] = combinedForm['qn45'] + '-' + combinedForm.others
+    }
+    console.log(combinedForm)
+    let qn = getQnAns(combinedForm)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
+    trial++
+    if (trial <= maxTrialEx2) {
+      res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
+    } else {
+      res.redirect('/survey3/' + userId) // go to demographic
+    }
+  }
 }
 module.exports = new Survey1Controller()
+
+function getQnAns (obj) {
+  const userId = obj.userId
+  const trial = obj.trial
+  const itemOrder = obj.itemOrder
+  let qn = Object.keys(obj).filter(k => k.slice(0, 2) === 'qn')
+  let qnAns = []
+  for (let q of qn) {
+    let temp = [q.slice(2), userId, obj[q], trial, itemOrder] // [question id, userId, answer to the question]
+    qnAns.push(temp)
+  }
+  return qnAns
+}

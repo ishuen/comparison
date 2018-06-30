@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title= 'experiment 2 - presurvey'
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+    - var setDesc = data[0].description // index 0 = display num 0
+    h1 #{setDesc}
+    form(action='/survey3/', method='post')
+      input(type='hidden', name='userId', value=userId)
+      table
+        tr
+          td
+            h5 #{data[1].description}
+          td
+            label 
+              input(type='radio', name='gender', value=0)
+              span male
+            label 
+              input(type='radio', name='gender', value=1)
+              span female
+        - var remained = data.slice(2)
+        each qn in remained
+          tr
+            td
+              h5 #{qn.description}
+            td
+              input(name=qn.description, type='text')
+      br
+      button(class='surSubmit', type='submit', value='submit') Submit
