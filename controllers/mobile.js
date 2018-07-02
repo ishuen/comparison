@@ -71,19 +71,20 @@ class ParetoFrontierController {
         return (_.findIndex(out, {'0': loc[0], '1': loc[1]}) === -1)
       })
       count = number - location.length
-      console.log('set', count, '====', out, '****', location)
       let mid = Math.round(out.length / 2) // change into random allocation?
       left.push(out.slice(0, mid))
       right.push(out.slice(mid))
     }
-    console.log('RRRR', right)
-    console.log('LLLL', left)
     // allocate into 2 sides
-    let middle = left.length
+    const len = left.length - 1
+    let middle = left[len]
+    middle = middle.reduce((a, b) => a.concat(b), [])
     let result = left.concat(right.reverse())
     result = [].concat.apply([], result)
     let resData = reorderData(result, data)
-    let defaultPoint = resData[middle]
+    let defaultPoint = _.find(resData, function (o) {
+      return _.isEqual(String(middle[0]), o['camera 1']) && _.isEqual(String(middle[1]), o['screen'])
+    })
     res.send({data: resData, defaultPoint: defaultPoint})
     // res.render('pareto', {data: resData, defaultPoint: defaultPoint})
   }
@@ -111,7 +112,6 @@ function reorderData (locations, data) {
     let index = 0
     while (index !== -1) {
       index = _.findIndex(data, {'camera 1': String(loc[0]), 'screen': String(loc[1])}, index)
-      console.log(index, loc)
       if (index !== -1) {
         result.push(data[index])
         index = index + 1
