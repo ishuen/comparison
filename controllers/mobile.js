@@ -104,6 +104,28 @@ class ParetoFrontierController {
     let defaultPoint = resData[Math.floor(resData.length / 2)]
     res.send({data: resData, defaultPoint: defaultPoint})
   }
+
+  showPathHeuristic (req, res) {
+    const number = req.params.number
+    // get more sample data to prevent from filter out too many items
+    let data = ParetoFrontier.randomData(number * 3)
+    console.log(data.length)
+    let defaultPoint = _.sample(data)
+    data = _.filter(data, function (o) {
+      return parseFloat(o['camera 1']) >= parseFloat(defaultPoint['camera 1'])
+    })
+    console.log(data.length)
+    const obj = groupData(data, defaultPoint, number)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    console.log(tGroup.length, hGroup.length)
+    tGroup = _.sortBy(tGroup, [function (o) { return parseFloat(o['camera 1']) }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return parseFloat(o['screen']) }])
+    let resData = tGroup.concat(hGroup)
+    // res.send({data: resData, defaultPoint: defaultPoint})
+    res.send({data: resData, defaultPoint: defaultPoint})
+  }
 }
 
 function reorderData (locations, data) {
@@ -120,6 +142,44 @@ function reorderData (locations, data) {
   }
   console.log(result.length)
   return result
+}
+
+function groupData (data, mid, number) {
+  let tGroup = []
+  let hGroup = []
+  for (let item of data) {
+    if (parseFloat(item['screen']) >= parseFloat(mid['screen'])) {
+      hGroup.push(item)
+    } else {
+      tGroup.push(item)
+    }
+  }
+  console.log(tGroup.length, hGroup.length)
+  let obj = checkLength(tGroup, hGroup, mid, number)
+  return obj
+}
+
+function checkLength (tGroup, hGroup, mid, number) {
+  // mid point is already grouped into hGroup
+  // if the result list is too long, delete some items
+  let tMax = 0
+  if (number % 2 === 1) {
+    tMax = (number - 1) / 2
+  } else {
+    tMax = number / 2
+  }
+  let hMax = number - tMax
+  if (tGroup.length > tMax) {
+    tGroup = _.sampleSize(tGroup, tMax)
+  }
+  if (hGroup.length > hMax) {
+    let temp = _.sampleSize(hGroup, hMax)
+    while (!_.find(temp, mid)) {
+      temp = _.sampleSize(hGroup, hMax)
+    }
+    hGroup = temp
+  }
+  return {tGroup: tGroup, hGroup: hGroup}
 }
 
 module.exports = new ParetoFrontierController()

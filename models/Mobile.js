@@ -39,12 +39,12 @@ class Mobile {
     return _.sampleSize(this.mobileData, num)
   }
 
-  // randomFixOne (num, itemName) {
-  //   const _ = require('lodash')
-  //   let data = _.sampleSize(this.mobileData, num)
-  //   let item = _.find(this.mobileData, ['name', itemName])
-  //   console.log(item)
-  //   return {data: data, item: item}
-  // }
+  randomFixOne (num, itemName) {
+    const _ = require('lodash')
+    let data = _.sampleSize(this.mobileData, num)
+    let item = _.find(this.mobileData, ['name', itemName])
+    console.log(item)
+    return {data: data, item: item}
+  }
 }
 module.exports = new Mobile()
