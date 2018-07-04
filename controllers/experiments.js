@@ -114,6 +114,20 @@ class ExperimentsController {
     console.log('timeUsed', timeUsed)
     res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
   }
+
+  showItemsExp2 (req, res) {
+    const trial = req.params.trial
+    const userId = req.params.userId
+    Experiments.getTrialSet(trial, function (items) {
+      _.map(items, function (i) {
+        i.path = i.image.toString('utf8')
+      })
+      console.log(items)
+      // res.send({data: items})
+      let now = new Date()
+      res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+    })
+  }
 }
 
 module.exports = new ExperimentsController()

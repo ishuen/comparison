@@ -18,4 +18,5 @@ router.use('/survey3', require('./survey3'))
 router.use('/survey4', require('./survey4'))
 router.use('/survey5', require('./survey5'))
 router.use('/experiment1', require('./experiment1'))
+router.use('/experiment2', require('./experiment2'))
 module.exports = router
