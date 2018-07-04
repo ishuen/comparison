@@ -10,32 +10,58 @@ html
       let data = !{JSON.stringify(data)}
       var max = data.length
     - var count = 0
+    h1 Please sort the items below to a list with higher taste score on the left and higher health score on the right.
     form(id='sortingResult', name='sortingResult', action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="div2form('sortingResult')")
       div#destinationPanel
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)
-      button(class='expSubmit', type='submit', value='submit') I'm done!
-    div#sourcePanel
-      each item in data
-        - var foodName = item.foodname
-        - var taste = item.taste
-        - var health = item.health
-        - var imgPath = item.path
-        div.card(id= 'food'+count, name='card')
-          h3 #{foodName}
-          if foodName.length < 24
-            br
-          div(style="visibility: hidden; font-size: 0pt")
-            p(name='foodId') #{item.id}
-          img(src= imgPath alt= foodName)
-          table.scores
-            tr
-              th.taste Taste
-              th.health Health
-            tr
-              td.taste(name='taste') #{taste}
-              td.health(name='health') #{health}
+      table.lower
+        tr
+          td
+            table.sort
+              tr
+                th Sort by
+              tr
+                td
+                  button(class='sort') Alphabet
+              tr
+                td
+                  button(class='sort') Taste
+              tr
+                td
+                  button(class='sort') Health
+          td
+            div#sourcePanel
+              - var count = 0
+              each item in data
+                - var foodName = item.foodname
+                - var taste = item.taste
+                - var health = item.health
+                - var imgPath = item.path
+                div.card(id= 'food'+count, name='card')
+                  h3 #{foodName}
+                  if foodName.length < 24
+                    br
+                  div(style="visibility: hidden; font-size: 0pt")
+                    p(name='foodId') #{item.id}
+                  img(src= imgPath alt= foodName)
+                  table.scores
+                    tr
+                      th.taste Taste
+                      th.health Health
+                    tr
+                      td.taste(name='taste') #{taste}
+                      td.health(name='health') #{health}
+          td
+            table.option
+              tr
+                td
+                  button(class='expSubmit', type='submit', value='submit') I'm done!
+              tr
+                td
+                  button(class='resetSort') Reset Sort
+          
     script.
       var get = function(id){ return document.getElementById(id)}
       dragula([get('sourcePanel'), get('destinationPanel')], {})

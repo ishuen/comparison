@@ -49,12 +49,18 @@ a {
   border: 0px;
 }
 
+.scores th {
+  width: 50%;
+}
+
 .taste {
   color: blue;
+  text-align: center;
 }
 
 .health {
   color: red;
+  text-align: center;
 }
 /*.smallCard {
 }
@@ -63,22 +69,26 @@ a {
 }*/
 
 #sourcePanel {
-  width: auto;
+  float: left;
+  width: 100%;
   margin: 0px;
   padding: 0px;
-  display:block;
+  display: inline-block;
+  overflow: visible;
 }
 
-#sourcePanel table {
-  margin: 0px;
-  width: auto;
-  height: auto;
-  /*border: black 3px solid;*/
+.lower {
+  width: 140%;
 }
+.lower td{
+  padding-top: 30px;
+  padding-left: 0px;
+  padding-right: 0px;
+  vertical-align: top;
 
+}
 #destinationPanel {
-  
-  width: auto;
+  width: 140%;
   /*height: auto;*/
   height: 560px;
   border: black 3px solid;
@@ -87,21 +97,60 @@ a {
   display:block;
   overflow-x: auto;
   white-space: nowrap;
+  background-color: #D8D8D8;
 }
 
 .exp {
   transform: scale(0.7);
   transform-origin: left top;
 }
-
+.exp h1 {
+  width: 140%;
+  text-align: center;
+}
 .expSubmit {
   float: right;
+  width: 100%;
 }
-
-button[type=submit] {
-  font-size: 15pt;
+.resetSort {
+  padding-top: 30px;
+  float: right;
+  width: 100%;
+  background-color: red;
+}
+button {
+  width: 100%;
+  font-size: 20pt;
   border: none;
-  padding: 15px 32px;
+  padding: 15px 20px;
+}
+.sort {
+  overflow: visible;
+}
+.sort th {
+  font-size: 30pt;
+}
+.sort table {
+  float: left;
+  display: inline;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.sort button {
+  width: 100%;
+  font-size: 20pt;
+  border: none;
+  padding: 15px 20px;
+}
+.option {
+  padding: 0px;
+  margin: 0px;
+}
+button[type=submit] {
+  font-size: 20pt;
+  border: none;
+  padding: 15px 20px;
 }
 
 .likert {
