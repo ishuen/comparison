@@ -50,20 +50,24 @@ html
           - var health = item.health
           - var imgPath = item.path
           div(data-p='138')
-            div.card(id= 'food'+count, name='card', data-u='image')
-              h3 #{foodName}
-              if foodName.length < 27
-                br
-              div(style='visibility: hidden; font-size: 0pt')
-                p(name='foodId') #{item.id}
-              img(src= imgPath alt= foodName)
-              table.scores
-                tr
-                  th.taste Taste
-                  th.health Health
-                tr
-                  td.taste(name='taste') #{taste}
-                  td.health(name='health') #{health}
+            form(id='pickingTask'+item.id action='/experiment2/'+ trial + '/' + userId, method='post')
+              input(type='hidden', name='trial', value=trial)
+              input(type='hidden', name='userId', value=userId)
+              input(type='hidden', name='startingTime', value=startingTime)
+              div.card.selectable(id= 'food'+item.id, name='card', data-u='image', ondblclick="submitForm('pickingTask"+ item.id + "','food"+item.id+"')")
+                h3 #{foodName}
+                if foodName.length < 27
+                  br
+                div(style='visibility: hidden; font-size: 0pt')
+                  p(name='foodId') #{item.id}
+                img(src= imgPath alt= foodName)
+                table.scores
+                  tr
+                    th.taste Taste
+                    th.health Health
+                  tr
+                    td.taste(name='taste') #{taste}
+                    td.health(name='health') #{health}
       div(data-u='navigator' class='jssorb051' style='position:absolute;bottom:12px;right:12px;' data-autocenter='1' data-scale='0.5' data-scale-bottom='0.75')
         div(data-u='prototype' class='i' style='width:16px;height:16px;')
           svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
@@ -76,3 +80,29 @@ html
           polyline(class='a' points='4960,1920 11040,8000 4960,14080 ')
     script.
       jssor_1_slider_init()
+      function submitSelected(formId, cardId) {
+        var form = document.getElementById(formId)
+        if (!form) { return }
+        var div = form.getElementsByTagName('div')
+        var texta = document.createElement('TEXTAREA')
+        texta.name = 'picked'
+        texta.style.display = 'none'
+        texta.value = JSON.stringify({
+          itemName: div[0].getElementsByTagName('h3')[0].innerHTML,
+          foodId: div[0].getElementsByTagName('p')[0].innerHTML,
+          taste: div[0].getElementsByTagName('td')[0].innerHTML,
+          health: div[0].getElementsByTagName('td')[1].innerHTML
+        })
+        form.appendChild(texta)
+      }
+      window.submitForm = function(formId, cardId) {
+        submitSelected(formId, cardId)
+        var form = document.getElementById(formId)
+        var button = document.createElement('input');
+        button.style.display = 'none';
+        button.type = 'submit';
+        form.appendChild(button).click();
+      };
+
+
+

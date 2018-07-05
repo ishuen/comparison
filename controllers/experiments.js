@@ -128,6 +128,18 @@ class ExperimentsController {
       res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
+
+  submitPicked (req, res) {
+    console.log(req.body)
+    let picked = JSON.parse(req.body.picked)
+    console.log(picked)
+    const trial = Number(req.body.trial) + 1
+    const userId = req.body.userId
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    console.log('timeUsed', timeUsed)
+    res.redirect('/survey5/' + trial + '/' + userId) // go to post-survey
+  }
 }
 
 module.exports = new ExperimentsController()

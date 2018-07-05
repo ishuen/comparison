@@ -29,3 +29,6 @@
 	border-top: black 3px solid;
 	border-bottom: black 3px solid;
 }
+.selectable {
+	cursor: pointer;
+}
