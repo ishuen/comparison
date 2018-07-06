@@ -4,6 +4,7 @@ html
     title= 'experiment 1'
     link(rel='stylesheet', href='/stylesheets/style.css')
   body(class='exp')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='/scripts/dragula.min.js', type='text/javascript')
     script(src='/scripts/util.js', type='text/javascript')
@@ -26,13 +27,13 @@ html
                   input(class='expSubmit', type='submit', value='I\'m done!') 
               tr
                 td
-                  button(class='resetSort') Reset Sort
+                  button(id='reset', class='resetSort', onclick='init()') Reset Sort
     table.lower
       col(width='8%')
       col(width='92%')
       tr
         td
-          table.sort
+          table.sort#sort
             tr
               th Sort by
             tr
@@ -68,6 +69,7 @@ html
     script.
       var get = function(id){ return document.getElementById(id)}
       dragula([get('sourcePanel'), get('destinationPanel')], {})
+      sortCardsBy('alphabet')
       function div2form(id) {
         var form = get(id)
         if (!form) { return }

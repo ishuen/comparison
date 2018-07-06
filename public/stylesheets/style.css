@@ -154,8 +154,10 @@ button {
 .sort button {
   width: 100%;
   font-size: 20pt;
-  border: none;
+  border: black 2px solid;
   padding: 15px 20px;
+  background-color: white;
+  color: black;
 }
 .option {
   padding: 0px;
