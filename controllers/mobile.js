@@ -105,6 +105,32 @@ class ParetoFrontierController {
     res.send({data: resData, defaultPoint: defaultPoint})
   }
 
+  relaxedPath (req, res) {
+    const number = req.params.number
+    const data = ParetoFrontier.randomData(number)
+    let location = []
+    for (let index in data) {
+      let temp = [parseFloat(data[index]['camera 1']), parseFloat(data[index]['screen'])]
+      location.push(temp)
+    }
+    // console.log(location)
+    let result = []
+    let count = 0
+    while (count < 10 && result.length < 1 / 2 * number) {
+      let temp = pf.getParetoFrontier(location)
+      result = _.concat(result, temp)
+      result = _.sortBy(result, function (r) { return r[0] })
+      console.log(result)
+      location = _.filter(location, function (loc) {
+        return (_.findIndex(temp, {'0': loc[0], '1': loc[1]}) === -1)
+      })
+      count++
+    }
+    let resData = reorderData(result, data)
+    let defaultPoint = resData[Math.floor(resData.length / 2)]
+    res.send({data: resData, defaultPoint: defaultPoint, original: data})
+  }
+
   showPathHeuristic (req, res) {
     const number = req.params.number
     // get more sample data to prevent from filter out too many items
