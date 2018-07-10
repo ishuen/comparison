@@ -3,7 +3,7 @@ function sortCardsBy(option) {
   list = document.getElementById('sourcePanel')
   block = document.getElementById('sort')
   buttons = block.getElementsByTagName('button')
-  console.log(buttons)
+  // console.log(buttons)
   let switching = true
   /*Make a loop that will continue until
   no switching has been done:*/

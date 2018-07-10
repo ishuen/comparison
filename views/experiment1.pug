@@ -11,8 +11,9 @@ html
     script.
       let data = !{JSON.stringify(data)}
       var max = data.length
+      let tracking = []
     h1 Please sort the items below to a list with higher taste score on the left and higher health score on the right.
-    form(id='sortingResult', name='sortingResult', action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="div2form('sortingResult')")
+    form(id='sortingResult', name='sortingResult', action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
       table.upper
         tr
           td
@@ -20,6 +21,7 @@ html
               input(type='hidden', name='trial', value=trial)
               input(type='hidden', name='userId', value=userId)
               input(type='hidden', name='startingTime', value=startingTime)
+              input(type='hidden', name='tracking', value=JSON.stringify(tracking))
           td(width='6%')
             table.option
               tr
@@ -70,11 +72,18 @@ html
       var get = function(id){ return document.getElementById(id)}
       dragula([get('sourcePanel'), get('destinationPanel')], {})
       sortCardsBy('alphabet')
+      $('#destinationPanel').bind('DOMSubtreeModified', function() {
+        trackList(tracking)
+      })
       function div2form(id) {
         var form = get(id)
         if (!form) { return }
         var divs = form.getElementsByTagName('div')
         var ndivs = (divs.length - 1) / 2
+        if (ndivs < max) {
+          alert('Please have all cards sorted.')
+          return false
+        }
         var texta = document.createElement('TEXTAREA')
         texta.name = 'sorts'
         texta.style.display = 'none'
@@ -92,5 +101,22 @@ html
         }
         texta.value = temp
         form.appendChild(texta)
+        form.tracking.value = JSON.stringify(tracking)
+      }
+      function trackList (tracking) {
+        let divs = $('#destinationPanel > div')
+        let len = divs.length
+        let arr = []
+        for (let i = 0; i < len; i++) {
+          let item = divs[i].id.slice(4)
+          arr.push(item)
+        }
+        let now = new Date()
+        let temp = {
+          order: arr,
+          time_stamp: now.getTime()
+        }
+        tracking.push(temp)
+        console.log(tracking)
       }
     

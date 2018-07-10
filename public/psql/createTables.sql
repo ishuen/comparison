@@ -47,11 +47,18 @@ CREATE TABLE user_sorting(
     ordering INT NOT NULL,
     user_id serial REFERENCES user_data(user_id));
 
+CREATE TABLE user_sorting_record(
+    starting_time timestamp,
+    end_time timestamp,
+    time_used int,
+    user_id serial REFERENCES user_data(user_id),
+    trial_num integer,
+    record_number serial PRIMARY KEY);
+
 CREATE TABLE user_track(
     exp_id serial REFERENCES sorting_experiment(exp_id),
     food_id varchar REFERENCES hpbdata(id),
     user_id serial REFERENCES user_data(user_id),
-    action VARCHAR(30) NOT NULL,
     time_stamp timestamp,
     ordering INT NOT NULL);
 
