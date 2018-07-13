@@ -16,6 +16,12 @@ class Survey1 {
       callback(res.rows)
     })
   }
+  getNewId (callback) {
+    pool.query('INSERT INTO user_data (age) VALUES ($1) RETURNING user_id', [0], (err, res) => {
+      if (err) throw err
+      callback(res.rows[0]['user_id'])
+    })
+  }
 }
 
 module.exports = new Survey1()

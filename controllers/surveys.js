@@ -23,7 +23,11 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    res.redirect('/survey1/1/1/' + userId)
+    if (userId % 2 === 0) {
+      res.redirect('/survey1/1/1/' + userId)
+    } else {
+      res.redirect('/survey2/1/1/' + userId)
+    }
   }
   /**
   * @api {get} /survey2/:trial/:itemOrder Request the survey question set

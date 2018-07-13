@@ -7,8 +7,8 @@ CREATE TABLE survey_questions(
 
 CREATE TABLE user_data(
     user_id serial PRIMARY KEY,
-    age INT NOT NULL,
-    gender BOOLEAN NOT NULL,
+    age INT,
+    gender BOOLEAN,
     Occupation VARCHAR (50),
     CoR VARCHAR (50),
     Ethnicity VARCHAR (50)); -- Country of Residence -> CoR
