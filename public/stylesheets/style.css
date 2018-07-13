@@ -13,13 +13,15 @@ a {
 }
 
 .card {
-  width: 300px;
-  height: auto;
+  width: 320px;
+  height: 490px;
   font-size: 15pt;
   border: black 3px solid;
   text-align: left;
   padding: 2%;
   background-color: white;
+  margin: 0px;
+  display: inline-block;
 }
 
 .card img {
@@ -28,15 +30,23 @@ a {
 
 .card h3 {
   margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
 }
 
 .scores {
   width: 100%;
-  height: 18%;
+  height: auto;
   text-align: center;
   padding: 0px;
   margin: 0px;
   font-size: 30pt;
+  position: relative;
+  bottom: 0px;
+}
+.scores table {
+  border: 0px;
 }
 
 .taste {
@@ -53,32 +63,35 @@ a {
 }*/
 
 #sourcePanel {
-  /*transform-origin: left top;*/
-  /*transform: scale(0.5);*/
-  width: 90%;
-  height: auto;
+  width: auto;
   margin: 0px;
-  border: black 3px solid;
+  padding: 0px;
+  display:block;
 }
 
 #sourcePanel table {
-  width: 100%;
+  margin: 0px;
+  width: auto;
   height: auto;
   /*border: black 3px solid;*/
 }
 
 #destinationPanel {
-  width: 100%;
+  
+  width: auto;
   /*height: auto;*/
-  height: 270px;
+  height: 560px;
   border: black 3px solid;
+  padding: 0px;
+  margin: 0px;
+  display:block;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .exp {
-  width: 100%;
-  height: 350px;
-  padding: 0px;
-  margin: 0px;
+  transform: scale(0.7);
+  transform-origin: left top;
 }
 
 .expSubmit {
