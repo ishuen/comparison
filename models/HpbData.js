@@ -37,9 +37,16 @@ class HpbData {
     return this.foodData
   }
 
-  randomData (num) {
-    const _ = require('lodash')
-    return _.sampleSize(this.foodData, num)
+  // randomData (num) {
+  //   const _ = require('lodash')
+  //   return _.sampleSize(this.foodData, num)
+  // }
+
+  randomData (num, callback) {
+    pool.query('SELECT * FROM hpbdata ORDER BY random() limit $1', [num], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
   }
 
   randomFixOne (num, itemId) {

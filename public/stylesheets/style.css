@@ -190,6 +190,11 @@ input[type=submit] {
 .likert input[type=radio] {
   width: 100%;
 }
+
+.surSubmit {
+  width: 150px;
+}
+
 input[type=radio] {
   height: 2em;
 }

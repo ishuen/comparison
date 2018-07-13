@@ -104,17 +104,20 @@ class BehavioralRankController {
   randomPath (req, res) {
     const number = req.params.number
     // get more sample data to prevent from filter out too many items
-    let data = BehavioralRank.randomData(number * 3)
-    const defaultPoint = _.sample(data)
-    data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
-    const obj = groupData(data, defaultPoint, number)
-    let tGroup = obj.tGroup
-    let hGroup = obj.hGroup
-    tGroup = _.sortBy(tGroup, [function (o) { return o['T\'c'] }])
-    tGroup = tGroup.reverse()
-    hGroup = _.sortBy(hGroup, [function (o) { return o['RRR\''] }])
-    let resData = tGroup.concat(hGroup)
-    res.send({data: resData, defaultPoint: defaultPoint})
+    // let data = BehavioralRank.randomData(number * 3)
+    BehavioralRank.randomData(number, function (data) {
+      console.log(data)
+      const defaultPoint = _.minBy(data, function (o) { return o['taste'] })
+      data = _.filter(data, function (o) { return o['taste'] >= defaultPoint['taste'] })
+      const obj = groupData(data, defaultPoint, number)
+      let tGroup = obj.tGroup
+      let hGroup = obj.hGroup
+      tGroup = _.sortBy(tGroup, [function (o) { return o['taste'] }])
+      tGroup = tGroup.reverse()
+      hGroup = _.sortBy(hGroup, [function (o) { return o['health'] }])
+      let resData = tGroup.concat(hGroup)
+      res.send({data: resData, defaultPoint: defaultPoint})
+    })
   }
 
   /**
@@ -137,17 +140,30 @@ class BehavioralRankController {
     let dbData = BehavioralRank.randomFixOne(number * 3, itemId)
     let data = dbData.data
     const defaultPoint = dbData.item
-    data = _.filter(data, function (o) { return o['T\'c'] >= defaultPoint['T\'c'] })
+    data = _.filter(data, function (o) { return o['taste'] >= defaultPoint['taste'] })
     data.push(defaultPoint)
     const obj = groupData(data, defaultPoint, number)
     let tGroup = obj.tGroup
     let hGroup = obj.hGroup
-    tGroup = _.sortBy(tGroup, [function (o) { return o['T\'c'] }])
+    tGroup = _.sortBy(tGroup, [function (o) { return o['taste'] }])
     tGroup = tGroup.reverse()
-    hGroup = _.sortBy(hGroup, [function (o) { return o['RRR\''] }])
+    hGroup = _.sortBy(hGroup, [function (o) { return o['health'] }])
     let resData = tGroup.concat(hGroup)
     // res.send({data: resData, defaultPoint: defaultPoint})
     res.render('behavioralRank', {data: resData, defaultPoint: defaultPoint})
+  }
+
+  pathGivenSet (data) {
+    let defaultPoint = _.minBy(data, function (o) { return o['taste'] })
+    // console.log(defaultPoint.foodname, defaultPoint['taste'] , defaultPoint['health'])
+    const obj = groupData(data, defaultPoint, data.length)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    tGroup = _.sortBy(tGroup, [function (o) { return o['taste'] }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return o['health'] }])
+    let resData = tGroup.concat(hGroup)
+    return {data: resData, defaultPoint: defaultPoint}
   }
 }
 
@@ -157,7 +173,11 @@ function groupData (data, mid, number) {
   let tGroup = []
   let hGroup = []
   for (let item of data) {
-    if (item['RRR\''] >= mid['RRR\'']) {
+    if (item['health'] >= mid['health'] && item['taste'] <= mid['taste']) {
+      hGroup.push(item)
+    } else if (item['health'] <= mid['health'] && item['taste'] >= mid['taste']) {
+      tGroup.push(item)
+    } else if (item['health'] >= item['taste']) {
       hGroup.push(item)
     } else {
       tGroup.push(item)
@@ -170,6 +190,10 @@ function groupData (data, mid, number) {
 function checkLength (tGroup, hGroup, mid, number) {
   // mid point is already grouped into hGroup
   // if the result list is too long, delete some items
+  if (tGroup.length + hGroup.length <= number) {
+    console.log(tGroup.length, hGroup.length)
+    return {tGroup: tGroup, hGroup: hGroup}
+  }
   let tMax = 0
   if (number % 2 === 1) {
     tMax = (number - 1) / 2

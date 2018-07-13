@@ -1,4 +1,7 @@
-const Experiments = require('../models/HpbData')
+// const Experiments = require('../models/Experiments')
+const HpbData = require('../models/HpbData')
+const heuristic = require('./behavioralRank')
+// const pareto = require('./paretoFrontier')
 const _ = require('lodash')
 class ExperimentsController {
   /**
@@ -89,7 +92,7 @@ class ExperimentsController {
   showItems (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
-    Experiments.getTrialSet(trial, function (items) {
+    HpbData.getTrialSet(trial, function (items) {
       _.map(items, function (i) {
         i.path = i.image.toString('utf8')
       })
@@ -118,11 +121,16 @@ class ExperimentsController {
   showItemsExp2 (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
-    Experiments.getTrialSet(trial, function (items) {
+    const algorithm = req.params.alg
+    HpbData.getTrialSet(trial, function (items) {
       _.map(items, function (i) {
         i.path = i.image.toString('utf8')
       })
-      console.log(items)
+      let obj = sortByAssignedAlgo(items, algorithm)
+      items = obj.data
+      let defaultPoint = obj.defaultPoint
+      items = rondo(items, defaultPoint)
+      console.log(items.length)
       // res.send({data: items})
       let now = new Date()
       res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
@@ -143,3 +151,21 @@ class ExperimentsController {
 }
 
 module.exports = new ExperimentsController()
+
+function rondo (data, defaultPoint) {
+  let index = _.findIndex(data, defaultPoint)
+  let middleFirst = data.slice(index)
+  let reversedArr = data.slice(0, index) // left -- taste
+  middleFirst = _.concat(middleFirst, reversedArr)
+  return middleFirst
+}
+
+function sortByAssignedAlgo (items, algorithm) {
+  let obj = {}
+  if (algorithm === 'heuristic') {
+    obj = heuristic.pathGivenSet(items)
+  } else if (algorithm === 'pareto') {
+
+  }
+  return obj
+}
