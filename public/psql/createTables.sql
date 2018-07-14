@@ -63,6 +63,15 @@ CREATE TABLE user_track(
     time_stamp timestamp with time zone,
     ordering INT NOT NULL);
 
+CREATE TABLE user_choice(
+    user_id serial REFERENCES user_data(user_id),
+    starting_time timestamp with time zone,
+    time_used int,
+    end_time timestamp with time zone,
+    food_id varchar REFERENCES hpbdata(id),
+    trial_num integer,
+    choice_id serial PRIMARY KEY);
+
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,
 --     high_score INT NOT NULL,

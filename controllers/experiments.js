@@ -144,11 +144,22 @@ class ExperimentsController {
     console.log(req.body)
     let picked = JSON.parse(req.body.picked)
     console.log(picked)
-    const trial = Number(req.body.trial) + 1
+    let trial = Number(req.body.trial)
     const userId = req.body.userId
     let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    let start = new Date(Number(req.body.startingTime))
+    const timeUsed = now.getTime() - start // msec
     console.log('timeUsed', timeUsed)
+    let details = {
+      userId: userId,
+      trial: trial,
+      item: picked,
+      startingTime: start,
+      endTime: now,
+      timeUsed: timeUsed
+    }
+    Experiments.insertUserChoice(details, function (out) { console.log(out) })
+    trial++
     res.redirect('/survey5/' + trial + '/' + userId) // go to post-survey
   }
 }

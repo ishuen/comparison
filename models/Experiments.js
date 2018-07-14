@@ -7,6 +7,7 @@ class Experiments {
       callback(res.rows)
     })
   }
+
   insertQnAns (arr, callback) {
     console.log(arr)
     let qnId = arr.map(x => x[0])
@@ -40,6 +41,7 @@ class Experiments {
       callback(res.rows)
     })
   }
+
   insertDemog (user, callback) {
     console.log(user)
     let arr = [user.Age, user.gender, user.Occupation, user['Country of Residence'], user.Ethnicity, user.userId]
@@ -49,6 +51,7 @@ class Experiments {
       callback(res.rows)
     })
   }
+
   userSorting (details, callback) {
     let userId = details.userId
     let expData = [Number(userId), Number(details.trial)]
@@ -77,6 +80,7 @@ class Experiments {
       callback(done)
     })
   }
+
   getCustomSet (userId, trial, callback) {
     let input = [userId, trial]
     pool.query('SELECT * FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) WHERE user_id = $1 AND trial_num = $2', input, (err, res) => {
@@ -95,6 +99,14 @@ class Experiments {
         data.push(temp)
       })
       callback(data)
+    })
+  }
+
+  insertUserChoice (details, callback) {
+    let input = [details.userId, details.startingTime, details.endTime, details.timeUsed, details.trial, details.item.foodId]
+    pool.query('INSERT INTO user_choice (user_id, starting_time, end_time, time_used, trial_num, food_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING choice_id', input, (err, res) => {
+      if (err) throw err
+      callback(res.rows)
     })
   }
 }
