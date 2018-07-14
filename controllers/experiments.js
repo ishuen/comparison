@@ -92,12 +92,8 @@ class ExperimentsController {
   showItems (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
-    HpbData.getTrialSet(trial, function (items) {
-      _.map(items, function (i) {
-        i.path = i.image.toString('utf8')
-      })
+    Experiments.getCustomSet(userId, trial, function (items) {
       console.log(items)
-      // res.send({data: items})
       let now = new Date()
       res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
     })
@@ -133,9 +129,6 @@ class ExperimentsController {
     const userId = req.params.userId
     const algorithm = req.params.alg
     HpbData.getTrialSet(trial, function (items) {
-      _.map(items, function (i) {
-        i.path = i.image.toString('utf8')
-      })
       let obj = sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint

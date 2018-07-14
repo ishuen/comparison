@@ -77,6 +77,26 @@ class Experiments {
       callback(done)
     })
   }
+  getCustomSet (userId, trial, callback) {
+    let input = [userId, trial]
+    pool.query('SELECT * FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) WHERE user_id = $1 AND trial_num = $2', input, (err, res) => {
+      if (err) throw err
+      // console.log(res.rows)
+      let data = []
+      _.map(res.rows, function (i) {
+        i.path = i.image.toString('utf8')
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.new_health,
+          taste: i.new_taste,
+          path: i.path
+        }
+        data.push(temp)
+      })
+      callback(data)
+    })
+  }
 }
 module.exports = new Experiments()
 

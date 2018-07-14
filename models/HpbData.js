@@ -1,4 +1,5 @@
 const pool = require('../db')
+const _ = require('lodash')
 class HpbData {
   constructor () {
     const fs = require('fs')
@@ -65,19 +66,23 @@ class HpbData {
   }
 
   getTrialSet (trialNum, callback) {
-    let itemSet = []
-    if (Number(trialNum) === 1) {
-      itemSet = itemSet.concat(itemSetList[0])
-    } else if (Number(trialNum) === 2) {
-      itemSet = itemSet.concat(itemSetList[1])
-    } else if (Number(trialNum) === 3) {
-      itemSet = itemSet.concat(itemSetList[2])
-    } else if (Number(trialNum) === 4) {
-      itemSet = itemSet.concat(itemSetList[3])
-    }
+    trialNum = Number(trialNum)
+    let itemSet = itemSetList[trialNum - 1]
     pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemSet], (err, res) => {
       if (err) throw err
-      callback(res.rows)
+      let data = []
+      _.map(res.rows, function (i) {
+        i.path = i.image.toString('utf8')
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.health,
+          taste: i.taste,
+          path: i.path
+        }
+        data.push(temp)
+      })
+      callback(data)
     })
   }
 
