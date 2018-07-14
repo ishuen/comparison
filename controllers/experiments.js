@@ -1,4 +1,4 @@
-// const Experiments = require('../models/Experiments')
+const Experiments = require('../models/Experiments')
 const HpbData = require('../models/HpbData')
 const heuristic = require('./behavioralRank')
 // const pareto = require('./paretoFrontier')
@@ -103,18 +103,28 @@ class ExperimentsController {
     })
   }
   submitSorting (req, res) {
-    console.log(req.body)
     let sorts = JSON.parse('[' + req.body.sorts + ']')
     let ordering = []
     for (let item of sorts) {
       ordering.push(item.foodId)
     }
     console.log(ordering)
-    const trial = Number(req.body.trial) + 1
+    let trial = Number(req.body.trial)
     const userId = req.body.userId
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     console.log('timeUsed', timeUsed)
+    let details = {
+      ordering: ordering,
+      tracking: JSON.parse('[' + req.body.tracking + ']'),
+      trial: trial,
+      userId: userId,
+      timeUsed: timeUsed,
+      startingTime: req.body.startingTime,
+      endTime: now
+    }
+    Experiments.userSorting(details, function (out) { console.log(out) })
+    trial++
     res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
   }
 
