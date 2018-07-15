@@ -23,7 +23,11 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    res.redirect('/survey1/1/1/' + userId)
+    if (userId % 2 === 0) {
+      res.redirect('/survey1/1/1/' + userId)
+    } else {
+      res.redirect('/survey2/1/1/' + userId)
+    }
   }
   /**
   * @api {get} /survey2/:trial/:itemOrder Request the survey question set
@@ -127,13 +131,13 @@ class Survey1Controller {
   agreementSubmit (req, res) {
     console.log(req.body)
     let trial = Number(req.body.trial)
+    let qn = getQnAns(req.body)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
     let itemOrder = Number(req.body.itemOrder) + 1
     const userId = req.body.userId
     if (itemOrder === 10) { // last trial + 1
       res.redirect('/experiment2/' + trial + '/' + userId) // go to experiment
     } else {
-      let qn = getQnAns(req.body)
-      Experiments.insertQnAns(qn, function (done) { console.log(done) })
       res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
     }
   }
@@ -241,25 +245,26 @@ class Survey1Controller {
   scoreSubmit (req, res) {
     console.log(req.body)
     let trial = Number(req.body.trial)
-    let itemOrder = Number(req.body.itemOrder) + 1
+    let itemOrder = Number(req.body.itemOrder)
     const userId = req.body.userId
-    if (itemOrder === 11) { // last trial + 1
-      res.redirect('/experiment1/' + trial + '/' + userId) // go to experiment
-    } else {
-      let obj = {
-        food_id: req.body.itemId,
-        new_health: req.body.health,
-        new_taste: req.body.taste,
-        user_id: req.body.userId,
-        trial_num: trial
-      }
-      let qn = getQnAns(req.body)
-      Experiments.insertQnAns(qn, function (done) { console.log(done) })
-      Experiments.addUserDefinedScores(obj, function (done) {
-        console.log(done)
-        if (done) res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
-      })
+    let obj = {
+      food_id: req.body.itemId,
+      new_health: req.body.health,
+      new_taste: req.body.taste,
+      user_id: req.body.userId,
+      trial_num: trial
     }
+    let qn = getQnAns(req.body)
+    Experiments.insertQnAns(qn, function (done) { console.log(done) })
+    Experiments.addUserDefinedScores(obj, function (done) {
+      console.log(done)
+      itemOrder++
+      if (itemOrder === 11) {
+        res.redirect('/experiment1/' + trial + '/' + userId) // go to experiment
+      } else {
+        res.redirect('/survey1/' + trial + '/' + itemOrder + '/' + userId)
+      }
+    })
   }
 
   showDemographics (req, res) {

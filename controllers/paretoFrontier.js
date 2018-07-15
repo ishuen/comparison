@@ -80,14 +80,100 @@ class ParetoFrontierController {
     // res.send({data: resData})
     res.render('pareto', {data: resData, defaultPoint: defaultPoint})
   }
+
+  traditionalPath (req, res) {
+    const number = req.params.number
+    ParetoFrontier.randomData(number, function (data) {
+      console.log(data.length)
+      let location = []
+      for (let index in data) {
+        let temp = [parseFloat(data[index]['health']), parseFloat(data[index]['taste'])]
+        location.push(temp)
+      }
+      // console.log(location)
+      let result = pf.getParetoFrontier(location)
+      console.log(result)
+      let resData = reorderData(result, data)
+      let defaultPoint = resData[Math.floor(resData.length / 2)]
+      res.send({data: resData, defaultPoint: defaultPoint})
+    })
+  }
+
+  relaxedPath (req, res) {
+    const number = req.params.number
+    ParetoFrontier.randomData(number, function (data) {
+      let location = []
+      for (let index in data) {
+        let temp = [parseFloat(data[index]['health']), parseFloat(data[index]['taste'])]
+        location.push(temp)
+      }
+      // console.log(location)
+      let result = []
+      let count = 0
+      while (count < 10 && result.length < 1 / 2 * number) {
+        let temp = pf.getParetoFrontier(location)
+        result = _.concat(result, temp)
+        result = _.sortBy(result, function (r) { return r[0] })
+        console.log(result)
+        location = _.filter(location, function (loc) {
+          return (_.findIndex(temp, {'0': loc[0], '1': loc[1]}) === -1)
+        })
+        count++
+      }
+      let resData = reorderData(result, data)
+      let defaultPoint = resData[Math.floor(resData.length / 2)]
+      res.send({data: resData, defaultPoint: defaultPoint, original: data})
+    })
+  }
+
+  relaxedPathGivenSet (data) {
+    let location = []
+    for (let index in data) {
+      let temp = [parseFloat(data[index]['health']), parseFloat(data[index]['taste'])]
+      location.push(temp)
+    }
+    const proportion = 1 / 2 // depends on how many data points have the same values
+    let maxLen = data.length
+    let result = []
+    let count = 0
+    while (count < maxLen && result.length < proportion * maxLen) {
+      let temp = pf.getParetoFrontier(location)
+      result = _.concat(result, temp)
+      result = _.sortBy(result, function (r) { return r[0] })
+      console.log(result)
+      location = _.filter(location, function (loc) {
+        return (_.findIndex(temp, {'0': loc[0], '1': loc[1]}) === -1)
+      })
+      count++
+    }
+    let resData = reorderData(result, data)
+    let defaultPoint = resData[Math.floor(resData.length / 2)]
+    return {data: resData, defaultPoint: defaultPoint}
+  }
 }
+
+// function reorderData (locations, data) {
+//   let result = []
+//   for (let i in locations) {
+//     let index = _.findIndex(data, ['health', locations[i][0], 'taste', locations[i][1]])
+//     result.push(data[index])
+//   }
+//   return result
+// }
 
 function reorderData (locations, data) {
   let result = []
-  for (let i in locations) {
-    let index = _.findIndex(data, ['RRR\'', locations[i][0], 'T\'c', locations[i][1]])
-    result.push(data[index])
+  for (let loc of locations) {
+    let index = 0
+    while (index !== -1) {
+      index = _.findIndex(data, {'health': loc[0], 'taste': loc[1]}, index)
+      if (index !== -1) {
+        result.push(data[index])
+        index = index + 1
+      }
+    }
   }
+  console.log(result.length)
   return result
 }
 

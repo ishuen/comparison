@@ -1,4 +1,7 @@
-const Experiments = require('../models/HpbData')
+const Experiments = require('../models/Experiments')
+const HpbData = require('../models/HpbData')
+const heuristic = require('./behavioralRank')
+const pareto = require('./paretoFrontier')
 const _ = require('lodash')
 class ExperimentsController {
   /**
@@ -89,31 +92,94 @@ class ExperimentsController {
   showItems (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
-    Experiments.getTrialSet(trial, function (items) {
-      _.map(items, function (i) {
-        i.path = i.image.toString('utf8')
-      })
+    Experiments.getCustomSet(userId, trial, function (items) {
       console.log(items)
-      // res.send({data: items})
       let now = new Date()
       res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
   submitSorting (req, res) {
-    console.log(req.body)
     let sorts = JSON.parse('[' + req.body.sorts + ']')
     let ordering = []
     for (let item of sorts) {
       ordering.push(item.foodId)
     }
     console.log(ordering)
-    const trial = Number(req.body.trial) + 1
+    let trial = Number(req.body.trial)
     const userId = req.body.userId
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     console.log('timeUsed', timeUsed)
+    let details = {
+      ordering: ordering,
+      tracking: JSON.parse('[' + req.body.tracking + ']'),
+      trial: trial,
+      userId: userId,
+      timeUsed: timeUsed,
+      startingTime: req.body.startingTime,
+      endTime: now
+    }
+    Experiments.userSorting(details, function (out) { console.log(out) })
+    trial++
     res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
+  }
+
+  showItemsExp2 (req, res) {
+    const trial = req.params.trial
+    const userId = req.params.userId
+    const algorithm = req.params.alg
+    HpbData.getTrialSet(trial, function (items) {
+      let obj = sortByAssignedAlgo(items, algorithm)
+      items = obj.data
+      let defaultPoint = obj.defaultPoint
+      items = rondo(items, defaultPoint)
+      console.log(items.length)
+      // res.send({data: items})
+      let now = new Date()
+      res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+    })
+  }
+
+  submitPicked (req, res) {
+    console.log(req.body)
+    let picked = JSON.parse(req.body.picked)
+    console.log(picked)
+    let trial = Number(req.body.trial)
+    const userId = req.body.userId
+    let now = new Date()
+    let start = new Date(Number(req.body.startingTime))
+    const timeUsed = now.getTime() - start // msec
+    console.log('timeUsed', timeUsed)
+    let details = {
+      userId: userId,
+      trial: trial,
+      item: picked,
+      startingTime: start,
+      endTime: now,
+      timeUsed: timeUsed
+    }
+    Experiments.insertUserChoice(details, function (out) { console.log(out) })
+    trial++
+    res.redirect('/survey5/' + trial + '/' + userId) // go to post-survey
   }
 }
 
 module.exports = new ExperimentsController()
+
+function rondo (data, defaultPoint) {
+  let index = _.findIndex(data, defaultPoint)
+  let middleFirst = data.slice(index)
+  let reversedArr = data.slice(0, index) // left -- taste
+  middleFirst = _.concat(middleFirst, reversedArr)
+  return middleFirst
+}
+
+function sortByAssignedAlgo (items, algorithm) {
+  let obj = {}
+  if (algorithm === 'heuristic') {
+    obj = heuristic.pathGivenSet(items)
+  } else if (algorithm === 'pareto') {
+    obj = pareto.relaxedPathGivenSet(items)
+  }
+  return obj
+}

@@ -1,3 +1,4 @@
+SET timezone = 'UTC+8';
 CREATE TABLE survey_questions(
     qn_id serial PRIMARY KEY,
     qn_set INT NOT NULL,
@@ -7,8 +8,8 @@ CREATE TABLE survey_questions(
 
 CREATE TABLE user_data(
     user_id serial PRIMARY KEY,
-    age INT NOT NULL,
-    gender BOOLEAN NOT NULL,
+    age INT,
+    gender BOOLEAN,
     Occupation VARCHAR (50),
     CoR VARCHAR (50),
     Ethnicity VARCHAR (50)); -- Country of Residence -> CoR
@@ -47,13 +48,29 @@ CREATE TABLE user_sorting(
     ordering INT NOT NULL,
     user_id serial REFERENCES user_data(user_id));
 
+CREATE TABLE user_sorting_record(
+    starting_time timestamp with time zone,
+    end_time timestamp with time zone,
+    time_used int,
+    user_id serial REFERENCES user_data(user_id),
+    trial_num integer,
+    record_number serial PRIMARY KEY);
+
 CREATE TABLE user_track(
-    exp_id serial REFERENCES sorting_experiment(exp_id),
+    record_number serial REFERENCES user_sorting_record(record_number),
     food_id varchar REFERENCES hpbdata(id),
     user_id serial REFERENCES user_data(user_id),
-    action VARCHAR(30) NOT NULL,
-    time_stamp timestamp,
+    time_stamp timestamp with time zone,
     ordering INT NOT NULL);
+
+CREATE TABLE user_choice(
+    user_id serial REFERENCES user_data(user_id),
+    starting_time timestamp with time zone,
+    time_used int,
+    end_time timestamp with time zone,
+    food_id varchar REFERENCES hpbdata(id),
+    trial_num integer,
+    choice_id serial PRIMARY KEY);
 
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,
