@@ -1,7 +1,7 @@
 const Experiments = require('../models/Experiments')
 const HpbData = require('../models/HpbData')
 const heuristic = require('./behavioralRank')
-// const pareto = require('./paretoFrontier')
+const pareto = require('./paretoFrontier')
 const _ = require('lodash')
 class ExperimentsController {
   /**
@@ -179,7 +179,7 @@ function sortByAssignedAlgo (items, algorithm) {
   if (algorithm === 'heuristic') {
     obj = heuristic.pathGivenSet(items)
   } else if (algorithm === 'pareto') {
-
+    obj = pareto.relaxedPathGivenSet(items)
   }
   return obj
 }
