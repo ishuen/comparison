@@ -1,3 +1,5 @@
+const pool = require('../db')
+const _ = require('lodash')
 class HpbData {
   constructor () {
     const fs = require('fs')
@@ -7,7 +9,7 @@ class HpbData {
     var csvData = []
     var count = 0
     let keys = []
-    fs.createReadStream(path.join(__dirname, '/../public/csv/output--hpb.csv'))
+    fs.createReadStream(path.join(__dirname, '/../public/csv/1700Food.csv'))
     .pipe(parse({delimiter: ':'}))
     .on('data', function (array) {
       var csvrow = array[0].split(',')
@@ -36,9 +38,16 @@ class HpbData {
     return this.foodData
   }
 
-  randomData (num) {
-    const _ = require('lodash')
-    return _.sampleSize(this.foodData, num)
+  // randomData (num) {
+  //   const _ = require('lodash')
+  //   return _.sampleSize(this.foodData, num)
+  // }
+
+  randomData (num, callback) {
+    pool.query('SELECT * FROM hpbdata ORDER BY random() limit $1', [num], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
   }
 
   randomFixOne (num, itemId) {
@@ -48,6 +57,48 @@ class HpbData {
     console.log(item)
     return {data: data, item: item}
   }
+
+  getOneItem (itemId, callback) {
+    pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
+
+  getTrialSet (trialNum, callback) {
+    trialNum = Number(trialNum)
+    let itemSet = itemSetList[trialNum - 1]
+    pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemSet], (err, res) => {
+      if (err) throw err
+      let data = []
+      _.map(res.rows, function (i) {
+        i.path = i.image.toString('utf8')
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.health,
+          taste: i.taste,
+          path: i.path
+        }
+        data.push(temp)
+      })
+      callback(data)
+    })
+  }
+
+  getOneItemFromList (trialNum, itemOrder, callback) {
+    let itemId = itemSetList[trialNum - 1][itemOrder - 1]
+    pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
+      if (err) throw err
+      // console.log(res.rows)
+      callback(res.rows)
+    })
+  }
 }
+
+var itemSetList = [[2734, 1340, 1587, 1413, 1888, 2555, 2447, 1589, 1517, 1511],
+[2046, 1738, 713, 1289, 104, 1147, 2862, 1298, 912, 1302],
+[1394, 1399, 878, 448, 1886, 771, 101, 124, 831, 1659],
+[2385, 114, 1438, 758, 516, 615, 1040, 2745, 1436, 966]]
 
 module.exports = new HpbData()

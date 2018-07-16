@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "cross-env NODE_ENV=dev node app.js",
-    "prod": "cross-env NODE_ENV=prod node app.js",
-    "start-u": "NODE_ENV=dev node app.js",
-    "prod-u": "NODE_ENV=prod node app.js",
+    "start": "cross-env NODE_ENV=prod node app.js",
+    "dev": "cross-env NODE_ENV=dev node app.js",
+    "start-u": "NODE_ENV=prod node app.js",
+    "dev-u": "NODE_ENV=dev node app.js",
     "standard": "standard --verbose | snazzy",
     "precommit": "npm run standard",
     "apidoc": "apidoc -i ./controllers -o public/apidoc/"
@@ -19,6 +19,7 @@
     "cross-env": "^5.1.3",
     "csv-parse": "~2.0.4",
     "debug": "~2.6.3",
+    "dragula": "3.7.2",
     "express": "~4.15.2",
     "grunt-apidoc":"~0.11",
     "lodash":"~4.17.5",

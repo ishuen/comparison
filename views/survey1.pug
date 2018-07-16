@@ -1,14 +1,84 @@
 doctype html
 html
   head
-    title= behavioralRank
+    title= 'experiment 1 - presurvey'
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
-    script(src='/scripts/questionSets.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
+      let item = !{JSON.stringify(item)}
+      let trial = !{JSON.stringify(trial)}
+    - var foodName = item[0].foodname
+    - var taste = item[0]['taste']
+    - var health = item[0]['health']
+    - var imgPath = item[0].path
     - var setDesc = data[0].description // index 0 = display num 0
+    h1 Understanding Food Items
+    div(class='progress')
+      div(class='progress-bar' role='progressbar' aria-valuenow='70' aria-valuemin='0' aria-valuemax='100' style='width:' + itemOrder + '0%') Understanding Food Items #{itemOrder} / 10
+    h3 We will show you multiple cards, each representing a food item. The scores range from 1 to 100.
+    div.centerDisplay.card
+      h3 #{foodName}
+      img(src= imgPath alt= foodName)
+      table.scores
+        tr
+          th.taste Taste
+          th.health Health
+        tr
+          td.taste #{taste}
+          td.health #{health}
     h3 #{setDesc}
+    form(name='foodForm', action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post', onsubmit='return validateScore()')
+      input(type='hidden', name='trial', value=trial)
+      input(type='hidden', name='itemOrder', value=itemOrder)
+      input(type='hidden', name='itemId', value=item[0].id)
+      input(type='hidden', name='userId', value=userId)
+      table.likert
+        tr
+          th
+          th Strongly disagree
+          th Disagree
+          th Neither agree nor disagree
+          th Agree
+          th Strongly agree
+        - var firstSet = data.filter(d => d.qn_set == 1)
+        - firstSet = firstSet.slice(1)
+        - var count = 0
+        each qn in firstSet
+          - count++
+          tr
+          td #{qn.description}
+          each val in [1, 2, 3, 4, 5]
+            td
+              input(name='qn' + qn.qn_id, type='radio', value= val)
+      - var secondSet = data.filter(d => d.qn_set == 2)
+      - var setDesc2 = secondSet[0].description
+      h3 #{setDesc2}
+      p #{secondSet[1].description}
+      input(type='text', name= 'taste', value= taste)
+      p #{secondSet[2].description}
+      input(type='text', name='health', value= health)
+      br
+      p #{secondSet[3].description}
+      textarea(name='qn' + secondSet[3].qn_id, rows='4', style='width: 80%;')
+      br
+      br
+      button(class='surSubmit', type='submit', value='submit') Submit
     script.
-      likertTable(data.slice(1))
+      function validateScore () {
+        let x = document.forms['foodForm']['taste'].value
+        let y = document.forms['foodForm']['health'].value;
+        if (x == '' || y == '') {
+          alert('The score must be filled out.')
+          return false
+        } else if ( x > 100 || y > 100 || x < 1 || y < 1) {
+          alert('The score must range from 1 to 100.')
+          return false
+        } else if (!Number.isInteger(Number(x)) || !Number.isInteger(Number(y))) {
+          console.log(typeof x)
+          alert('The score must be integer.')
+          return false
+        }
+      }

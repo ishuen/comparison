@@ -4,10 +4,10 @@
     "port": "3000"
   },
   "db": {
-    "user": "web",
-    "host": "localhost",
-    "database": "foods",
-    "pAsswOrd": "web123",
+    "user": "xidfbtjh",
+    "host": "pellefant.db.elephantsql.com",
+    "database": "xidfbtjh",
+    "pAsswOrd": "7J5XCj1AzO0wXDonbaZkxyQMpb5ItGpa",
     "port": "5432",
     "max": 10, // max number of clients in the pool
     "idleTimeoutMillis": 3000

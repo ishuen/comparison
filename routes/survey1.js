@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
-const survey1 = require('../controllers/survey1')
+const surveys = require('../controllers/surveys')
 
-router.get('/:num', survey1.showQuestions)
-
+router.get('/:trial/:itemOrder/:userId', surveys.showQuestionsModValue)
+router.post('/:trial/:itemOrder/:userId', surveys.scoreSubmit)
 module.exports = router

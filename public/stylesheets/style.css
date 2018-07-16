@@ -1,8 +1,217 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+}
+
+.centerDisplay {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.card {
+  width: 320px;
+  height: 490px;
+  font-size: 15pt;
+  border: black 3px solid;
+  text-align: left;
+  padding: 2%;
+  background-color: white;
+  margin: 0px;
+  display: inline-block;
+}
+
+.card img {
+  width: 96%;
+}
+
+.card h3 {
+  margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
+}
+
+.scores {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-size: 30pt;
+  position: relative;
+  bottom: 0px;
+}
+.scores table {
+  border: 0px;
+}
+
+.scores th {
+  width: 50%;
+}
+
+.taste {
+  color: blue;
+  text-align: center;
+}
+
+.health {
+  color: red;
+  text-align: center;
+}
+/*.smallCard {
+}
+*//*.smallCard:hover {
+  transform: scale(1.5);
+}*/
+
+#sourcePanel {
+  float: left;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  display: inline-block;
+  overflow: visible;
+}
+#sortingResult {
+  width: 140%;
+  margin: 0px;
+  padding: 0px;
+}
+.upper table {
+  width: 140%;
+  padding:0px;
+  margin:0px;
+  /*table-layout: fixed;*/
+}
+.upper td{
+  padding:0px;
+  margin:0px;
+}
+.lower {
+  width: 140%;
+}
+.lower td{
+  padding-top: 30px;
+  padding-left: 0px;
+  padding-right: 0px;
+  vertical-align: top;
+}
+#destinationPanel {
+  width: 100%;
+  /*width: 1000px;*/
+  /*height: auto;*/
+  height: 560px;
+  border: black 3px solid;
+  padding: 0px;
+  margin: 0px;
+  display: block;
+  overflow-x: scroll;
+  white-space: nowrap;
+  background-color: #D8D8D8;
+}
+
+.exp {
+  transform: scale(0.65);
+  transform-origin: left top;
+}
+.exp h1 {
+  width: 150%;
+  text-align: center;
+}
+.expSubmit {
+  float: right;
+  width: 100%;
+}
+.resetSort {
+  padding-top: 30px;
+  float: right;
+  width: 100%;
+  background-color: red;
+}
+button {
+  width: 100%;
+  font-size: 20pt;
+  border: none;
+  padding: 15px 20px;
+}
+.sort {
+  overflow: visible;
+}
+.sort th {
+  font-size: 30pt;
+}
+.sort table {
+  float: left;
+  display: inline;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.sort button {
+  width: 100%;
+  font-size: 20pt;
+  border: black 2px solid;
+  padding: 15px 20px;
+  background-color: white;
+  color: black;
+}
+.option {
+  padding: 0px;
+}
+input[type=submit] {
+  font-size: 20pt;
+  border: none;
+  padding: 15px 20px;
+}
+
+.likert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+}
+
+.likert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+
+.likert th {
+  margin: 0px;
+  padding: 0px;
+  border: black 3px solid;
+}
+
+.likert input[type=radio] {
+  width: 100%;
+}
+
+.surSubmit {
+  width: 150px;
+}
+
+input[type=radio] {
+  height: 2em;
+}
+
+span {
+  margin: 15px;
+}
+
+.indexButton {
+  width: 100%;
+  text-align: center;
+}
+.indexButton button{
+  width: 30%;
+  cursor: pointer;
+  text-align: center;
+  padding: auto;
+  margin-left: 35%;
+  margin-right: 35%;
 }
