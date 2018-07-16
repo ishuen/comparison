@@ -9,7 +9,7 @@ class HpbData {
     var csvData = []
     var count = 0
     let keys = []
-    fs.createReadStream(path.join(__dirname, '/../public/csv/output--hpb.csv'))
+    fs.createReadStream(path.join(__dirname, '/../public/csv/1700Food.csv'))
     .pipe(parse({delimiter: ':'}))
     .on('data', function (array) {
       var csvrow = array[0].split(',')

@@ -1,12 +1,12 @@
-ALTER TABLE hpbdata
-ADD COLUMN image bytea;
+-- ALTER TABLE hpbdata
+-- ADD COLUMN image bytea;
 
 UPDATE hpbdata SET image = '/images/Thosai.jpg' WHERE id = '2734';
 UPDATE hpbdata SET image = '/images/Idli.jpg' WHERE id = '1340';
 UPDATE hpbdata SET image = '/images/Mee rebus.jpg' WHERE id = '1587';
 UPDATE hpbdata SET image = '/images/Butterfly fritter.jpg' WHERE id = '448';
-UPDATE hpbdata SET image = '/images/Kopi O.jpg' WHERE id = '1413';
-UPDATE hpbdata SET image = '/images/Milo drink less sweet.jpg' WHERE id = '1626';
+-- UPDATE hpbdata SET image = '/images/Kopi O.jpg' WHERE id = '1413';
+-- UPDATE hpbdata SET image = '/images/Milo drink less sweet.jpg' WHERE id = '1626';
 UPDATE hpbdata SET image = '/images/Dim sum you tiao.jpg' WHERE id = '935';
 UPDATE hpbdata SET image = '/images/Dim sum siew mai steamed.jpg' WHERE id = '933';
 UPDATE hpbdata SET image = '/images/Steamed mantou.jpg' WHERE id = '2549';
@@ -26,7 +26,7 @@ UPDATE hpbdata SET image = '/images/Chapati.jpg' WHERE id = '515';
 UPDATE hpbdata SET image = '/images/Chinese rojak.jpg' WHERE id = '713';
 UPDATE hpbdata SET image = '/images/Hokkien mee.jpg' WHERE id = '1289';
 UPDATE hpbdata SET image = '/images/Fried rice with lap cheong and salted fish.jpg' WHERE id = '1147';
-UPDATE hpbdata SET image = '/images/Bak kut teh soup only.jpg' WHERE id = '104';
+-- UPDATE hpbdata SET image = '/images/Bak kut teh soup only.jpg' WHERE id = '104';
 UPDATE hpbdata SET image = '/images/Hong Kong wanton noodles dry.jpg' WHERE id = '1298';
 UPDATE hpbdata SET image = '/images/Vegetarian fried bee hoon.jpg' WHERE id = '2862';
 UPDATE hpbdata SET image = '/images/Jemput pisang.jpg' WHERE id = '1369';
@@ -41,7 +41,7 @@ UPDATE hpbdata SET image = '/images/Curry puff chicken.jpg' WHERE id = '878';
 UPDATE hpbdata SET image = '/images/Bak kua pork with lean and fat.jpg' WHERE id = '101';
 UPDATE hpbdata SET image = '/images/Pandan chiffon cake.jpg' WHERE id = '1886';
 UPDATE hpbdata SET image = '/images/Mee siam.jpg' WHERE id = '1589';
-UPDATE hpbdata SET image = '/images/Laksa.jpg' WHERE id = '1442';
+-- UPDATE hpbdata SET image = '/images/Laksa.jpg' WHERE id = '1442';
 UPDATE hpbdata SET image = '/images/Lor mee.jpg' WHERE id = '1517';
 UPDATE hpbdata SET image = '/images/Lontong goreng.jpg' WHERE id = '1511';
 UPDATE hpbdata SET image = '/images/Chilli crab.jpg' WHERE id = '701';
@@ -54,5 +54,5 @@ UPDATE hpbdata SET image = '/images/Chicken porridge.jpg' WHERE id = '615';
 UPDATE hpbdata SET image = '/images/Fish ball noodles soup.jpg' WHERE id = '1040';
 UPDATE hpbdata SET image = '/images/Tom yam noodle soup.jpg' WHERE id = '2745';
 UPDATE hpbdata SET image = '/images/Kway chap.jpg' WHERE id = '1436';
-UPDATE hpbdata SET image = '/images/Duck with salted vegetable soup.jpg' WHERE id = '966';
+-- UPDATE hpbdata SET image = '/images/Duck with salted vegetable soup.jpg' WHERE id = '966';
 UPDATE hpbdata SET image = '/images/Nasi goreng.jpg' WHERE id = '1715';
