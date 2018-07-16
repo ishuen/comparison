@@ -7,14 +7,9 @@ a {
   color: #00B7FF;
 }
 
-.centerDisplay {
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .card {
   width: 320px;
-  height: 490px;
+  height: 450px;
   font-size: 15pt;
   border: black 3px solid;
   text-align: left;
@@ -26,6 +21,8 @@ a {
 
 .card img {
   width: 96%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .card h3 {
@@ -54,12 +51,12 @@ a {
 }
 
 .taste {
-  color: blue;
+  color: red;
   text-align: center;
 }
 
 .health {
-  color: red;
+  color: green;
   text-align: center;
 }
 /*.smallCard {
