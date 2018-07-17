@@ -132,11 +132,10 @@ class ExperimentsController {
       let obj = sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint
-      items = rondo(items, defaultPoint)
+      let defaultIndex = _.findIndex(items, defaultPoint)
       console.log(items.length)
-      // res.send({data: items})
       let now = new Date()
-      res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+      res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
     })
   }
 
@@ -165,14 +164,6 @@ class ExperimentsController {
 }
 
 module.exports = new ExperimentsController()
-
-function rondo (data, defaultPoint) {
-  let index = _.findIndex(data, defaultPoint)
-  let middleFirst = data.slice(index)
-  let reversedArr = data.slice(0, index) // left -- taste
-  middleFirst = _.concat(middleFirst, reversedArr)
-  return middleFirst
-}
 
 function sortByAssignedAlgo (items, algorithm) {
   let obj = {}

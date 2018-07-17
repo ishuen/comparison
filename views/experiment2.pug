@@ -9,6 +9,7 @@ html
     script(src='/scripts/jssor.slider-27.2.0.min.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
+      let defaultIndex = !{JSON.stringify(defaultIndex)}
       var jssor_1_slider_init = function() {
         var jssor_1_options = {
           $AutoPlay: 0,
@@ -16,9 +17,11 @@ html
           $ArrowNavigatorOptions: {
             $Class: $JssorArrowNavigator$
           },
+          $StartIndex: defaultIndex,
           $BulletNavigatorOptions: {
             $Class: $JssorBulletNavigator$
-          }
+          },
+          $Loop: 0
         }
         var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options)
         /*#region responsive code begin*/
