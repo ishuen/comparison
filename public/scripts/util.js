@@ -57,7 +57,7 @@ function sortCardsBy(option) {
           shouldSwitch = true
           break
         }
-        let last = buttons.length - 1
+        let last = buttons.length - 2
         for (let j = last; j >= 0; j--) {
           buttons[j].style.backgroundColor = 'white'
           buttons[j].style.color = 'black'

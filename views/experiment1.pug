@@ -22,7 +22,7 @@ html
               input(type='hidden', name='userId', value=userId)
               input(type='hidden', name='startingTime', value=startingTime)
               input(type='hidden', name='tracking', value=JSON.stringify(tracking))
-          td(width='6%')
+          td
             table.option
               tr
                 td
@@ -31,11 +31,11 @@ html
                 td
                   button(id='reset', class='resetSort', onclick='init()') Reset Sort
     table.lower
-      col(width='8%')
-      col(width='92%')
+      col(width='10%')
+      col(width='90%')
       tr
         td
-          table.sort#sort
+          table.sortingOption#sort
             tr
               th Sort by
             tr
@@ -49,6 +49,8 @@ html
                 button(class='sort', onclick="sortCardsBy('health')") Health
             tr
               td
+                br
+                br
                 button(class='discard', onclick="discardItem()") Discard Card(s)
         td
           div#sourcePanel
