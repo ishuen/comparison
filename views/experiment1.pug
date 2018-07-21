@@ -8,9 +8,9 @@ html
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='/scripts/dragula.min.js', type='text/javascript')
     script(src='/scripts/util.js', type='text/javascript')
+    script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
     script.
       let data = !{JSON.stringify(data)}
-      var max = data.length
       let tracking = []
     h1 Please sort the items below to a list with higher taste score on the left and higher health score on the right.
     form(id='sortingResult', name='sortingResult', action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
@@ -47,6 +47,9 @@ html
             tr
               td
                 button(class='sort', onclick="sortCardsBy('health')") Health
+            tr
+              td
+                button(class='discard', onclick="discardItem()") Discard Card(s)
         td
           div#sourcePanel
             each item in data
@@ -75,12 +78,15 @@ html
       $('#destinationPanel').bind('DOMSubtreeModified', function() {
         trackList(tracking)
       })
+      $('#sourcePanel').selectable();
       function div2form(id) {
         var form = get(id)
         if (!form) { return }
         var divs = form.getElementsByTagName('div')
         var ndivs = (divs.length - 1) / 2
-        if (ndivs < max) {
+        let source = document.getElementById('sourcePanel')
+        let cards = source.getElementsByClassName('card')
+        if (cards.length !== 0) {
           alert('Please have all cards sorted.')
           return false
         }

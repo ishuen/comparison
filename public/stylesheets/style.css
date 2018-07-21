@@ -73,6 +73,13 @@ a {
   display: inline-block;
   overflow: visible;
 }
+#sourcePanel .ui-selecting {
+  background-color: #97DFED;
+}
+
+#sourcePanel .ui-selected {
+  background-color: blue;
+}
 #sortingResult {
   width: 140%;
   margin: 0px;

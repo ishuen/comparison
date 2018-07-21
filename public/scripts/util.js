@@ -75,8 +75,26 @@ function sortCardsBy(option) {
     }
   }
 }
+
 function init() {
   document.getElementById('reset').disabled = true;
  // Move the paragraph from #myDiv1 to #myDiv2
   $('#sourcePanel').append( $('#destinationPanel>div') );
+}
+
+function discardItem() {
+  let remainingCards = document.getElementsByClassName('card')
+  let toDiscard = document.getElementsByClassName('card ui-selected')
+  console.log(remainingCards.length, toDiscard.length)
+  if (remainingCards.length - toDiscard.length < 5) {
+    alert('Cannot discard card(s) anymore.')
+    return false
+  }
+  if (toDiscard.length == 0) {
+    // ask user to select item first
+    alert('Please select card(s) from the card display area and press this button again.')
+  } else {
+    // delete card
+    $(toDiscard).remove()
+  }
 }
