@@ -154,7 +154,10 @@ class BehavioralRankController {
   }
 
   pathGivenSet (data) {
-    let defaultPoint = _.minBy(data, function (o) { return o['taste'] })
+    let minTaste = _.minBy(data, function (o) { return o['taste'] })
+    let minTasteSet = _.filter(data, function (o) { return o['taste'] === minTaste['taste'] })
+    let defaultPoint = _.minBy(minTasteSet, function (o) { return o['health'] })
+    // let defaultPoint = _.minBy(data, function (o) { return o['health'] + o['taste'] })
     // console.log(defaultPoint.foodname, defaultPoint['taste'] , defaultPoint['health'])
     const obj = groupData(data, defaultPoint, data.length)
     let tGroup = obj.tGroup
@@ -175,7 +178,7 @@ function groupData (data, mid, number) {
   for (let item of data) {
     if (item['health'] >= mid['health'] && item['taste'] <= mid['taste']) {
       hGroup.push(item)
-    } else if (item['health'] <= mid['health'] && item['taste'] >= mid['taste']) {
+    } else if (item['health'] <= mid['health'] && item['taste'] > mid['taste']) {
       tGroup.push(item)
     } else if (item['health'] >= item['taste']) {
       hGroup.push(item)
