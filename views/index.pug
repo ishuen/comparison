@@ -1,7 +1,24 @@
 extends layout
 
 block content
-  h1= title
-  p consent form
-  a(class='indexButton', href= '/survey0/' + userId)
-    button(class='indexButton') Start survey
+  div(class='consentForm')
+    h1 Development of Multi-Criteria Food Recommendation Algorithms and User Interface
+    br
+    h2 Consent Form
+    div(class='scrollableContent')
+      p.bold I hereby acknowledge that:
+      p.text 1. I have agreed to take part in the above research.
+      p.text 2. I have received a copy of this information sheet that explains the use of my data in this research. I understand its contents and agree to donate my data for the use of this research.
+      p.text 3. I can withdraw from the research at any point of time by informing the Principal Investigator and all my data will be discarded.
+      p.text 4. I will not have any financial benefits that result from the commercial development of this research.
+      p.text 5. I consent to have the coded data made available for future research studies. This will be subject to an Institutional Review Board’s approval.
+      p.bold Principal Investigator with the contact number and organization:
+      p.text Principal Investigator: Brian Lim
+      p.text Contact number: +65 6601 1084
+      p.text Organisation: Dept of Computer Science, NUS
+      br
+      br
+      br
+      br
+    a(class='indexButton', href= '/survey0/' + userId)
+      button(class='indexButton') I Agree

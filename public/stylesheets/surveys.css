@@ -1,0 +1,47 @@
+.consentForm {
+  width: 80%;
+  margin: auto;
+  padding: auto;
+}
+.consentForm p {
+  font-size: 18pt;
+}
+.consentForm h1 {
+  text-align: center;
+}
+.consentForm h2 {
+  text-align: center;
+}
+.bold {
+  font-weight: bold;
+}
+.text {
+  padding-left: 10px;
+}
+.scrollableContent {
+  width: 80%;
+  height: 500px;
+  margin: auto;
+  padding: 5px;
+  border: 2px solid #D8D8D8;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+.indexButton {
+  width: 100%;
+  text-align: center;
+  margin: 30px;
+}
+.indexButton button{
+  width: 30%;
+  cursor: pointer;
+  text-align: center;
+  padding: auto;
+  margin-left: 35%;
+  margin-right: 35%;
+  height: 50px;
+  font-size: 18pt;
+  background-color: #D8D8D8;
+  color: black;
+  border: none;
+}

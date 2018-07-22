@@ -226,16 +226,3 @@ input[type=radio] {
 span {
   margin: 15px;
 }
-
-.indexButton {
-  width: 100%;
-  text-align: center;
-}
-.indexButton button{
-  width: 30%;
-  cursor: pointer;
-  text-align: center;
-  padding: auto;
-  margin-left: 35%;
-  margin-right: 35%;
-}
