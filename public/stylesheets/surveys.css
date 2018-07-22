@@ -143,6 +143,38 @@
   position: relative;
   top: 0px;
 }
+/*survey3&4*/
+.expLikert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14pt;
+}
+.expLikert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.expLikert th {
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.expLikert input[type=radio] {
+  width: 100%;
+  height: 2em;
+}
+.expQnOption span{
+  font-size: 14pt;
+}
+.expQnOption input[type=radio] {
+  height: 2em;
+}
+.expQnOption {
+  font-weight: normal !important;
+}
 /*demographics*/
 .demographics h1 {
   padding-left: 20px;

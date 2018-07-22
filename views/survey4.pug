@@ -3,18 +3,22 @@ html
   head
     title= 'experiment 1 - postsurvey'
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/questionSets.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
     - var setDesc = data[0].description // index 0 = display num 0
     h1 Post-Experiment Survey – Experiment 1
     h3 #{setDesc}
-    form(action='/survey4/' + trial + '/' + userId, method='post')
+    form(id='form', action='/survey4/' + trial + '/' + userId, method='post', onsubmit='return validateExpForm()')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='userId', value=userId)
-      table.likert
+      table.expLikert
+        col(width='30%')
         tr
           th
           th Strongly disagree
@@ -42,7 +46,7 @@ html
       - var choice = ['I don’t eat them.', 'I’m not familiar with them.', 'The health scores are too low.', 'The taste scores are too low.', 'Other (please specify)']
       - var val = 0
       while val < choice.length
-        label 
+        label(class='expQnOption')
           input(type='radio', name='qn' + secondSet[0].qn_id, value=choice[val])
           span #{choice[val]}
         br
