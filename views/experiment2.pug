@@ -7,9 +7,11 @@ html
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='/scripts/jssor.slider-27.2.0.min.js', type='text/javascript')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script.
       let data = !{JSON.stringify(data)}
       let defaultIndex = !{JSON.stringify(defaultIndex)}
+      let tracking = []
       var jssor_1_slider_init = function() {
         var jssor_1_options = {
           $AutoPlay: 0,
@@ -36,10 +38,21 @@ html
             window.setTimeout(ScaleSlider, 30)
           }
         }
+        function trackMovement(slideIndex, fromIndex) {
+          let now = new Date()
+          let temp = {
+            from: fromIndex,
+            to: slideIndex,
+            time_stamp: now.getTime()
+          }
+          tracking.push(temp)
+          console.log(tracking)
+        }
         ScaleSlider()
         $Jssor$.$AddEvent(window, "load", ScaleSlider)
         $Jssor$.$AddEvent(window, "resize", ScaleSlider)
         $Jssor$.$AddEvent(window, "orientationchange", ScaleSlider)
+        jssor_1_slider.$On($JssorSlider$.$EVT_PARK, trackMovement)
             /*#endregion responsive code end*/
       }
     h1 Please find out something healthy which you are also willing to eat.
@@ -54,11 +67,13 @@ html
           - var taste = item.taste
           - var health = item.health
           - var imgPath = item.path
-          div(data-p='138')
+          div(data-p='138' class='container')
             form(id='pickingTask'+item.id action='/experiment2/'+ trial + '/' + userId, method='post')
               input(type='hidden', name='trial', value=trial)
               input(type='hidden', name='userId', value=userId)
               input(type='hidden', name='startingTime', value=startingTime)
+              input(type='hidden', name='defaultIndex', value=defaultIndex)
+              input(type='hidden', name='tracking', value=JSON.stringify(tracking))
               div.card.selectable(id= 'food'+item.id, name='card', data-u='image', ondblclick="submitForm('pickingTask"+ item.id + "','food"+item.id+"')")
                 h3 #{foodName}
                 if foodName.length < 27
@@ -99,15 +114,17 @@ html
           health: div[0].getElementsByTagName('td')[1].innerHTML
         })
         form.appendChild(texta)
+        tracking = tracking.slice(1)
+        form.tracking.value = JSON.stringify(tracking)
       }
       window.submitForm = function(formId, cardId) {
         submitSelected(formId, cardId)
         var form = document.getElementById(formId)
-        var button = document.createElement('input');
-        button.style.display = 'none';
-        button.type = 'submit';
-        form.appendChild(button).click();
-      };
+        var button = document.createElement('input')
+        button.style.display = 'none'
+        button.type = 'submit'
+        form.appendChild(button).click()
+      }
 
 
 
