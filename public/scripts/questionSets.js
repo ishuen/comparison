@@ -87,12 +87,18 @@ function validateExpForm() {
   let ans = form.getElementsByTagName('input')
   let names = $('input').map(function(){ return $(this).attr('name') })
   let distinctNames = $.unique(names)
-  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial')})
+  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'others')})
   for (let qn of distinctNames) {
     if (qn === 'qn29') {
       if (document.getElementsByName(qn)[0].value === '') {
         console.log(qn)
         alert('Please describe how you sort the items.')
+        return false
+      }
+    } else if (qn === 'qn40') {
+      if (document.getElementsByName(qn)[0].value === '') {
+        console.log(qn)
+        alert('Please describe how you found the item.')
         return false
       }
     } else if (qn === 'qn34') {
@@ -108,7 +114,14 @@ function validateExpForm() {
         alert('Please answer all questions.')
         return false
       }
+      if (qn === 'qn45') {
+        if (document.getElementsByName(qn)[3].checked === true && document.getElementsByName('others')[0].value === '') {
+          alert('Please describe what you focused on.')
+          return false
+        }
+      }
     } 
   }
+  // did not check qn 46
   return true
 }
