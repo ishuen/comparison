@@ -3,9 +3,11 @@ html
   head
     title= 'experiment 2 - presurvey'
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script(src='/scripts/questionSets.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
@@ -19,7 +21,7 @@ html
     div(class='progress')
       div(class='progress-bar' role='progressbar' aria-valuenow='70' aria-valuemin='0' aria-valuemax='100' style='width:' + itemOrder + '0%') Understanding Food Items #{itemOrder} / 10
     h3 We will show you multiple cards, each representing a food item. The scores range from 1 to 100.
-    div.card
+    div.bigCard
       h3 #{foodName}
       img(src= imgPath alt= foodName)
       table.scores
@@ -30,11 +32,12 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    form(action='/survey2/' + trial + '/' + itemOrder + '/' + userId, method='post')
+    form(id='form', name='foodForm', class='foodForm', action='/survey2/' + trial + '/' + itemOrder + '/' + userId, method='post', onsubmit='return validateFormSurvey2()')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='itemOrder', value=itemOrder)
       input(type='hidden', name='userId', value=userId)
-      table.likert
+      table.itemLikert
+        col(width='30%')
         tr
           th
           th Strongly disagree

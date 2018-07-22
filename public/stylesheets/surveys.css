@@ -93,6 +93,56 @@
   padding: 15px 20px;
 }
 
+/*survey1 & 2*/
+.itemLikert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14pt;
+}
+.itemLikert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.itemLikert th {
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.itemLikert input[type=radio] {
+  width: 100%;
+  height: 2em;
+}
+.foodForm p {
+  font-size: 14pt;
+}
+.foodForm input[type=text] {
+  margin-bottom: 20px;
+}
+.bigCard {
+  width: 360px;
+  height: 520px;
+  font-size: 15pt;
+  border: black 3px solid;
+  text-align: left;
+  padding: 2%;
+  background-color: white;
+  margin: auto;
+}
+.bigCard img {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.bigCard h3 {
+  margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
+}
 /*demographics*/
 .demographics h1 {
   padding-left: 20px;
