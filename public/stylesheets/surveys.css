@@ -1,0 +1,199 @@
+/*index page*/
+.consentForm {
+  width: 80%;
+  margin: auto;
+  padding: auto;
+}
+.consentForm p {
+  font-size: 18pt;
+}
+.consentForm h1 {
+  text-align: center;
+}
+.consentForm h2 {
+  text-align: center;
+}
+.bold {
+  font-weight: bold;
+}
+.text {
+  padding-left: 10px;
+}
+.scrollableContent {
+  width: 80%;
+  height: 500px;
+  margin: auto;
+  padding: 5px;
+  border: 2px solid #D8D8D8;
+  border-radius: 5px;
+  overflow-y: scroll;
+}
+.indexButton {
+  width: 100%;
+  text-align: center;
+  margin: 30px;
+}
+.indexButton button{
+  width: 30%;
+  cursor: pointer;
+  text-align: center;
+  padding: auto;
+  margin-left: 35%;
+  margin-right: 35%;
+  height: 50px;
+  font-size: 18pt;
+  background-color: #D8D8D8;
+  color: black;
+  border: none;
+}
+
+/*pre-survey dietary constraint*/
+.likert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14pt;
+}
+.likert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.likert th {
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.likert input[type=radio] {
+  width: 100%;
+  height: 2em;
+}
+.others {
+  float: right;
+  width: 80%;
+  margin: 5px;
+}
+.qnOption span{
+  font-size: 14pt;
+}
+.qnOption input[type=radio] {
+  height: 2em;
+}
+.qnOption {
+  font-weight: normal !important;
+}
+.surSubmit {
+  width: 150px;
+  font-size: 18pt;
+}
+.surSubmit input[type=submit] {
+  border: none;
+  padding: 15px 20px;
+}
+
+/*survey1 & 2*/
+.itemLikert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14pt;
+}
+.itemLikert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.itemLikert th {
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.itemLikert input[type=radio] {
+  width: 100%;
+  height: 2em;
+}
+.foodForm p {
+  font-size: 14pt;
+}
+.foodForm input[type=text] {
+  margin-bottom: 20px;
+}
+.bigCard {
+  width: 360px;
+  height: 520px;
+  font-size: 15pt;
+  border: black 3px solid;
+  text-align: left;
+  padding: 2%;
+  background-color: white;
+  margin: auto;
+}
+.bigCard img {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.bigCard h3 {
+  margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
+}
+/*survey3&4*/
+.expLikert {
+  width: 100%;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14pt;
+}
+.expLikert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.expLikert th {
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.expLikert input[type=radio] {
+  width: 100%;
+  height: 2em;
+}
+.expQnOption span{
+  font-size: 14pt;
+}
+.expQnOption input[type=radio] {
+  height: 2em;
+}
+.expQnOption {
+  font-weight: normal !important;
+}
+/*demographics*/
+.demographics h1 {
+  padding-left: 20px;
+}
+.nextExpButton {
+  width: 100%;
+  text-align: center;
+  margin: 30px;
+}
+.nextExpButton button{
+  width: 30%;
+  cursor: pointer;
+  text-align: center;
+  padding: auto;
+  margin-left: 35%;
+  margin-right: 35%;
+  height: 50px;
+  font-size: 18pt;
+  background-color: #D8D8D8;
+  color: black;
+  border: none;
+}

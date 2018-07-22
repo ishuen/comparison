@@ -3,15 +3,19 @@ html
   head
     title= 'presurvey - Dietary restrictions'
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/surveys.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/questionSets.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
     - var firstSet = data.filter(d => d.qn_set == 4)
     - var setDesc = firstSet[0].description // index 0 = display num 0
     h1 Dietary restrictions
     h3 #{setDesc}
-    form(action='/survey0/' + userId, method='post')
+    form(id='form', action='/survey0/' + userId, method='post', onsubmit='return validateForm()')
       input(type='hidden', name='userId', value=userId)
       table.likert
         tr
@@ -34,7 +38,7 @@ html
           td #{qn.description}
             if count == firstSet.length
               br
-              input(name='others', type='text', style='float: right; width: 90%; margin: 2%') 
+              input(name='others',class='others', type='text', style='float: right; width: 90%; margin: 2%') 
           each val in [0, 1, 2, 3, 4]
             td
               input(name='qn'+ qn.qn_id, type='radio', value=ans[val])
@@ -44,7 +48,7 @@ html
       - var veganType = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian', 'I\'m neither a vegan nor a vegetarian']
       - var val = 0
       while val < veganType.length
-        label 
+        label(class='qnOption')
           input(type='radio', name='qn' + secondSet[0].qn_id, value=veganType[val])
           span #{veganType[val]}
         br

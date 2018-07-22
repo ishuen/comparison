@@ -3,9 +3,11 @@ html
   head
     title= 'experiment 1 - presurvey'
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script.
       let data = !{JSON.stringify(data)}
       let item = !{JSON.stringify(item)}
@@ -19,7 +21,7 @@ html
     div(class='progress')
       div(class='progress-bar' role='progressbar' aria-valuenow='70' aria-valuemin='0' aria-valuemax='100' style='width:' + itemOrder + '0%') Understanding Food Items #{itemOrder} / 10
     h3 We will show you multiple cards, each representing a food item. The scores range from 1 to 100.
-    div.card
+    div.bigCard
       h3 #{foodName}
       img(src= imgPath alt= foodName)
       table.scores
@@ -30,12 +32,13 @@ html
           td.taste #{taste}
           td.health #{health}
     h3 #{setDesc}
-    form(name='foodForm', action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post', onsubmit='return validateScore()')
+    form(id='form', name='foodForm', class='foodForm', action='/survey1/' + trial + '/' + itemOrder + '/' + userId, method='post', onsubmit='return validateScore()')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='itemOrder', value=itemOrder)
       input(type='hidden', name='itemId', value=item[0].id)
       input(type='hidden', name='userId', value=userId)
-      table.likert
+      table.itemLikert
+        col(width='30%')
         tr
           th
           th Strongly disagree
@@ -60,16 +63,39 @@ html
       input(type='text', name= 'taste', value= taste)
       p #{secondSet[2].description}
       input(type='text', name='health', value= health)
-      br
       p #{secondSet[3].description}
       textarea(name='qn' + secondSet[3].qn_id, rows='4', style='width: 80%;')
       br
-      br
       button(class='surSubmit', type='submit', value='submit') Submit
     script.
+      function validateFormSurvey1() {
+        let form = document.getElementById('form')
+        let ans = form.getElementsByTagName('input')
+        let comment = form.getElementsByTagName('textarea')
+        let names = $('input').map(function(){ return $(this).attr('name') })
+        let distinctNames = $.unique(names)
+        distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'itemOrder' && distinctNames[o] !== 'itemId' && distinctNames[o] !== 'taste' && distinctNames[o] !== 'health')})
+        for (let qn of distinctNames) {
+          let radioSet = document.getElementsByName(qn)
+          let selected = false
+          for (let radio of radioSet) {
+            if (radio.checked === true) { selected = true }
+          }
+          if (selected === false) {
+            console.log(qn)
+            alert('Please answer all questions.')
+            return false
+          }
+        }
+        if (comment[0].value === '') {
+          alert('Please justify your changes.')
+          return false
+        }
+        return true
+      }
       function validateScore () {
         let x = document.forms['foodForm']['taste'].value
-        let y = document.forms['foodForm']['health'].value;
+        let y = document.forms['foodForm']['health'].value
         if (x == '' || y == '') {
           alert('The score must be filled out.')
           return false
@@ -81,4 +107,5 @@ html
           alert('The score must be integer.')
           return false
         }
+        return validateFormSurvey1()
       }

@@ -3,9 +3,12 @@ html
   head
     title= 'experiment 2 - postsurvey'
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/questionSets.js', type='text/javascript')
     script.
       let data = !{JSON.stringify(data)}
     - var setDesc = data[0].description // index 0 = display num 0
@@ -13,10 +16,11 @@ html
     br
     h2 Overall opinion about the sorted list
     h3 #{setDesc}
-    form(action='/survey5/' + trial + '/' + userId, method='post')
+    form(id='form', action='/survey5/' + trial + '/' + userId, method='post', onsubmit='return validateExpForm()')
       input(type='hidden', name='trial', value=trial)
       input(type='hidden', name='userId', value=userId)
-      table.likert
+      table.expLikert
+        col(width='30%')
         tr
           th
           th Strongly disagree

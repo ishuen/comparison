@@ -119,6 +119,9 @@ class Survey1Controller {
     const setNum = 1
     const trial = req.params.trial
     const itemOrder = req.params.itemOrder
+    if (Number(trial) === 1 && Number(itemOrder) === 1) {
+      Survey1.checkGroup(userId, 2, function (done) { console.log(done) })
+    }
     Survey1.getQnSet(setNum, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
@@ -233,6 +236,9 @@ class Survey1Controller {
     const trial = req.params.trial
     const itemOrder = req.params.itemOrder
     const setNum2 = [1, 2]
+    if (Number(trial) === 1 && Number(itemOrder) === 1) {
+      Survey1.checkGroup(userId, 1, function (done) { console.log(done) })
+    }
     Survey1.getQnSets(setNum2, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
@@ -268,20 +274,13 @@ class Survey1Controller {
   }
 
   showDemographics (req, res) {
+    const fs = require('fs')
     const userId = req.params.userId
-    const setNum = 3
-    Survey1.getQnSet(setNum, function (qnSet) {
-      res.render('survey3', {data: qnSet, userId: userId})
-    })
-  }
-
-  demographicsSubmit (req, res) {
-    console.log(req.body)
-    const userData = req.body
-    Experiments.insertDemog(userData, function (done) {
-      console.log(done)
-      res.redirect('/')
-    })
+    const country = require('../public/json/nationality.json')
+    let countryArr = Object.values(country)
+    const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
+    let ethnicity = text.split('\n')
+    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity})
   }
 
   showQnPost1 (req, res) {
@@ -310,7 +309,13 @@ class Survey1Controller {
     if (trial <= maxTrialEx1) {
       res.redirect('/survey1/' + trial + '/1/' + userId) // go to experiment
     } else {
-      res.redirect('/survey3/' + userId) // go to demographic
+      Survey1.getUserGroup(userId, function (expGroup) {
+        if (expGroup !== 'both') {
+          res.redirect('/survey3/' + userId) // go to demographic
+        } else {
+          res.redirect('/') // end of experiment
+        }
+      })
     }
   }
 
@@ -340,7 +345,13 @@ class Survey1Controller {
     if (trial <= maxTrialEx2) {
       res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
     } else {
-      res.redirect('/survey3/' + userId) // go to demographic
+      Survey1.getUserGroup(userId, function (expGroup) {
+        if (expGroup !== 'both') {
+          res.redirect('/survey3/' + userId) // go to demographic
+        } else {
+          res.redirect('/') // end of experiment
+        }
+      })
     }
   }
 }
