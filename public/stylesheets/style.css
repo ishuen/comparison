@@ -186,42 +186,6 @@ button {
   height: 50%;
   padding: 20px;
 }
-input[type=submit] {
-  font-size: 20pt;
-  border: none;
-  padding: 15px 20px;
-}
-
-.likert {
-  width: 100%;
-  border: black 3px solid;
-  padding: 0px;
-  border-collapse: collapse;
-}
-
-.likert tr td{
-  margin: 0px;
-  padding: 5px;
-  border: black 3px solid;
-}
-
-.likert th {
-  margin: 0px;
-  padding: 0px;
-  border: black 3px solid;
-}
-
-.likert input[type=radio] {
-  width: 100%;
-}
-
-.surSubmit {
-  width: 150px;
-}
-
-input[type=radio] {
-  height: 2em;
-}
 
 span {
   margin: 15px;
