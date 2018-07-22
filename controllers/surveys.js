@@ -119,6 +119,9 @@ class Survey1Controller {
     const setNum = 1
     const trial = req.params.trial
     const itemOrder = req.params.itemOrder
+    if (Number(trial) === 1 && Number(itemOrder) === 1) {
+      Survey1.checkGroup(userId, 2, function (done) { console.log(done) })
+    }
     Survey1.getQnSet(setNum, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
@@ -233,6 +236,9 @@ class Survey1Controller {
     const trial = req.params.trial
     const itemOrder = req.params.itemOrder
     const setNum2 = [1, 2]
+    if (Number(trial) === 1 && Number(itemOrder) === 1) {
+      Survey1.checkGroup(userId, 1, function (done) { console.log(done) })
+    }
     Survey1.getQnSets(setNum2, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
@@ -303,7 +309,13 @@ class Survey1Controller {
     if (trial <= maxTrialEx1) {
       res.redirect('/survey1/' + trial + '/1/' + userId) // go to experiment
     } else {
-      res.redirect('/survey3/' + userId) // go to demographic
+      Survey1.getUserGroup(userId, function (expGroup) {
+        if (expGroup !== 'both') {
+          res.redirect('/survey3/' + userId) // go to demographic
+        } else {
+          res.redirect('/') // end of experiment
+        }
+      })
     }
   }
 
@@ -333,7 +345,13 @@ class Survey1Controller {
     if (trial <= maxTrialEx2) {
       res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
     } else {
-      res.redirect('/survey3/' + userId) // go to demographic
+      Survey1.getUserGroup(userId, function (expGroup) {
+        if (expGroup !== 'both') {
+          res.redirect('/survey3/' + userId) // go to demographic
+        } else {
+          res.redirect('/') // end of experiment
+        }
+      })
     }
   }
 }

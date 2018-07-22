@@ -12,7 +12,8 @@ CREATE TABLE user_data(
     gender BOOLEAN,
     Occupation VARCHAR (50),
     CoR VARCHAR (50),
-    Ethnicity VARCHAR (50)); -- Country of Residence -> CoR
+    Ethnicity VARCHAR (50),
+    exp_group VARCHAR(10)); -- Country of Residence -> CoR; exp_group: 1, 2, both
 
 CREATE TABLE user_rating(
     qn_id serial REFERENCES survey_questions(qn_id),
@@ -93,3 +94,5 @@ CREATE TABLE user_chossing_process(
 
 -- ALTER TABLE user_criteria
 -- ADD COLUMN time_stamp timestamp;
+
+-- ALTER TABLE user_data ADD COLUMN exp_group VARCHAR(10);
