@@ -155,7 +155,9 @@ class ExperimentsController {
       item: picked,
       startingTime: start,
       endTime: now,
-      timeUsed: timeUsed
+      timeUsed: timeUsed,
+      tracking: JSON.parse(req.body.tracking),
+      defaultIndex: req.body.defaultIndex
     }
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
     trial++

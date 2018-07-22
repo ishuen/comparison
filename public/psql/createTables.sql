@@ -72,6 +72,15 @@ CREATE TABLE user_choice(
     trial_num integer,
     choice_id serial PRIMARY KEY);
 
+CREATE TABLE user_chossing_process(
+    slide_from integer,
+    slide_to integer,
+    default_index integer,
+    time_stamp timestamp with time zone,
+    user_id serial REFERENCES user_data(user_id),
+    trial_num integer,
+    process_number serial PRIMARY KEY);
+
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,
 --     high_score INT NOT NULL,

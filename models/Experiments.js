@@ -103,6 +103,9 @@ class Experiments {
   }
 
   insertUserChoice (details, callback) {
+    if (details.tracking.length > 0) {
+      storeSliding(details.userId, details.trial, details.defaultIndex, details.tracking)
+    }
     let input = [details.userId, details.startingTime, details.endTime, details.timeUsed, details.trial, details.item.foodId]
     pool.query('INSERT INTO user_choice (user_id, starting_time, end_time, time_used, trial_num, food_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING choice_id', input, (err, res) => {
       if (err) throw err
@@ -124,4 +127,13 @@ function storeTracked (userId, recordNum, trackedData) {
     }
   }
   return 1
+}
+function storeSliding (userId, trial, defaultIndex, trackedData) {
+  for (let record of trackedData) {
+    let time = new Date(Number(record.time_stamp))
+    let input = [record.from, record.to, trial, time, userId, defaultIndex]
+    pool.query('INSERT INTO user_chossing_process (slide_from, slide_to, trial_num, time_stamp, user_id, default_index) VALUES ($1, $2, $3, $4, $5, $6)', input, (err, res) => {
+      if (err) throw err
+    })
+  }
 }
