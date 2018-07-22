@@ -2,44 +2,31 @@ doctype html
 html
   head
     title= 'experiment 2 - presurvey'
-    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
-  body
-    //- script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+  body(class='demographics')
     script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script(src='https://surveyjs.azureedge.net/1.0.32/survey.jquery.min.js', charset='utf-8')
     script.
-      let data = !{JSON.stringify(data)}
-    - var setDesc = data[0].description // index 0 = display num 0
+      let country = !{JSON.stringify(country)}
+      let userId = !{JSON.stringify(userId)}
+      let ethnicity = !{JSON.stringify(ethnicity)}
+    - var setDesc = 'Demographics'
     h1 #{setDesc}
-    //- form(action='/survey3/', method='post')
-    //-   input(type='hidden', name='userId', value=userId)
-    //-   table
-    //-     tr
-    //-       td
-    //-         h5 #{data[1].description}
-    //-       td
-    //-         label 
-    //-           input(type='radio', name='gender', value=0)
-    //-           span male
-    //-         label 
-    //-           input(type='radio', name='gender', value=1)
-    //-           span female
-    //-     - var remained = data.slice(2)
-    //-     each qn in remained
-    //-       tr
-    //-         td
-    //-           h5 #{qn.description}
-    //-         td
-    //-           input(name=qn.description, type='text')
-    //-   br
-    //-   button(class='surSubmit', type='submit', value='submit') Submit
     div(id='surveyContainer')
+    div(id='nextExp', style='visibility: hidden;')
+      if (userId % 2 == 0)
+        a(class='nextExpButton', href= '/survey2/1/1/' + userId)
+          button(class='indexButton') Go to next experiment
+      else
+        a(class='nextExpButton', href= '/survey1/1/1' + userId)
+          button(class='indexButton') Go to next experiment
     script.
       Survey.Survey.cssType = 'bootstrap'
-      var surveyJSON = {pages:[{name:'page1',elements:[{type:'radiogroup',name:'question1',title:'Gender',isRequired:true,choices:[{value:'item1',text:'Male',undefined:''},{value:'item2',text:'Female'}]},{type:'text',name:'Age',title:'Age',isRequired:true},{type:'text',name:'question2',title:'Occupation',isRequired:true},{type:'dropdown',name:'question5',title:'Country of Residence',isRequired:true,choices:['item1','item2','item3']},{type:'dropdown',name:'question6',title:'Ethnicity',isRequired:true,choices:['item1','item2','item3']},{type:'text',name:'question3',title:'Mechanical Turk Worker ID'},{type:'text',name:'question4',visible:false,title:'UserId'}]}]}
+      var surveyJSON = {pages:[{name:'page1',elements:[{type:'radiogroup',name:'question1',title:'Gender',isRequired:true,choices:[{value:'item1',text:'Male',undefined:''},{value:'item2',text:'Female'}]},{type:'text',name:'Age',title:'Age',isRequired:true,inputType:'number'},{type:'text',name:'Occupation',title:'Occupation',isRequired:true},{type:'dropdown',name:'Country of Residence',title:'Country of Residence',isRequired:true,choices: country},{type:'dropdown',name:'Ethnicity',title:'Ethnicity',isRequired:true,choices: ethnicity},{type:'text',name:'MTurk',title:'Mechanical Turk Worker ID'},{type:'text',name:'contactNum',title:'Contact Number',inputType:'tel'},{type:'text',name:'email',title:'Email Address',inputType:'email'},{type:'text',name:'userId',visible:false,title:'UserId', defaultValue: userId}]}],clearInvisibleValues:'none', completedHtml: "<p><h3>Thank you for completing the survey!</h3></p><p><h3>You can either leave the experiment or attend another condition group.</h3></p>"}
       function sendDataToServer(survey) {
         survey.sendResult('13344d69-7e69-464b-9c38-59680450dadb')
+        document.getElementById('nextExp').style.visibility = 'visible'
       }
       var survey = new Survey.Model(surveyJSON)
       $('#surveyContainer').Survey({

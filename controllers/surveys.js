@@ -268,20 +268,13 @@ class Survey1Controller {
   }
 
   showDemographics (req, res) {
+    const fs = require('fs')
     const userId = req.params.userId
-    const setNum = 3
-    Survey1.getQnSet(setNum, function (qnSet) {
-      res.render('survey3', {data: qnSet, userId: userId})
-    })
-  }
-
-  demographicsSubmit (req, res) {
-    console.log(req.body)
-    const userData = req.body
-    Experiments.insertDemog(userData, function (done) {
-      console.log(done)
-      res.redirect('/')
-    })
+    const country = require('../public/json/nationality.json')
+    let countryArr = Object.values(country)
+    const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
+    let ethnicity = text.split('\n')
+    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity})
   }
 
   showQnPost1 (req, res) {
