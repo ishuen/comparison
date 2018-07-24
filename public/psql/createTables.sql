@@ -13,7 +13,7 @@ CREATE TABLE user_data(
     Occupation VARCHAR (50),
     CoR VARCHAR (50),
     Ethnicity VARCHAR (50),
-    exp_group VARCHAR(10)); -- Country of Residence -> CoR; exp_group: 1, 2, 2a, both1_2, both1_2a
+    exp_group VARCHAR(10)); -- Country of Residence -> CoR; exp_group: 1, 2a~2g, both1_2, both1_2a~g
 
 CREATE TABLE user_rating(
     qn_id serial REFERENCES survey_questions(qn_id),
@@ -73,7 +73,7 @@ CREATE TABLE user_choice(
     trial_num integer,
     choice_id serial PRIMARY KEY);
 
-CREATE TABLE user_chossing_process(
+CREATE TABLE user_choosing_process(
     slide_from integer,
     slide_to integer,
     default_index integer,
@@ -81,6 +81,14 @@ CREATE TABLE user_chossing_process(
     user_id serial REFERENCES user_data(user_id),
     trial_num integer,
     process_number serial PRIMARY KEY);
+
+CREATE TABLE user_satisfaction(
+    user_id serial REFERENCES user_data(user_id),
+    food_id varchar REFERENCES hpbdata(id),
+    trial_num integer,
+    state VARCHAR(30),
+    satisfaction integer,
+    confidence integer);
 
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,

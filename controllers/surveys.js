@@ -1,11 +1,21 @@
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
+const experiments = require('./experiments')
 const maxTrialEx1 = 3
 const maxTrialEx2 = 3
 const maxItemEx1 = 10
 const maxItemEx2 = 20
-// const _ = require('lodash')
+const groups = {
+  a: 'heuristic',
+  b: 'pareto',
+  c: 'taste',
+  d: 'health',
+  e: 'health',
+  f: 'health',
+  g: 'health'
+}
+
 class Survey1Controller {
   // survey page for dietary restriction
   showDietaryConstraint (req, res) {
@@ -142,16 +152,7 @@ class Survey1Controller {
     const userId = req.body.userId
     if (itemOrder === maxItemEx2) {
       Survey1.getUserGroup(userId, function (expGroup) {
-        let category = expGroup.slice(1, 2)
-        let groups = {
-          a: 'heuristic',
-          b: 'pareto',
-          c: 'taste',
-          d: 'health',
-          e: 'health',
-          f: 'health',
-          g: 'health'
-        }
+        let category = expGroup.slice(-1)
         let algorithm = groups[category]
         res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
       })
@@ -357,11 +358,56 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
+    // trial++
+    // if (trial <= maxTrialEx2) {
+    //   res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
+    // } else {
+    //   Survey1.getUserGroup(userId, function (expGroup) {
+    //     if (expGroup.slice(0, 4) !== 'both') {
+    //       res.redirect('/survey3/' + userId) // go to demographic
+    //     } else {
+    //       res.redirect('/') // end of experiment
+    //     }
+    //   })
+    // }
+    res.redirect('/survey6/' + trial + '/' + userId)
+  }
+
+  showSatisfaction (req, res) {
+    const trial = req.params.trial
+    const userId = req.params.userId
+    Survey1.getUserGroup(userId, function (expGroup) {
+      let category = expGroup.slice(-1)
+      let algorithm = groups[category]
+      HpbData.getTrialSet(Number(trial) + 3, function (items) {
+        let obj = experiments.sortByAssignedAlgo(items, algorithm)
+        items = obj.data
+        let defaultPoint = obj.defaultPoint
+        let left = items[0] // tastiest
+        let right = items[items.length - 1] // healthiest
+        defaultPoint.state = 'defaultPoint'
+        left.state = 'tastiest/first'
+        right.state = 'healthiest/last'
+        Experiments.getUserChoice(userId, trial, function (userChoice) {
+          userChoice.state = 'userChoice'
+          // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
+          res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
+        })
+      })
+    })
+  }
+
+  satisfactionSubmit (req, res) {
+    console.log(req.body)
+    let userId = req.body.userId
+    let trial = req.body.trial
+    Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
     trial++
     if (trial <= maxTrialEx2) {
       res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
+        console.log('expGroup***', expGroup.slice(0, 4))
         if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {

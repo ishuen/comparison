@@ -197,3 +197,66 @@
   color: black;
   border: none;
 }
+.smallCard {
+  width: 200px;
+  height: 280px;
+  font-size: 12pt;
+  border: black 2px solid;
+  text-align: left;
+  padding: 1%;
+  background-color: white;
+  float: left;
+}
+.smallCard img {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.smallCard h3 {
+  font-size: 12pt;
+  margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
+}
+.scoresSmall {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-size: 12pt;
+  position: relative;
+  bottom: 0px;
+}
+.scoresSmall table {
+  border: 0px;
+}
+
+.scoresSmall th {
+  width: 50%;
+}
+
+.smallLikert {
+  height: 280px;
+  border: black 3px solid;
+  padding: 0px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14pt;
+}
+.smallLikert tr td{
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+  width: 14%;
+}
+.smallLikert th {
+  margin: 0px;
+  padding: 5px;
+  border: black 3px solid;
+}
+.smallLikert input[type=radio] {
+  width: 100%;
+  height: 2em;
+}

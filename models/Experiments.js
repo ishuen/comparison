@@ -112,6 +112,26 @@ class Experiments {
       callback(res.rows)
     })
   }
+
+  getUserChoice (userId, trial, callback) {
+    let input = [userId, trial]
+    pool.query('SELECT * FROM user_choice INNER JOIN hpbdata ON (user_choice.food_id = hpbdata.id) WHERE user_id = $1 AND trial_num = $2', input, (err, res) => {
+      if (err) throw err
+      if (res.rows[0]['image'] != null) {
+        res.rows[0]['path'] = res.rows[0]['image'].toString('utf8')
+      } else {
+        res.rows[0]['path'] = '/images/abs_food.png'
+      }
+      let obj = {
+        id: res.rows[0].food_id,
+        foodname: res.rows[0].foodname,
+        health: res.rows[0].health,
+        taste: res.rows[0].taste,
+        path: res.rows[0].path
+      }
+      callback(obj)
+    })
+  }
 }
 module.exports = new Experiments()
 
@@ -132,7 +152,7 @@ function storeSliding (userId, trial, defaultIndex, trackedData) {
   for (let record of trackedData) {
     let time = new Date(Number(record.time_stamp))
     let input = [record.from, record.to, trial, time, userId, defaultIndex]
-    pool.query('INSERT INTO user_chossing_process (slide_from, slide_to, trial_num, time_stamp, user_id, default_index) VALUES ($1, $2, $3, $4, $5, $6)', input, (err, res) => {
+    pool.query('INSERT INTO user_choosing_process (slide_from, slide_to, trial_num, time_stamp, user_id, default_index) VALUES ($1, $2, $3, $4, $5, $6)', input, (err, res) => {
       if (err) throw err
     })
   }

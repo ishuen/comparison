@@ -1,4 +1,5 @@
 const pool = require('../db')
+const _ = require('lodash')
 class Survey1 {
   // constructor () {
 
@@ -56,6 +57,34 @@ class Survey1 {
           if (err) throw err
         })
       })
+    }
+  }
+  userSatisfaction (obj, callback) {
+    let userId = obj.userId
+    let trial = obj.trial
+    let prop = Object.keys(obj)
+    let items = []
+    for (let i = 0; i < prop.length; i++) {
+      if (prop[i] === 'userId' || prop[i] === 'trial') continue
+      let foodId = prop[i].slice(0, prop[i].indexOf('-'))
+      let type = prop[i].slice(prop[i].indexOf('-') + 1, prop[i].lastIndexOf('-'))
+      let state = prop[i].slice(prop[i].lastIndexOf('-') + 1)
+      let index = _.findIndex(items, function (o) { return o.id === foodId })
+      if (index === -1) {
+        let newRecord = {
+          id: foodId,
+          state: state,
+          [type]: obj[prop[i]]
+        }
+        items.push(newRecord)
+      } else {
+        items[index][type] = obj[prop[i]]
+        let input = [userId, trial, items[index]['id'], items[index]['state'], items[index]['satisfaction'], items[index]['confidence']]
+        pool.query('INSERT INTO user_satisfaction (user_id, trial_num, food_id, state, satisfaction, confidence) VALUES ($1, $2, $3, $4, $5, $6)', input, (err, res) => {
+          if (err) throw err
+          callback(res.rows)
+        })
+      }
     }
   }
 }

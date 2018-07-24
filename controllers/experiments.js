@@ -123,12 +123,28 @@ class ExperimentsController {
     res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
   }
 
+  sortByAssignedAlgo (items, algorithm) {
+    let obj = {}
+    if (algorithm === 'heuristic') {
+      obj = heuristic.pathGivenSet(items)
+    } else if (algorithm === 'pareto') {
+      obj = pareto.relaxedPathGivenSet(items)
+    } else if (algorithm === 'health') {
+      obj.data = _.sortBy(items, [function (o) { return -o['health'] }])
+      obj.defaultPoint = obj.data[0]
+    } else if (algorithm === 'taste') {
+      obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
+      obj.defaultPoint = obj.data[0]
+    }
+    return obj
+  }
+
   showItemsExp2 (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
     const algorithm = req.params.alg
     HpbData.getTrialSet(Number(trial) + 3, function (items) {
-      let obj = sortByAssignedAlgo(items, algorithm)
+      let obj = module.exports.sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint
       let defaultIndex = _.findIndex(items, defaultPoint)
@@ -168,19 +184,3 @@ class ExperimentsController {
 }
 
 module.exports = new ExperimentsController()
-
-function sortByAssignedAlgo (items, algorithm) {
-  let obj = {}
-  if (algorithm === 'heuristic') {
-    obj = heuristic.pathGivenSet(items)
-  } else if (algorithm === 'pareto') {
-    obj = pareto.relaxedPathGivenSet(items)
-  } else if (algorithm === 'health') {
-    obj.data = _.sortBy(items, [function (o) { return -o['health'] }])
-    obj.defaultPoint = obj.data[0]
-  } else if (algorithm === 'taste') {
-    obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
-    obj.defaultPoint = obj.data[0]
-  }
-  return obj
-}
