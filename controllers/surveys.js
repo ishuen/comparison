@@ -1,11 +1,21 @@
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
+const experiments = require('./experiments')
 const maxTrialEx1 = 3
 const maxTrialEx2 = 3
 const maxItemEx1 = 10
 const maxItemEx2 = 20
-// const _ = require('lodash')
+const groups = {
+  a: 'heuristic',
+  b: 'pareto',
+  c: 'taste',
+  d: 'health',
+  e: 'health',
+  f: 'health',
+  g: 'health'
+}
+
 class Survey1Controller {
   // survey page for dietary restriction
   showDietaryConstraint (req, res) {
@@ -142,16 +152,7 @@ class Survey1Controller {
     const userId = req.body.userId
     if (itemOrder === maxItemEx2) {
       Survey1.getUserGroup(userId, function (expGroup) {
-        let category = expGroup.slice(1, 2)
-        let groups = {
-          a: 'heuristic',
-          b: 'pareto',
-          c: 'taste',
-          d: 'health',
-          e: 'health',
-          f: 'health',
-          g: 'health'
-        }
+        let category = expGroup.slice(-1)
         let algorithm = groups[category]
         res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
       })
@@ -369,6 +370,30 @@ class Survey1Controller {
         }
       })
     }
+  }
+
+  showSatisfaction (req, res) {
+    const trial = req.params.trial
+    const userId = req.params.userId
+    Survey1.getUserGroup(userId, function (expGroup) {
+      let category = expGroup.slice(-1)
+      let algorithm = groups[category]
+      HpbData.getTrialSet(Number(trial) + 3, function (items) {
+        let obj = experiments.sortByAssignedAlgo(items, algorithm)
+        items = obj.data
+        let defaultPoint = obj.defaultPoint
+        let left = items[0] // tastiest
+        let right = items[items.length - 1] // healthiest
+        Experiments.getUserChoice(userId, trial, function (userChoice) {
+          // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
+          res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
+        })
+      })
+    })
+  }
+
+  satisfactionSubmit (req, res) {
+
   }
 }
 module.exports = new Survey1Controller()
