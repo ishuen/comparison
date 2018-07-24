@@ -117,6 +117,11 @@ class Experiments {
     let input = [userId, trial]
     pool.query('SELECT * FROM user_choice INNER JOIN hpbdata ON (user_choice.food_id = hpbdata.id) WHERE user_id = $1 AND trial_num = $2', input, (err, res) => {
       if (err) throw err
+      if (res.rows[0]['image'] != null) {
+        res.rows[0]['path'] = res.rows[0]['image'].toString('utf8')
+      } else {
+        res.rows[0]['path'] = '/images/abs_food.png'
+      }
       let obj = {
         id: res.rows[0].food_id,
         foodname: res.rows[0].foodname,

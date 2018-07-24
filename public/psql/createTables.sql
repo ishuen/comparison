@@ -86,7 +86,7 @@ CREATE TABLE user_satisfaction(
     user_id serial REFERENCES user_data(user_id),
     food_id varchar REFERENCES hpbdata(id),
     trial_num integer,
-    state VARCHAR(10),
+    state VARCHAR(30),
     satisfaction integer,
     confidence integer);
 

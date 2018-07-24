@@ -358,18 +358,19 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    trial++
-    if (trial <= maxTrialEx2) {
-      res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
-    } else {
-      Survey1.getUserGroup(userId, function (expGroup) {
-        if (expGroup.slice(0, 4) !== 'both') {
-          res.redirect('/survey3/' + userId) // go to demographic
-        } else {
-          res.redirect('/') // end of experiment
-        }
-      })
-    }
+    // trial++
+    // if (trial <= maxTrialEx2) {
+    //   res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
+    // } else {
+    //   Survey1.getUserGroup(userId, function (expGroup) {
+    //     if (expGroup.slice(0, 4) !== 'both') {
+    //       res.redirect('/survey3/' + userId) // go to demographic
+    //     } else {
+    //       res.redirect('/') // end of experiment
+    //     }
+    //   })
+    // }
+    res.redirect('/survey6/' + trial + '/' + userId)
   }
 
   showSatisfaction (req, res) {
@@ -384,7 +385,11 @@ class Survey1Controller {
         let defaultPoint = obj.defaultPoint
         let left = items[0] // tastiest
         let right = items[items.length - 1] // healthiest
+        defaultPoint.state = 'defaultPoint'
+        left.state = 'tastiest/first'
+        right.state = 'healthiest/last'
         Experiments.getUserChoice(userId, trial, function (userChoice) {
+          userChoice.state = 'userChoice'
           // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
           res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
         })
@@ -393,7 +398,23 @@ class Survey1Controller {
   }
 
   satisfactionSubmit (req, res) {
-
+    console.log(req.body)
+    let userId = req.body.userId
+    let trial = req.body.trial
+    Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
+    trial++
+    if (trial <= maxTrialEx2) {
+      res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
+    } else {
+      Survey1.getUserGroup(userId, function (expGroup) {
+        console.log('expGroup***', expGroup.slice(0, 4))
+        if (expGroup.slice(0, 4) !== 'both') {
+          res.redirect('/survey3/' + userId) // go to demographic
+        } else {
+          res.redirect('/') // end of experiment
+        }
+      })
+    }
   }
 }
 module.exports = new Survey1Controller()
