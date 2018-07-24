@@ -3,6 +3,8 @@ const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
 const maxTrialEx1 = 3
 const maxTrialEx2 = 3
+const maxItemEx1 = 10
+const maxItemEx2 = 20
 // const _ = require('lodash')
 class Survey1Controller {
   // survey page for dietary restriction
@@ -23,7 +25,7 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    if (userId % 2 === 0) {
+    if (userId % 8 === 0) {
       res.redirect('/survey1/1/1/' + userId)
     } else {
       res.redirect('/survey2/1/1/' + userId)
@@ -123,9 +125,9 @@ class Survey1Controller {
       Survey1.checkGroup(userId, 2, function (done) { console.log(done) })
     }
     Survey1.getQnSet(setNum, function (qnSet) {
-      HpbData.getOneItemFromList(trial, itemOrder, function (item) {
+      HpbData.getOneItemFromList(Number(trial) + 3, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId})
+        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId, max: maxItemEx2})
         // res.send({data: qnSet, item: item})
       })
     })
@@ -136,11 +138,25 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     let qn = getQnAns(req.body)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    let itemOrder = Number(req.body.itemOrder) + 1
+    let itemOrder = Number(req.body.itemOrder)
     const userId = req.body.userId
-    if (itemOrder === 10) { // last trial + 1
-      res.redirect('/experiment2/' + trial + '/' + userId) // go to experiment
+    if (itemOrder === maxItemEx2) {
+      Survey1.getUserGroup(userId, function (expGroup) {
+        let category = expGroup.slice(1, 2)
+        let groups = {
+          a: 'heuristic',
+          b: 'pareto',
+          c: 'taste',
+          d: 'health',
+          e: 'health',
+          f: 'health',
+          g: 'health'
+        }
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+      })
     } else {
+      itemOrder++
       res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
     }
   }
@@ -242,7 +258,7 @@ class Survey1Controller {
     Survey1.getQnSets(setNum2, function (qnSet) {
       HpbData.getOneItemFromList(trial, itemOrder, function (item) {
         item[0].path = item[0].image.toString('utf8')
-        res.render('survey1', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId})
+        res.render('survey1', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId, max: maxItemEx1})
         // res.send({data: qnSet, item: item})
       })
     })
@@ -310,7 +326,7 @@ class Survey1Controller {
       res.redirect('/survey1/' + trial + '/1/' + userId) // go to experiment
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
-        if (expGroup !== 'both') {
+        if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {
           res.redirect('/') // end of experiment
@@ -346,7 +362,7 @@ class Survey1Controller {
       res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
-        if (expGroup !== 'both') {
+        if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {
           res.redirect('/') // end of experiment

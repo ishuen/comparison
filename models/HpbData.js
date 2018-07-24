@@ -94,7 +94,12 @@ class HpbData {
     let itemId = itemSetList[trialNum - 1][itemOrder - 1]
     pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
       if (err) throw err
-      // console.log(res.rows)
+      console.log(res.rows)
+      if (res.rows[0]['image'] != null) {
+        res.rows[0]['path'] = res.rows[0]['image'].toString('utf8')
+      } else {
+        res.rows[0]['path'] = '/images/abs_food.png'
+      }
       callback(res.rows)
     })
   }
@@ -105,6 +110,7 @@ class HpbData {
 // [1394, 1399, 878, 448, 1886, 771, 101, 124, 831, 1659],
 // [2385, 114, 1438, 758, 516, 615, 1040, 2745, 1436, 966]]
 
+// exp1: 0~2, exp2: 3~5
 var itemSetList = [
 [95, 2024, 2198, 592, 433, 409, 432, 2262, 884, 201],
 [1781, 388, 511, 1758, 1592, 1666, 2021, 2030, 429, 1748],

@@ -120,7 +120,6 @@ class ExperimentsController {
       endTime: now
     }
     Experiments.userSorting(details, function (out) { console.log(out) })
-    trial++
     res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
   }
 
@@ -128,14 +127,18 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const algorithm = req.params.alg
-    HpbData.getTrialSet(trial + 3, function (items) {
+    HpbData.getTrialSet(Number(trial) + 3, function (items) {
       let obj = sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint
       let defaultIndex = _.findIndex(items, defaultPoint)
       console.log(items.length)
       let now = new Date()
-      res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
+      if (algorithm === 'taste' || algorithm === 'health') {
+        res.render('experiment2-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
+      } else {
+        res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
+      }
     })
   }
 
@@ -160,7 +163,6 @@ class ExperimentsController {
       defaultIndex: req.body.defaultIndex
     }
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
-    trial++
     res.redirect('/survey5/' + trial + '/' + userId) // go to post-survey
   }
 }
@@ -173,6 +175,12 @@ function sortByAssignedAlgo (items, algorithm) {
     obj = heuristic.pathGivenSet(items)
   } else if (algorithm === 'pareto') {
     obj = pareto.relaxedPathGivenSet(items)
+  } else if (algorithm === 'health') {
+    obj.data = _.sortBy(items, [function (o) { return -o['health'] }])
+    obj.defaultPoint = obj.data[0]
+  } else if (algorithm === 'taste') {
+    obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
+    obj.defaultPoint = obj.data[0]
   }
   return obj
 }

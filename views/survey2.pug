@@ -17,9 +17,10 @@ html
     - var health = item[0]['health']
     - var imgPath = item[0].path
     - var setDesc = data[0].description // index 0 = display num 0
+    - var percentage = itemOrder/max * 100
     h1 Understanding Food Items
     div(class='progress')
-      div(class='progress-bar' role='progressbar' aria-valuenow='70' aria-valuemin='0' aria-valuemax='100' style='width:' + itemOrder + '0%') Understanding Food Items #{itemOrder} / 10
+      div(class='progress-bar' role='progressbar' aria-valuenow='70' aria-valuemin='0' aria-valuemax='100' style='width:' + percentage + '%') Understanding Food Items #{itemOrder} / #{max}
     h3 We will show you multiple cards, each representing a food item. The scores range from 1 to 100.
     div.bigCard
       h3 #{foodName}
