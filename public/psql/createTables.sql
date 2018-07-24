@@ -13,7 +13,7 @@ CREATE TABLE user_data(
     Occupation VARCHAR (50),
     CoR VARCHAR (50),
     Ethnicity VARCHAR (50),
-    exp_group VARCHAR(10)); -- Country of Residence -> CoR; exp_group: 1, 2, both
+    exp_group VARCHAR(10)); -- Country of Residence -> CoR; exp_group: 1, 2, 2a, both1_2, both1_2a
 
 CREATE TABLE user_rating(
     qn_id serial REFERENCES survey_questions(qn_id),

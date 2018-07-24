@@ -74,11 +74,11 @@ a {
   overflow: visible;
 }
 #sourcePanel .ui-selecting {
-  background-color: #97DFED;
+  background-color: #86C8EF;
 }
 
 #sourcePanel .ui-selected {
-  background-color: blue;
+  background-color: #67ACD4;
 }
 #sortingResult {
   /*width: 140%;*/
@@ -136,6 +136,12 @@ a {
 .expSubmit {
   float: right;
   width: 100%;
+  font-size: 20pt;
+}
+input[type=submit] {
+  border: none;
+  padding: 15px 20px;
+  font-size: 20pt;
 }
 .resetSort {
   padding-top: 30px;
@@ -183,6 +189,10 @@ button {
   padding-right: 0px;
 }
 .option tr {
+  height: 50%;
+  padding: 20px;
+}
+.option td {
   height: 50%;
   padding: 20px;
 }

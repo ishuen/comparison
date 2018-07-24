@@ -49,7 +49,7 @@ html
       - var choice = ['item name or image', 'taste score', 'health score', 'Other (please specify)']
       - var val = 0
       while val < choice.length
-        label 
+        label(class='expQnOption')
           input(type='radio', name='qn' + secondSet[0].qn_id, value=choice[val])
           span #{choice[val]}
           if val == choice.length - 1
