@@ -1,8 +1,8 @@
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
-const maxTrialEx1 = 5
-const maxTrialEx2 = 5
+const maxTrialEx1 = 3
+const maxTrialEx2 = 3
 // const _ = require('lodash')
 class Survey1Controller {
   // survey page for dietary restriction
