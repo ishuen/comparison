@@ -128,7 +128,7 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const algorithm = req.params.alg
-    HpbData.getTrialSet(trial, function (items) {
+    HpbData.getTrialSet(trial + 3, function (items) {
       let obj = sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint
