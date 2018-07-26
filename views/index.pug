@@ -20,5 +20,15 @@ block content
       br
       br
       br
-    a(class='indexButton', href= '/survey0/' + userId)
-      button(class='indexButton') I Agree
+    label(class='agreeCheckbox')
+      input(id='checkbox', type='checkbox')
+      span I agree to participate
+    a(id='link', class='indexButton', href= '/survey0/' + userId)
+      button(class='indexButton') Next
+  script.
+    $('.indexButton').click(function() {
+      if ($('#checkbox').prop('checked') === false) {
+        alert('You have to agree with the consent form.')
+        return false
+      }
+    })

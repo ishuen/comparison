@@ -28,16 +28,30 @@
   border-radius: 5px;
   overflow-y: scroll;
 }
-.indexButton {
-  width: 100%;
+.agreeCheckbox {
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 5%;
+  margin-bottom: 2%;
+  padding: auto;
   text-align: center;
-  margin: 30px;
+  font-size: 18pt;
+}
+.agreeCheckbox span {
+  margin: 20px;
+  font-weight: normal !important;
+}
+.agreeCheckbox input[type=checkbox] {
+  transform: scale(2);
+}
+.indexButton {
+  text-align: center;
 }
 .indexButton button{
   width: 30%;
   cursor: pointer;
-  text-align: center;
-  padding: auto;
+  padding: 0px;
   margin-left: 35%;
   margin-right: 35%;
   height: 50px;
