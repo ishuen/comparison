@@ -145,3 +145,23 @@ function validateFormSurvey6() {
   }
   return true
 }
+function validateFormSurvey7() {
+  let form = document.getElementById('form')
+  let ans = form.getElementsByTagName('input')
+  let names = $('input').map(function(){ return $(this).attr('name') })
+  let distinctNames = $.unique(names)
+  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial') })
+  for (let qn of distinctNames) {
+    let radioSet = document.getElementsByName(qn)
+    let selected = false
+    for (let radio of radioSet) {
+      if (radio.checked === true) { selected = true }
+    }
+    if (selected === false) {
+      console.log(qn)
+      alert('Please answer all questions.')
+      return false
+    }
+  }
+  return true
+}

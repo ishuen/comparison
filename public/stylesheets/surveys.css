@@ -274,3 +274,126 @@
   width: 100%;
   height: 2em;
 }
+/*survey 7 (new survey 2)*/
+div[id^='section'] {
+  height: 760px;
+  border-bottom: black 3px solid;
+}
+body.foodSurvey {
+  position: relative;
+}
+div.col-sm-9 {
+  float: right;
+}
+.nav {
+  background-color: #D8D8D8;
+  padding-left: auto;
+  padding-right: auto;
+}
+.navbar {
+  margin: auto;
+  width: 130px;
+  height: 160px;
+  padding:0px;
+}
+.navbar a {
+  width: 100%;
+  margin: auto;
+  padding: auto;
+  height: 100%;
+}
+div.container {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+div.row {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+.col-sm-2 ul {
+  height: 850px;
+  width: 130px;
+  overflow-y: scroll;
+}
+.littleCard {
+  width: 100px;
+  height: 140px;
+  font-size: 5pt;
+  border: black 1px solid;
+  text-align: left;
+  padding: 1%;
+  background-color: white;
+  float: left;
+  color: black;
+  margin: auto;
+}
+.littleCard img {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.littleCard h3 {
+  font-size: 5pt;
+  margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
+}
+.scoresLittle {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-size: 6pt;
+  position: relative;
+  bottom: 0px;
+}
+.scoresLittle table {
+  border: 0px;
+}
+
+.scoresLittle th {
+  width: 50%;
+}
+.mediumCard {
+  width: 280px;
+  height: 380px;
+  font-size: 13pt;
+  border: black 3px solid;
+  text-align: left;
+  padding: 2%;
+  background-color: white;
+  margin: auto;
+}
+.mediumCard img {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.mediumCard h3 {
+  font-size: 13pt;
+  margin: 2%;
+  white-space: initial;
+  position: relative;
+  top: 0px;
+}
+.scoresMedium {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-size: 20pt;
+  position: relative;
+  bottom: 0px;
+}
+.scoresMedium table {
+  border: 0px;
+}
+
+.scoresMedium th {
+  width: 50%;
+}

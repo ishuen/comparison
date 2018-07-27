@@ -38,7 +38,7 @@ class Survey1Controller {
     if (userId % 8 === 0) {
       res.redirect('/survey1/1/1/' + userId)
     } else {
-      res.redirect('/survey2/1/1/' + userId)
+      res.redirect('/survey2/1/' + userId)
     }
   }
   /**
@@ -126,41 +126,66 @@ class Survey1Controller {
   *  ]
   * }
   */
-  showQuestions (req, res) {
-    const userId = req.params.userId
+  // showQuestions (req, res) {
+  //   const userId = req.params.userId
+  //   const setNum = 1
+  //   const trial = req.params.trial
+  //   const itemOrder = req.params.itemOrder
+  //   if (Number(trial) === 1 && Number(itemOrder) === 1) {
+  //     Survey1.checkGroup(userId, 2, function (done) { console.log(done) })
+  //   }
+  //   Survey1.getQnSet(setNum, function (qnSet) {
+  //     HpbData.getOneItemFromList(Number(trial) + 3, itemOrder, function (item) {
+  //       res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId, max: maxItemEx2})
+  //       // res.send({data: qnSet, item: item})
+  //     })
+  //   })
+  // }
+
+  // agreementSubmit (req, res) {
+  //   console.log(req.body)
+  //   let trial = Number(req.body.trial)
+  //   let qn = getQnAns(req.body)
+  //   Experiments.insertQnAns(qn, function (done) { console.log(done) })
+  //   let itemOrder = Number(req.body.itemOrder)
+  //   const userId = req.body.userId
+  //   if (itemOrder === maxItemEx2) {
+  //     Survey1.getUserGroup(userId, function (expGroup) {
+  //       let category = expGroup.slice(-1)
+  //       let algorithm = groups[category]
+  //       res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+  //     })
+  //   } else {
+  //     itemOrder++
+  //     res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
+  //   }
+  // }
+
+  allAgreementQns (req, res) {
+    let trial = req.params.trial
+    let userId = req.params.userId
     const setNum = 1
-    const trial = req.params.trial
-    const itemOrder = req.params.itemOrder
-    if (Number(trial) === 1 && Number(itemOrder) === 1) {
+    if (Number(trial) === 1) {
       Survey1.checkGroup(userId, 2, function (done) { console.log(done) })
     }
     Survey1.getQnSet(setNum, function (qnSet) {
-      HpbData.getOneItemFromList(Number(trial) + 3, itemOrder, function (item) {
-        res.render('survey2', {data: qnSet, item: item, trial: trial, itemOrder: itemOrder, userId: userId, max: maxItemEx2})
-        // res.send({data: qnSet, item: item})
+      HpbData.getTrialSet(Number(trial) + 3, function (items) {
+        res.render('survey7', {data: qnSet, items: items, trial: trial, userId: userId, max: maxItemEx2})
       })
     })
   }
-
-  agreementSubmit (req, res) {
+  allAgreementSubmit (req, res) {
     console.log(req.body)
     let trial = Number(req.body.trial)
-    let qn = getQnAns(req.body)
-    Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    let itemOrder = Number(req.body.itemOrder)
     const userId = req.body.userId
-    if (itemOrder === maxItemEx2) {
-      Survey1.getUserGroup(userId, function (expGroup) {
-        let category = expGroup.slice(-1)
-        let algorithm = groups[category]
-        res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
-      })
-    } else {
-      itemOrder++
-      res.redirect('/survey2/' + trial + '/' + itemOrder + '/' + userId)
-    }
+    let qn = getAllQnAns(req.body)
+    Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
+    Survey1.getUserGroup(userId, function (expGroup) {
+      let category = expGroup.slice(-1)
+      let algorithm = groups[category]
+      res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+    })
   }
-
   /**
   * @api {get} /survey1/:trial/:itemOrder/ Request the survey question sets
   * @apiName SurveyQuestion
@@ -413,6 +438,20 @@ function getQnAns (obj) {
   let qnAns = []
   for (let q of qn) {
     let temp = [q.slice(2), userId, obj[q], trial, itemOrder] // [question id, userId, answer to the question]
+    qnAns.push(temp)
+  }
+  return qnAns
+}
+function getAllQnAns (obj) {
+  const userId = obj.userId
+  const trial = obj.trial
+  let qn = Object.keys(obj).filter(k => !isNaN(parseInt(k.slice(0, 1))))
+  let qnAns = []
+  for (let q of qn) {
+    let itemOrder = q.slice(0, q.indexOf('-'))
+    let foodId = q.slice(q.indexOf('-') + 1, q.lastIndexOf('-'))
+    let qnNum = q.slice(q.lastIndexOf('-') + 1)
+    let temp = [qnNum, userId, obj[q], trial, itemOrder, foodId] // [question id, userId, answer to the question, trial, itemOrder, foodId]
     qnAns.push(temp)
   }
   return qnAns
