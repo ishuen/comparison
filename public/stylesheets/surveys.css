@@ -274,9 +274,13 @@
   width: 100%;
   height: 2em;
 }
-/*survey 7 (new survey 2)*/
+/*survey 7, 8 (new survey 2, 1)*/
 div[id^='section'] {
   height: 760px;
+  border-bottom: black 3px solid;
+}
+div[id^='sectionA'] {
+  height: 1100px;
   border-bottom: black 3px solid;
 }
 body.foodSurvey {

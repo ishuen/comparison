@@ -1,7 +1,7 @@
 doctype html
 html
   head
-    title= 'experiment 2 - presurvey'
+    title= 'experiment 1 - presurvey'
     meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/surveys.css')
@@ -14,7 +14,7 @@ html
     script.
       let data = !{JSON.stringify(data)}
       let items = !{JSON.stringify(items)}
-    //- console.log(items)
+    - console.log(data)
     h1 Understanding Food Items
     div(class='container')
       div(class='row')
@@ -23,7 +23,7 @@ html
             - var i = 0
             while i < items.length
               li.navbar
-                a(href='#section' + items[i].id)
+                a(href='#sectionA' + items[i].id)
                   div.littleCard
                     h3 #{items[i].foodname}
                     img(src= items[i].path alt= items[i].foodname)
@@ -36,12 +36,12 @@ html
                         td.health #{items[i].health}
               - i++
         div(class='col-sm-9')
-          form(id='form', name='foodForm', class='foodForm', action='/survey2/' + trial + '/' + userId, method='post', onsubmit='return validateFormSurvey7()')
+          form(id='form', name='foodForm', class='foodForm', action='/survey1/' + trial + '/' + userId, method='post', onsubmit='return validateScore()')
             input(type='hidden', name='trial', value=trial)
             input(type='hidden', name='userId', value=userId)
             - var i = 0
             while i < items.length
-              div(id='section'+ items[i].id)
+              div(id='sectionA'+ items[i].id)
                 br 
                 div.mediumCard
                   h3 #{items[i].foodname}
@@ -64,6 +64,7 @@ html
                     th Agree
                     th Strongly agree
                   - let firstSet = data.slice(1)
+                  - firstSet = firstSet.filter(d => d.qn_set == 1)
                   - let itemOrder = Number(i) + 1
                   each qn in firstSet
                     tr
@@ -71,6 +72,68 @@ html
                       each val in [1, 2, 3, 4, 5]
                         td
                           input(name=itemOrder + '-' + items[i].id + '-' + qn.qn_id, type='radio', value= val)
+                - var secondSet = data.filter(d => d.qn_set == 2)
+                h3 #{secondSet[0].description}
+                p #{secondSet[1].description}
+                input(type='text', name= 'taste-' + items[i].id, value= items[i].taste)
+                p #{secondSet[2].description}
+                input(type='text', name= 'health-' + items[i].id, value= items[i].health)
+                p #{secondSet[3].description}
+                textarea(name= itemOrder + '-' + items[i].id + '-' + secondSet[3].qn_id, rows='4', style='width: 80%;')
+                br
               - i++
             br
             button(class='surSubmit', type='submit', value='submit', style='float: right') Next
+    script.
+      function validateFormSurvey8() {
+        let form = document.getElementById('form')
+        let ans = form.getElementsByTagName('input')
+        //- let comment = form.getElementsByTagName('textarea')
+        let names = $('input').map(function(){ return $(this).attr('name') })
+        let distinctNames = $.unique(names)
+        distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o].slice(0, 5) !== 'taste' && distinctNames[o].slice(0, 6) !== 'health')})
+        for (let qn of distinctNames) {
+          let radioSet = document.getElementsByName(qn)
+          let selected = false
+          for (let radio of radioSet) {
+            if (radio.checked === true) { selected = true }
+          }
+          if (selected === false) {
+            console.log(qn)
+            alert('Please answer all questions.')
+            return false
+          }
+        }
+        //- if (comment[0].value === '') {
+        //-   alert('Please justify your changes.')
+        //-   return false
+        //- }
+        return true
+      }
+      function validateScore () {
+        let x = Array.from(document.querySelectorAll("[name^='taste-']"))
+        let y = Array.from(document.querySelectorAll("[name^='health-']"))
+        if (x.some(empty) || y.some(empty)) {
+          alert('The score must be filled out.')
+          return false
+        } else if (x.some(upperLimit) || y.some(upperLimit) || x.some(lowerLimit) || y.some(lowerLimit)) {
+          alert('The score must range from 1 to 100.')
+          return false
+        } else if (x.some(checkInteger) || y.some(checkInteger)) {
+          alert('The score must be integer.')
+          return false
+        }
+        return validateFormSurvey8()
+      }
+      function empty (o) {
+        return o.value === '' 
+      }
+      function upperLimit (o) {
+        return o.value > 100
+      }
+      function lowerLimit (o) {
+        return o.value < 1
+      }
+      function checkInteger (o) {
+        return !Number.isInteger(Number(o.value))
+      }
