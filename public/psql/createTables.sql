@@ -21,6 +21,7 @@ CREATE TABLE user_rating(
     rating INT NOT NULL,
     rating_id serial PRIMARY KEY,
     trial INT,
+    food_id varchar REFERENCES hpbdata(id),
     item_order INT); -- rating 1 ~ 5, 5_scale
 
 CREATE TABLE user_comment(
