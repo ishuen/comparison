@@ -297,7 +297,7 @@ div.col-sm-9 {
 .navbar {
   margin: auto;
   width: 130px;
-  height: 160px;
+  height: 170px;
   padding:0px;
 }
 .navbar a {
@@ -323,7 +323,7 @@ div.row {
 }
 .littleCard {
   width: 100px;
-  height: 140px;
+  height: 150px;
   font-size: 5pt;
   border: black 1px solid;
   text-align: left;
@@ -351,7 +351,7 @@ div.row {
   text-align: center;
   padding: 0px;
   margin: 0px;
-  font-size: 6pt;
+  font-size: 8pt;
   position: relative;
   bottom: 0px;
 }
