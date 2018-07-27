@@ -2,6 +2,7 @@ doctype html
 html
   head
     title= 'experiment 1 - postsurvey'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
@@ -12,45 +13,49 @@ html
     script.
       let data = !{JSON.stringify(data)}
     - var setDesc = data[0].description // index 0 = display num 0
-    h1 Post-Experiment Survey – Experiment 1
-    h3 #{setDesc}
-    form(id='form', action='/survey4/' + trial + '/' + userId, method='post', onsubmit='return validateExpForm()')
-      input(type='hidden', name='trial', value=trial)
-      input(type='hidden', name='userId', value=userId)
-      table.expLikert
-        col(width='30%')
-        tr
-          th
-          th Strongly disagree
-          th Disagree
-          th Neither agree nor disagree
-          th Agree
-          th Strongly agree
-        - var firstSet = data.filter(d => d.qn_set == 6).sort(function (a, b) {return a.qn_id > b.qn_id })
-        - firstSet = firstSet.slice(1)
-        - var i = 0
-        while i < firstSet.length
+    div(class='container')
+      h1 Post-Experiment Survey – Experiment 1
+      label #{setDesc}
+      form(id='form', action='/survey4/' + trial + '/' + userId, method='post', onsubmit='return validateExpForm()')
+        input(type='hidden', name='trial', value=trial)
+        input(type='hidden', name='userId', value=userId)
+        table(class='table table-striped likertTable')
+          col(width='30%')
           tr
-          td #{firstSet[i].description}
-            if firstSet[i].ans_type == '5_scale'
-              each val in [1, 2, 3, 4, 5]
-                td
-                  input(name='qn' + firstSet[i].qn_id, type='radio', value= val)
-            else
-              td(colspan='5')
-                input(name='qn' + firstSet[i].qn_id, type='text', style='width: 100%')
-          - i++
-      br
-      - var secondSet = data.filter(d => d.qn_set == 7)
-      h3 #{secondSet[0].description}
-      - var choice = ['I don’t eat them.', 'I’m not familiar with them.', 'The health scores are too low.', 'The taste scores are too low.', 'Other (please specify)']
-      - var val = 0
-      while val < choice.length
-        label(class='expQnOption')
-          input(type='radio', name='qn' + secondSet[0].qn_id, value=choice[val])
-          span #{choice[val]}
+            th
+            th Strongly disagree
+            th Disagree
+            th Neither agree nor disagree
+            th Agree
+            th Strongly agree
+          - var firstSet = data.filter(d => d.qn_set == 6).sort(function (a, b) {return a.qn_id > b.qn_id })
+          - firstSet = firstSet.slice(1)
+          - var i = 0
+          while i < firstSet.length
+            tr
+              td #{firstSet[i].description}
+              if firstSet[i].ans_type == '5_scale'
+                each val in [1, 2, 3, 4, 5]
+                  td
+                    input(name='qn' + firstSet[i].qn_id, type='radio', value= val)
+              else
+                td(colspan='5')
+                  input(name='qn' + firstSet[i].qn_id, type='text', style='width: 100%')
+            - i++
         br
-        - val++
-      textarea(name='others', rows='4', style='width: 80%;')
-      br
-      button(class='surSubmit', type='submit', value='submit') Next
+        - var secondSet = data.filter(d => d.qn_set == 7)
+        label #{secondSet[0].description}
+        - var choice = ['I don’t eat them.', 'I’m not familiar with them.', 'The health scores are too low.', 'The taste scores are too low.', 'Other (please specify)']
+        - var val = 0
+        while val < choice.length
+          div(class='radio')
+            label
+              input(type='radio', name='qn'+secondSet[0].qn_id, value=choice[val])
+              | #{choice[val]}
+          - val++
+        div(class='form-group')
+          textarea(class='form-control' rows='5' id='comment', name='others', style='width: 70%')
+          br
+        div(class='form-group')        
+          div(class='col-sm-10', style='float: left;')
+            button(type='submit' class='btn btn-default') Next

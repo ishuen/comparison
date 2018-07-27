@@ -138,24 +138,24 @@ a {
   width: 100%;
   font-size: 20pt;
 }
-input[type=submit] {
+/*input[type=submit] {
   border: none;
   padding: 15px 20px;
   font-size: 20pt;
 }
-.resetSort {
+*/.resetSort {
   padding-top: 30px;
   float: right;
   width: 100%;
   background-color: red;
 }
-button {
+/*button {
   width: 100%;
   font-size: 20pt;
   border: none;
   padding: 15px 20px;
 }
-.sortingOption {
+*/.sortingOption {
   overflow: visible;
 }
 .sortingOption th {
