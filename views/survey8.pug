@@ -35,7 +35,7 @@ html
                         td.taste #{items[i].taste}
                         td.health #{items[i].health}
               - i++
-        div(class='col-sm-9')
+        div(class='col-sm-10')
           form(id='form', name='foodForm', class='foodForm', action='/survey1/' + trial + '/' + userId, method='post', onsubmit='return validateScore()')
             input(type='hidden', name='trial', value=trial)
             input(type='hidden', name='userId', value=userId)
@@ -54,7 +54,7 @@ html
                       td.taste #{items[i].taste}
                       td.health #{items[i].health}
                 br
-                table.itemLikert
+                table(class='table table-striped likertTable')
                   col(width='35%')
                   tr
                     th

@@ -286,7 +286,7 @@ div[id^='sectionA'] {
 body.foodSurvey {
   position: relative;
 }
-div.col-sm-9 {
+div.col-sm-10 {
   float: right;
 }
 .nav {
@@ -315,6 +315,9 @@ div.row {
   width: 100%;
   margin: 0px;
   padding: 0px;
+}
+#myScrollspy {
+  width: 130px;
 }
 .col-sm-2 ul {
   height: 850px;
@@ -400,4 +403,7 @@ div.row {
 
 .scoresMedium th {
   width: 50%;
+}
+.likertTable {
+  table-layout: fixed;
 }
