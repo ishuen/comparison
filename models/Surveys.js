@@ -44,14 +44,20 @@ class Survey1 {
     if (userId % 8 === 0 && expNum === 2) {
       let num = (userId / 8) % 7
       let conditions = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-      let input = 'both12' + conditions[num]
-      pool.query('UPDATE user_data SET exp_group = $1 WHERE user_id = $2', [input, userId], (err, res) => {
+      pool.query('SELECT * FROM user_data WHERE user_id = $1', [userId], (err, res) => {
         if (err) throw err
+        let group = res.rows[0]['exp_group']
+        if (group.length > 2) return
+        let input = 'both12' + conditions[num]
+        pool.query('UPDATE user_data SET exp_group = $1 WHERE user_id = $2', [input, userId], (err, res) => {
+          if (err) throw err
+        })
       })
     } else if (userId % 8 !== 0 && expNum === 1) {
       pool.query('SELECT * FROM user_data WHERE user_id = $1', [userId], (err, res) => {
         if (err) throw err
         let group = res.rows[0]['exp_group']
+        if (group.length > 2) return
         let input = 'both1' + group
         pool.query('UPDATE user_data SET exp_group = $1 WHERE user_id = $2', [input, userId], (err, res) => {
           if (err) throw err
