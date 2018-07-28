@@ -70,7 +70,9 @@ html
                       td #{qn.description}
                       each val in [1, 2, 3, 4, 5]
                         td
-                          input(name=itemOrder + '-' + items[i].id + '-' + qn.qn_id, type='radio', value= val)
+                          label
+                            input(name=itemOrder + '-' + items[i].id + '-' + qn.qn_id, type='radio', value= val)
+                            span &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               - i++
             br
             button(class='surSubmit', type='submit', value='submit', style='float: right') Next
