@@ -95,7 +95,8 @@ class ExperimentsController {
     Experiments.getCustomSet(userId, trial, function (items) {
       console.log(items)
       let now = new Date()
-      res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+      // res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+      res.render('experiment1-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
   submitSorting (req, res) {
