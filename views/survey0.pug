@@ -2,59 +2,62 @@ doctype html
 html
   head
     title= 'presurvey - Dietary restrictions'
-    link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
-    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script(src='/scripts/questionSets.js', type='text/javascript')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', charset='utf-8')
     script.
       let data = !{JSON.stringify(data)}
     - var firstSet = data.filter(d => d.qn_set == 4)
     - var setDesc = firstSet[0].description // index 0 = display num 0
-    h1 Dietary restrictions
-    h3 #{setDesc}
-    form(id='form', action='/survey0/' + userId, method='post', onsubmit='return validateForm()')
-      input(type='hidden', name='userId', value=userId)
-      table.likert
-        tr
-          th Food Type
-          th I am OK with this
-          th I am Allergic
-          th I am Intolerant
-          th 
-            | I Choose not to eat
-            br
-            | (e.g., religious, ethical reasons)
-          th I Dislike
-        
-        - firstSet = firstSet.slice(1)
-        - var count = 0
-        - var ans = ['OK', 'Allergic', 'Intolerant', 'Choose not to eat', 'Dislike']
-        each qn in firstSet
-          - count++
+    div(class='container-fluid')
+      h1 Dietary restrictions
+      label #{setDesc}
+      form(id='form', action='/survey0/' + userId, method='post', onsubmit='return validateForm()')
+        input(type='hidden', name='userId', value=userId)
+        table(class='table table-striped likertTable')
           tr
-          td #{qn.description}
-            if count == firstSet.length
+            th Food Type
+            th I am OK with this
+            th I am Allergic
+            th I am Intolerant
+            th 
+              | I Choose not to eat
               br
-              input(name='others',class='others', type='text', style='float: right; width: 90%; margin: 2%') 
-          each val in [0, 1, 2, 3, 4]
-            td
-              input(name='qn'+ qn.qn_id, type='radio', value=ans[val])
-      br
-      - var secondSet = data.filter(d => d.qn_set == 5)
-      h3 #{secondSet[0].description}
-      - var veganType = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian', 'I\'m neither a vegan nor a vegetarian']
-      - var val = 0
-      while val < veganType.length
-        label(class='qnOption')
-          input(type='radio', name='qn' + secondSet[0].qn_id, value=veganType[val])
-          span #{veganType[val]}
+              | (e.g., religious, ethical reasons)
+            th I Dislike
+          - firstSet = firstSet.slice(1)
+          - var count = 0
+          - var ans = ['OK', 'Allergic', 'Intolerant', 'Choose not to eat', 'Dislike']
+          each qn in firstSet
+            - count++
+            tr
+              td 
+                label #{qn.description}
+                  if count == firstSet.length
+                    br
+                    input(name='others', class='form-control', type='text', style='float: right; width: 90%; margin: 2%') 
+              each val in [0, 1, 2, 3, 4]
+                td
+                  div(class='radio')
+                    label
+                      input(name='qn'+ qn.qn_id, type='radio', value=ans[val])
+                      span &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         br
-        - val++
-      h3 #{secondSet[1].description}
-      textarea(name='qn' + secondSet[1].qn_id, rows='4', style='width: 80%;')
-      br
-      br
-      button(class='surSubmit', type='submit', value='submit') Next
+        - var secondSet = data.filter(d => d.qn_set == 5)
+        label #{secondSet[0].description}
+        - var veganType = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian', 'I\'m neither a vegan nor a vegetarian']
+        - var val = 0
+        while val < veganType.length
+          div(class='radio')
+            label
+              input(type='radio', name='qn' + secondSet[0].qn_id, value=veganType[val])
+              | #{veganType[val]}
+          - val++
+        label #{secondSet[1].description}
+        div(class='form-group')
+          textarea(name='qn' + secondSet[1].qn_id, class='form-control', rows='5', style='width: 70%;')
+        br
+        button(class='btn btn-primary btn-lg', type='submit') Next

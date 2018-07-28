@@ -280,7 +280,7 @@ div[id^='section'] {
   border-bottom: black 3px solid;
 }
 div[id^='sectionA'] {
-  height: 1100px;
+  height: 530px;
   border-bottom: black 3px solid;
 }
 body.foodSurvey {
@@ -366,8 +366,10 @@ div.row {
   width: 50%;
 }
 .mediumCard {
-  width: 280px;
-  height: 380px;
+/*  width: 280px;
+  height: 380px;*/
+  width: 100%;
+  height: auto;
   font-size: 13pt;
   border: black 3px solid;
   text-align: left;
@@ -379,13 +381,6 @@ div.row {
   width: 96%;
   margin-left: auto;
   margin-right: auto;
-}
-.mediumCard h3 {
-  font-size: 13pt;
-  margin: 2%;
-  white-space: initial;
-  position: relative;
-  top: 0px;
 }
 .scoresMedium {
   width: 100%;
@@ -406,4 +401,11 @@ div.row {
 }
 .likertTable {
   table-layout: fixed;
+}
+.filling div {
+  margin-bottom: 0px;
+}
+.endQn {
+  margin-top: 10px;
+  padding-left: 20px;
 }

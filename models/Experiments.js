@@ -76,7 +76,8 @@ class Experiments {
       }
       // insert into comment
       for (let co of comment) {
-        pool.query('INSERT INTO user_comment (qn_id, user_id, description, trial, item_order, food_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING comment_id', co, (err, res) => {
+        co.pop()
+        pool.query('INSERT INTO user_comment (qn_id, user_id, description, trial, item_order) VALUES ($1, $2, $3, $4, $5) RETURNING comment_id', co, (err, res) => {
           if (err) throw err
           console.log(res.rows)
         })

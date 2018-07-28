@@ -36,11 +36,12 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    if (userId % 8 === 0) {
-      res.redirect('/survey1/1/' + userId)
-    } else {
-      res.redirect('/survey2/1/' + userId)
-    }
+    res.redirect('/survey1/1/' + userId)
+    // if (userId % 8 === 0) {
+    //   res.redirect('/survey1/1/' + userId)
+    // } else {
+    //   res.redirect('/survey2/1/' + userId)
+    // }
   }
   /**
   * @api {get} /survey2/:trial/:itemOrder Request the survey question set
@@ -171,7 +172,7 @@ class Survey1Controller {
     }
     Survey1.getQnSet(setNum, function (qnSet) {
       HpbData.getTrialSet(Number(trial) + 3, function (items) {
-        res.render('survey7', {data: qnSet, items: items, trial: trial, userId: userId, max: maxItemEx2})
+        res.render('survey2', {data: qnSet, items: items, trial: trial, userId: userId, max: maxItemEx2})
       })
     })
   }
@@ -322,7 +323,7 @@ class Survey1Controller {
     }
     Survey1.getQnSets(setNum, function (qnSet) {
       HpbData.getTrialSet(Number(trial), function (items) {
-        res.render('survey8', {data: qnSet, items: items, trial: trial, userId: userId, max: maxItemEx1})
+        res.render('survey1', {data: qnSet, items: items, trial: trial, userId: userId, max: maxItemEx1})
       })
     })
   }
@@ -335,7 +336,16 @@ class Survey1Controller {
     Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
-    res.redirect('/experiment1/pre/' + trial + '/' + userId)
+    if (userId % 8 === 0) {
+      res.redirect('/experiment1/pre/' + trial + '/' + userId)
+    } else {
+      Survey1.getUserGroup(userId, function (expGroup) {
+        let category = expGroup.slice(-1)
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+      })
+    }
+    // res.redirect('/experiment1/pre/' + trial + '/' + userId)
   }
 
   showDemographics (req, res) {
@@ -372,7 +382,8 @@ class Survey1Controller {
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
     trial++
     if (trial <= maxTrialEx1) {
-      res.redirect('/survey1/' + trial + '/1/' + userId) // go to experiment
+      // res.redirect('/survey1/' + trial + '/1/' + userId)
+      res.redirect('/survey1/' + trial + '/' + userId)
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
         if (expGroup.slice(0, 4) !== 'both') {
@@ -440,7 +451,8 @@ class Survey1Controller {
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
     trial++
     if (trial <= maxTrialEx2) {
-      res.redirect('/survey2/' + trial + '/1/' + userId) // go to satisfaction
+      // res.redirect('/survey2/' + trial + '/1/' + userId)
+      res.redirect('/survey1/' + trial + '/' + userId)
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
         console.log('expGroup***', expGroup.slice(0, 4))

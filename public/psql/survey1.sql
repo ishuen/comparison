@@ -70,3 +70,8 @@ INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES
 (9, 1, 'When I was searching for an item, I focused on...', 'choice'),
 (9, 2, 'Please specify why you focused on it/them', 'fill');
+
+DELETE FROM user_rating;
+DELETE FROM survey_questions WHERE qn_set=1 AND display_num=3;
+UPDATE survey_questions SET description='The taste score is accurate.' WHERE qn_set=1 AND display_num=2;
+
