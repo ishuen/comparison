@@ -54,6 +54,13 @@
   height: 200px;
   background-color: #D8D8D8;
 }
+#source .ui-selecting {
+  background-color: #86C8EF;
+}
+
+#source .ui-selected {
+  background-color: #67ACD4;
+}
 #tasteSort {
   height: 200px;
   background-color: #D8D8D8;
@@ -92,6 +99,15 @@ path {
 }
 .sliceSpace {
   padding: 3px;
+}
+#sortingResult {
+  width: 1vw;
+}
+#sortingResult {
+  display: inline;
+}
+#reset {
+  display: inline;
 }
 /*svg {
   float: right;

@@ -99,11 +99,28 @@ function discardItem() {
   }
 }
 
+// function discardItem1() {
+//   let remainingCards = document.getElementsByClassName('card')
+//   let toDiscard = document.getElementsByClassName('card ui-selected')
+//   console.log(remainingCards.length, toDiscard.length)
+//   if (remainingCards.length - toDiscard.length < 5) {
+//     alert('Cannot discard card(s) anymore.')
+//     return false
+//   }
+//   if (toDiscard.length == 0) {
+//     // ask user to select item first
+//     alert('Please select card(s) from the card display area and press this button again.')
+//   } else {
+//     // delete card
+//     $(toDiscard).remove()
+//   }
+// }
+
 function sortCardsBy1(option) {
   var list, i, b, shouldSwitch;
   list = document.getElementById('source')
   block = document.getElementById('sort')
-  buttons = block.getElementsByTagName('button')
+  buttons = block.getElementsByClassName('btn-default')
   // console.log(buttons)
   let switching = true
   /*Make a loop that will continue until
@@ -201,6 +218,15 @@ function isEqualArr (a, b) {
       result++
   }
   return result == 0
+}
+function isEqualTrackingArr (a, b) {
+  if ((a === undefined || a.length == 0) && (b === undefined || b.length == 0)) return 1
+  if (a.length != b.length) return 0
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i])
+      return 0
+  }
+  return 1
 }
 function init1() {
  // Move the paragraph from #myDiv1 to #myDiv2
