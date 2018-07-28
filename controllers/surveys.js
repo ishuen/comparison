@@ -335,7 +335,7 @@ class Survey1Controller {
     Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
-    res.redirect('/experiment1/' + trial + '/' + userId)
+    res.redirect('/experiment1/pre/' + trial + '/' + userId)
   }
 
   showDemographics (req, res) {

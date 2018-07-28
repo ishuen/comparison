@@ -78,7 +78,47 @@ class ExperimentsController {
   *   ]
   * }
   */
-
+  showItemsPre (req, res) {
+    const trial = req.params.trial
+    const userId = req.params.userId
+    const qnSet = [{section: 'Practice Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
+    {section: 'Practice Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
+    let qn = qnSet[trial - 1]
+    Experiments.getCustomSet(userId, 1, function (items) {
+      console.log(items)
+      let now = new Date()
+      res.render('experiment1-2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn})
+    })
+  }
+  submitSortingPre (req, res) {
+    let trial = Number(req.body.trial) + 1
+    const maxPreTrial = 2
+    const userId = req.body.userId
+    // let sorts = JSON.parse('[' + req.body.sorts + ']')
+    // let ordering = []
+    // for (let item of sorts) {
+    //   ordering.push(item.foodId)
+    // }
+    // console.log(ordering)
+    // let now = new Date()
+    // const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    // console.log('timeUsed', timeUsed)
+    // let details = {
+    //   ordering: ordering,
+    //   tracking: JSON.parse('[' + req.body.tracking + ']'),
+    //   trial: trial,
+    //   userId: userId,
+    //   timeUsed: timeUsed,
+    //   startingTime: req.body.startingTime,
+    //   endTime: now
+    // }
+    // Experiments.userSorting(details, function (out) { console.log(out) })
+    if (trial <= maxPreTrial) {
+      res.redirect('/experiment1/pre/' + trial + '/' + userId)
+    } else {
+      res.redirect('/experiment1/1/' + userId)
+    }
+  }
   /**
   * @api {get} /experiment1/:trial experiment1ShowingData
   * @apiName Experiment1Init
@@ -92,11 +132,15 @@ class ExperimentsController {
   showItems (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
+    const qn = {
+      section: 'Experiment 1',
+      description: 'Please use the cards above and sort the items to a list below by descending taste score and ascending health score, i.e. right side has smaller taste score and larger health score than the left.'
+    }
     Experiments.getCustomSet(userId, trial, function (items) {
       console.log(items)
       let now = new Date()
       // res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
-      res.render('experiment1-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+      res.render('experiment1-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn})
     })
   }
   submitSorting (req, res) {

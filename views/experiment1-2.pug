@@ -52,7 +52,7 @@ html
       //- h3 Practice trial - 1
       //- label Please use the cards above and sort the items to a list below by ascending taste score, i.e. right side is larger than the left.
       span(class='tabSpace')
-      form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
+      form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/pre/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)
