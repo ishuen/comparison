@@ -267,3 +267,68 @@ function updateData(data, location, width, height) {
   svg.select(".y0.axis").duration(750).call(yAxisLeft)
   svg.select(".y1.axis").duration(750).call(yAxisRight)
 }
+function drawScatterPlot (data, location, width, height) {
+  var margin = {top: 30, right: 40, bottom: 30, left: 50},
+    width = width - margin.left - margin.right,
+    height = height - margin.top - margin.bottom
+  var x = d3.scale.linear().range([0, width])
+  var y = d3.scale.linear().range([height, 0])
+  x.domain([0, d3.max(data, function(d) { return Math.max(d['health']) })]) 
+  y.domain([0, d3.max(data, function(d) { return Math.max(d['taste']) })])
+  var xCat = 'health', yCat = 'taste'
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+      let str = '<label>' + d['foodname'] + '</label><br>' + '<span>' + xCat + ':' + d[xCat] + '</span><br><span>' + yCat + ':' + d[yCat] + '</span><br>'
+      // return str + '<img src=' + d['path'] + '/>'
+      return str + '<img style="width: 50%; height: auto;", src="http://theplasticspoon.com/wp-content/uploads/2018/03/Miami-Food-Blog-TheFeistyP-300x300.jpg"/>'
+    })
+  var chart = d3.select(location)
+    .append('svg:svg')
+    .attr('width', width + margin.right + margin.left)
+    .attr('height', height + margin.top + margin.bottom)
+    .attr('class', 'chart')
+  chart.call(tip)
+  var main = chart.append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('class', 'main')       
+  var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient('bottom');
+  main.append('g')
+    .attr('transform', 'translate(0,' + height + ')')
+    .attr('class', 'main axis date')
+    .call(xAxis);
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient('left');
+  main.append('g')
+    .attr('transform', 'translate(0,0)')
+    .attr('class', 'main axis date')
+    .call(yAxis);
+  var g = main.append('svg:g')  
+  g.selectAll('scatter-dots')
+    .data(data)
+    .enter().append('svg:circle')
+    .attr('cx', function (d,i) { return x(d['health']); } )
+    .attr('cy', function (d) { return y(d['taste']); } )
+    .attr('r', 8)
+    .attr('id', function (d) { return 'food' + d['id'] })
+    .on('mouseover', tip.show)
+    .on('mouseout', tip.hide)
+  main.append('text')      // text label for the x axis
+    .attr('x', width / 2 )
+    .attr('y', height + margin.bottom )
+    .style('text-anchor', 'middle')
+    .text('Health')
+  main.append('text')
+    .attr('transform', 'rotate(-90)')
+    .attr('y', 0 - margin.left)
+    .attr('x', 0 - (height / 2))
+    .attr('dy', '1em')
+    .style('text-anchor', 'middle')
+    .text('Taste')
+}

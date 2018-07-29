@@ -12,7 +12,7 @@ const groups = {
   b: 'pareto',
   c: 'taste',
   d: 'health',
-  e: 'health',
+  e: 'scatterPlot',
   f: 'health',
   g: 'health'
 }

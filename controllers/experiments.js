@@ -180,6 +180,9 @@ class ExperimentsController {
     } else if (algorithm === 'taste') {
       obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
       obj.defaultPoint = obj.data[0]
+    } else { // scatterPlot
+      obj.data = items
+      obj.defaultPoint = items[0]
     }
     return obj
   }
@@ -188,7 +191,7 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const algorithm = req.params.alg
-    Experiments.getCustomSet(userId, Number(trial) + 3, function (items) {
+    Experiments.getCustomSet(userId, Number(trial), function (items) {
     // HpbData.getTrialSet(Number(trial) + 3, function (items) {
       let obj = module.exports.sortByAssignedAlgo(items, algorithm)
       items = obj.data
@@ -198,8 +201,10 @@ class ExperimentsController {
       let now = new Date()
       if (algorithm === 'taste' || algorithm === 'health') {
         res.render('experiment2-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      } else {
+      } else if (algorithm === 'heuristic' || algorithm === 'pareto') {
         res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
+      } else {
+        res.render('experiment2-2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
       }
     })
   }
@@ -221,7 +226,7 @@ class ExperimentsController {
       startingTime: start,
       endTime: now,
       timeUsed: timeUsed,
-      tracking: JSON.parse(req.body.tracking),
+      tracking: ('tracking' in req.body) ? JSON.parse(req.body.tracking) : [],
       defaultIndex: req.body.defaultIndex
     }
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
