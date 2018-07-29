@@ -1,0 +1,117 @@
+.card {
+  width: 100%;
+  height: auto;
+  font-size: 8pt;
+  border: black 1px solid;
+  text-align: left;
+  padding: 2%;
+  background-color: white;
+  margin: 0px;
+  display: inline-block;
+  white-space: normal;
+}
+
+.card img {
+  width: 96%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scores {
+  width: 100%;
+  height: auto;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-size: 10pt;
+  position: relative;
+  bottom: 0px;
+}
+.scores table {
+  border: 0px;
+}
+
+.scores th {
+  width: 50%;
+}
+
+.taste {
+  color: red;
+  text-align: center;
+}
+
+.health {
+  color: green;
+  text-align: center;
+}
+.col-sm-1 {
+  padding: 0px;
+}
+.row {
+  margin: 2%;
+}
+#source {
+  height: 200px;
+  background-color: #D8D8D8;
+}
+#source .ui-selecting {
+  background-color: #86C8EF;
+}
+
+#source .ui-selected {
+  background-color: #67ACD4;
+}
+
+#tasteSort {
+  height: 200px;
+  background-color: #D8D8D8;
+  overflow-x: scroll;
+  white-space: nowrap;
+}
+#tasteSort div{
+  width: 142px;
+}
+#tasteSort .col-sm-1 {
+  display: inline-block;
+}
+#tasteChart {
+  float: right;
+  min-width: 350px;
+  min-height: 200px;
+}
+.cardListEle {
+  height: 200px;
+  width: 142px;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+  stroke: gray;
+}
+.table tr {
+  pading-left: 2%;
+}
+path {
+  stroke-width: 2;
+  fill: none;
+}
+.tabSpace {
+  padding: 3em;
+}
+.sliceSpace {
+  padding: 3px;
+}
+#sortingResult {
+  width: 1vw;
+}
+#sortingResult {
+  display: inline;
+}
+#reset {
+  display: inline;
+}
+/*svg {
+  float: right;
+}*/

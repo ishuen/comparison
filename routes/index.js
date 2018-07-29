@@ -4,6 +4,7 @@ const usersController = require('../controllers/users')
 
 /* GET home page. */
 router.get('/', usersController.getNewUser)
+router.get('/end', function (req, res) { res.render('end', {}) })
 
 router.use('/topologicalSort', require('./topologicalSort'))
 router.use('/geneticSort', require('./geneticSort'))

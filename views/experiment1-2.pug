@@ -1,0 +1,132 @@
+doctype html
+html
+  head
+    title= 'experiment 1'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', href='/stylesheets/style1.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='/scripts/dragula.min.js', type='text/javascript')
+    script(src='/scripts/util.js', type='text/javascript')
+    script(src='https://code.jquery.com/ui/1.12.1/jquery-ui.js')
+    script(src='/scripts/drawGraph.js', type='text/javascript')
+    script.
+      let data = !{JSON.stringify(data)}
+      let tracking = []
+    div(class='container-fluid', id='sort')
+      h3 Resource Card Set
+      label Order By
+      span(class='sliceSpace')
+      button(class='btn btn-default', onclick="sortCardsBy1('alphabet')") Alphabet
+      span(class='sliceSpace')
+      button(class='btn btn-default', onclick="sortCardsBy1('taste')") Taste
+      span(class='sliceSpace')
+      button(class='btn btn-default', onclick="sortCardsBy1('health')") Health
+      span(class='sliceSpace')
+      label At most 5 cards are allowed to discard.
+      span(class='sliceSpace')
+      button(class='btn btn-info', onclick="discardItem()") Discard Card(s)
+    div(class='container-fluid')
+      div(class='row', id='source')
+        each item in data
+          div(class='cardListEle card col-sm-1', id= 'food'+item.id, name='card')
+            label #{item.foodname}
+            if item.foodname.length < 15
+              br
+              br
+            div(style='visibility: hidden; font-size: 0pt; height: 0px')                p(name='foodId') #{item.id}
+            img(src= item.path alt= item.foodname)
+            table.scores
+              tr
+                th.taste Taste
+                th.health Health
+              tr
+                td.taste(name='taste') #{item.taste}
+                td.health(name='health') #{item.health}
+    hr
+    div(class='container-fluid')
+      h3 #{qn.section}
+      label #{qn.description}
+      //- h3 Practice trial - 1
+      //- label Please use the cards above and sort the items to a list below by ascending taste score, i.e. right side is larger than the left.
+      span(class='tabSpace')
+      form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/pre/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
+        input(type='hidden', name='trial', value=trial)
+        input(type='hidden', name='userId', value=userId)
+        input(type='hidden', name='startingTime', value=startingTime)
+        input(type='hidden', name='tracking', value=JSON.stringify(tracking))
+        button(type='submit' class='btn btn-primary') I'm done!
+      span(class='sliceSpace')
+      button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
+      div(class='row', id='tasteSort')
+        div(class='col-md-2', id='tasteChart')
+
+    script.
+      let dataInDiv = getCardObjects('tasteSort')
+      //- let dataInDiv = [{order: 1, foodname: "Pizza pan supreme Pizza Hut", taste: "43", health: "28"}, {order: 2, foodname: "Bun susi", taste: "29", health: "19"}, {order: 3, foodname: "Bacon cooked baked", taste: "47", health: "15"}, {order: 4, foodname: "Beef minced regular simmered drained", taste: "17", health: "44"}, {order: 5, foodname: "Chicken croquette deep fried commercial", taste: "33", health: "15"}, {order: 6, foodname: "Brown rice kway teow cooked", taste: "17", health: "22"}, {order: 7, foodname: "Curry beef", taste: "17", health: "40"}, {order: 8, foodname: "Bun sugared", taste: "23", health: "28"}, {order: 9, foodname: "Pung kueh", taste: "37", health: "14"}, {order: 10, foodname: "Rice with stewed beef", taste: "29", health: "30"}]
+      var width = document.getElementById('tasteChart').offsetWidth
+      var height = document.getElementById('tasteSort').offsetHeight
+      drawDualYGraph1(dataInDiv, '#tasteChart', width, height)
+      var inter = setInterval(function() {
+        let temp = getCardObjects('tasteSort')
+        width = document.getElementById('tasteChart').offsetWidth
+        height = document.getElementById('tasteChart').offsetHeight
+        updateData(temp, '#tasteChart', width, height)
+      }, 500)
+      sortCardsBy1('alphabet')
+      $('#source').selectable();
+      var get = function(id){ return document.getElementById(id)}
+      dragula([get('source'), get('tasteSort')], {})
+      $('#tasteSort').bind('DOMSubtreeModified', function() {
+        trackList(tracking)
+      })
+      function div2form(id) {
+        var form = get(id)
+        if (!form) { return }
+        var divs = form.getElementsByTagName('div')
+        var ndivs = (divs.length - 1) / 2
+        let source = document.getElementById('source')
+        let cards = source.getElementsByClassName('card')
+        if (cards.length !== 0) {
+          alert('Please have all cards sorted.')
+          return false
+        }
+        var texta = document.createElement('TEXTAREA')
+        texta.name = 'sorts'
+        texta.style.display = 'none'
+        temp = []
+        for (var i = 0; i < ndivs; i++) {
+          var obj = {
+            ordering: i,
+            foodName: divs[0].getElementsByTagName('label')[i].innerHTML,
+            foodId: divs[0].getElementsByTagName('p')[i].innerHTML,
+            taste: divs[0].getElementsByTagName('td')[2 * i].innerHTML,
+            health: divs[0].getElementsByTagName('td')[2 * i + 1].innerHTML
+          }
+          var str = JSON.stringify(obj)
+          temp.push(str)
+        }
+        texta.value = temp
+        form.appendChild(texta)
+        form.tracking.value = JSON.stringify(tracking)
+      }
+      function trackList (tracking) {
+        let divs = $('#tasteSort > .card')
+        let len = divs.length
+        let arr = []
+        for (let i = 0; i < len; i++) {
+          let item = divs[i].id.slice(4)
+          arr.push(item)
+        }
+        if (tracking.length > 0 && isEqualTrackingArr(arr, tracking[tracking.length -1].order)) return
+        let now = new Date()
+        let temp = {
+          order: arr,
+          time_stamp: now.getTime()
+        }
+        tracking.push(temp)
+        console.log(tracking)
+      }
+

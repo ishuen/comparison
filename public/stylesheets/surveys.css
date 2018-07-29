@@ -4,15 +4,9 @@
   margin: auto;
   padding: auto;
 }
-.consentForm p {
+/*.consentForm p {
   font-size: 18pt;
-}
-.consentForm h1 {
-  text-align: center;
-}
-.consentForm h2 {
-  text-align: center;
-}
+}*/
 .bold {
   font-weight: bold;
 }
@@ -21,7 +15,7 @@
 }
 .scrollableContent {
   width: 80%;
-  height: 500px;
+  height: 400px;
   margin: auto;
   padding: 5px;
   border: 2px solid #D8D8D8;
@@ -45,7 +39,7 @@
 .agreeCheckbox input[type=checkbox] {
   transform: scale(2);
 }
-.indexButton {
+/*.indexButton {
   text-align: center;
 }
 .indexButton button{
@@ -59,7 +53,7 @@
   background-color: #D8D8D8;
   color: black;
   border: none;
-}
+}*/
 
 /*pre-survey dietary constraint*/
 .likert {
@@ -193,12 +187,12 @@
 .demographics h1 {
   padding-left: 20px;
 }
-.nextExpButton {
+/*.nextExpButton {
   width: 100%;
   text-align: center;
   margin: 30px;
 }
-.nextExpButton button{
+*//*.nextExpButton button{
   width: 30%;
   cursor: pointer;
   text-align: center;
@@ -210,11 +204,13 @@
   background-color: #D8D8D8;
   color: black;
   border: none;
-}
+}*/
 .smallCard {
-  width: 200px;
-  height: 280px;
-  font-size: 12pt;
+  width: 100%;
+  height: auto;
+  /*width: 200px;*/
+  /*height: 280px;*/
+  font-size: 10pt;
   border: black 2px solid;
   text-align: left;
   padding: 1%;
@@ -226,8 +222,8 @@
   margin-left: auto;
   margin-right: auto;
 }
-.smallCard h3 {
-  font-size: 12pt;
+.smallCard label {
+  font-size: 10pt;
   margin: 2%;
   white-space: initial;
   position: relative;
@@ -280,13 +276,13 @@ div[id^='section'] {
   border-bottom: black 3px solid;
 }
 div[id^='sectionA'] {
-  height: 1100px;
+  height: 530px;
   border-bottom: black 3px solid;
 }
 body.foodSurvey {
   position: relative;
 }
-div.col-sm-9 {
+div.col-sm-10 {
   float: right;
 }
 .nav {
@@ -297,7 +293,7 @@ div.col-sm-9 {
 .navbar {
   margin: auto;
   width: 130px;
-  height: 160px;
+  height: 170px;
   padding:0px;
 }
 .navbar a {
@@ -316,6 +312,9 @@ div.row {
   margin: 0px;
   padding: 0px;
 }
+#myScrollspy {
+  width: 130px;
+}
 .col-sm-2 ul {
   height: 850px;
   width: 130px;
@@ -323,7 +322,7 @@ div.row {
 }
 .littleCard {
   width: 100px;
-  height: 140px;
+  height: 150px;
   font-size: 5pt;
   border: black 1px solid;
   text-align: left;
@@ -351,7 +350,7 @@ div.row {
   text-align: center;
   padding: 0px;
   margin: 0px;
-  font-size: 6pt;
+  font-size: 8pt;
   position: relative;
   bottom: 0px;
 }
@@ -363,8 +362,10 @@ div.row {
   width: 50%;
 }
 .mediumCard {
-  width: 280px;
-  height: 380px;
+/*  width: 280px;
+  height: 380px;*/
+  width: 100%;
+  height: auto;
   font-size: 13pt;
   border: black 3px solid;
   text-align: left;
@@ -376,13 +377,6 @@ div.row {
   width: 96%;
   margin-left: auto;
   margin-right: auto;
-}
-.mediumCard h3 {
-  font-size: 13pt;
-  margin: 2%;
-  white-space: initial;
-  position: relative;
-  top: 0px;
 }
 .scoresMedium {
   width: 100%;
@@ -400,4 +394,14 @@ div.row {
 
 .scoresMedium th {
   width: 50%;
+}
+.likertTable {
+  table-layout: fixed;
+}
+.filling div {
+  margin-bottom: 0px;
+}
+.endQn {
+  margin-top: 10px;
+  padding-left: 20px;
 }
