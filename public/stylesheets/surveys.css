@@ -212,9 +212,11 @@
   border: none;
 }
 .smallCard {
-  width: 200px;
-  height: 280px;
-  font-size: 12pt;
+  width: 100%;
+  height: auto;
+  /*width: 200px;*/
+  /*height: 280px;*/
+  font-size: 10pt;
   border: black 2px solid;
   text-align: left;
   padding: 1%;
@@ -226,8 +228,8 @@
   margin-left: auto;
   margin-right: auto;
 }
-.smallCard h3 {
-  font-size: 12pt;
+.smallCard label {
+  font-size: 10pt;
   margin: 2%;
   white-space: initial;
   position: relative;

@@ -44,7 +44,6 @@ html
                   div(class='radio')
                     label
                       input(name='qn'+ qn.qn_id, type='radio', value=ans[val])
-                      span &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
         br
         - var secondSet = data.filter(d => d.qn_set == 5)
         label #{secondSet[0].description}
@@ -61,3 +60,9 @@ html
           textarea(name='qn' + secondSet[1].qn_id, class='form-control', rows='5', style='width: 70%;')
         br
         button(class='btn btn-primary btn-lg', type='submit') Next
+    script.
+      $('.table td').click(function(event) {
+        if (event.target.type !== 'radio') {
+          $(':radio', this).trigger('click')
+        }
+      })

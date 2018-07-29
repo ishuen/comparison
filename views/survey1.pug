@@ -75,7 +75,6 @@ html
                             td
                               label
                                 input(name=itemOrder + '-' + items[i].id + '-' + qn.qn_id, type='radio', value= val)
-                                span &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                     - var secondSet = data.filter(d => d.qn_set == 2)
                     label #{secondSet[0].description}
                     br
@@ -147,3 +146,8 @@ html
       function checkInteger (o) {
         return !Number.isInteger(Number(o.value))
       }
+      $('.table td').click(function(event) {
+        if (event.target.type !== 'radio') {
+          $(':radio', this).trigger('click')
+        }
+      })

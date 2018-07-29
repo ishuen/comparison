@@ -72,7 +72,12 @@ html
                         td
                           label
                             input(name=itemOrder + '-' + items[i].id + '-' + qn.qn_id, type='radio', value= val)
-                            span &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
               - i++
             br
             button(class='surSubmit', type='submit', value='submit', style='float: right') Next
+    script.
+      $('.table td').click(function(event) {
+        if (event.target.type !== 'radio') {
+          $(':radio', this).trigger('click')
+        }
+      })
