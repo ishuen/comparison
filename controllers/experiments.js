@@ -1,5 +1,5 @@
 const Experiments = require('../models/Experiments')
-const HpbData = require('../models/HpbData')
+// const HpbData = require('../models/HpbData')
 const heuristic = require('./behavioralRank')
 const pareto = require('./paretoFrontier')
 const _ = require('lodash')
@@ -188,7 +188,8 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const algorithm = req.params.alg
-    HpbData.getTrialSet(Number(trial) + 3, function (items) {
+    Experiments.getCustomSet(userId, Number(trial) + 3, function (items) {
+    // HpbData.getTrialSet(Number(trial) + 3, function (items) {
       let obj = module.exports.sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint

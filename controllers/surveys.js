@@ -36,12 +36,12 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    res.redirect('/survey1/1/' + userId)
-    // if (userId % 8 === 0) {
-    //   res.redirect('/survey1/1/' + userId)
-    // } else {
-    //   res.redirect('/survey2/1/' + userId)
-    // }
+    if (userId % 8 === 0) {
+      res.redirect('/survey1/1/' + userId)
+    } else {
+      let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
+      res.redirect('/survey1/' + tr + '/' + userId)
+    }
   }
   /**
   * @api {get} /survey2/:trial/:itemOrder Request the survey question set
@@ -163,6 +163,7 @@ class Survey1Controller {
   //   }
   // }
 
+  // discarded
   allAgreementQns (req, res) {
     let trial = req.params.trial
     let userId = req.params.userId
@@ -176,6 +177,7 @@ class Survey1Controller {
       })
     })
   }
+  // discarded
   allAgreementSubmit (req, res) {
     console.log(req.body)
     let trial = Number(req.body.trial)
@@ -336,7 +338,7 @@ class Survey1Controller {
     Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
-    if (userId % 8 === 0) {
+    if (trial <= maxTrialEx1) {
       res.redirect('/experiment1/pre/' + trial + '/' + userId)
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
@@ -355,7 +357,7 @@ class Survey1Controller {
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
-    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity})
+    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + 1})
   }
 
   showQnPost1 (req, res) {
@@ -389,7 +391,7 @@ class Survey1Controller {
         if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {
-          res.redirect('/') // end of experiment
+          res.redirect('/end') // end of experiment
         }
       })
     }
@@ -449,8 +451,8 @@ class Survey1Controller {
     let userId = req.body.userId
     let trial = req.body.trial
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    trial++
-    if (trial <= maxTrialEx2) {
+    if (trial < maxTrialEx1 + maxTrialEx2) {
+      trial++
       // res.redirect('/survey2/' + trial + '/1/' + userId)
       res.redirect('/survey1/' + trial + '/' + userId)
     } else {
@@ -459,7 +461,7 @@ class Survey1Controller {
         if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {
-          res.redirect('/') // end of experiment
+          res.redirect('/end') // end of experiment
         }
       })
     }

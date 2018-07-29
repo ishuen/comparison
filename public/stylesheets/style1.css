@@ -61,15 +61,18 @@
 #source .ui-selected {
   background-color: #67ACD4;
 }
+
 #tasteSort {
   height: 200px;
   background-color: #D8D8D8;
   overflow-x: scroll;
-  overflow-y: hidden;
   white-space: nowrap;
 }
 #tasteSort div{
   width: 142px;
+}
+#tasteSort .col-sm-1 {
+  display: inline-block;
 }
 #tasteChart {
   float: right;
@@ -78,7 +81,7 @@
 }
 .cardListEle {
   height: 200px;
-  width: 142px
+  width: 142px;
 }
 .axis path,
 .axis line {
