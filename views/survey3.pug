@@ -17,11 +17,12 @@ html
       div(id='surveyContainer')
       div(id='nextExp', style='visibility: hidden; padding: 15px;')
         if (userId % 2 == 0)
+          
           a(class='nextExpButton', href= '/survey1/'+ exp2Trial + '/' + userId)
             //- button(class='indexButton') Go to next experiment
             button(class='btn btn-primary btn-lg', type='button') Go to next experiment
         else
-          a(class='nextExpButton', href= '/survey1/1/' + userId)
+          a(class='nextExpButton', href= '/experiment1/pre/1/' + userId)
             //- button(class='indexButton') Go to next experiment
             button(class='btn btn-primary btn-lg', type='button') Go to next experiment
     script.

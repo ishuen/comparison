@@ -320,8 +320,8 @@ class Survey1Controller {
     let trial = req.params.trial
     let userId = req.params.userId
     const setNum = [1, 2]
-    if (Number(trial) === 1) {
-      Survey1.checkGroup(userId, 1, function (done) { console.log(done) })
+    if (Number(trial) === 7) {
+      Survey1.checkGroup(userId, 2, function (done) { console.log(done) }) // exp1 group go through second exp
     }
     Survey1.getQnSets(setNum, function (qnSet) {
       HpbData.getTrialSet(Number(trial), function (items) {
@@ -338,8 +338,10 @@ class Survey1Controller {
     Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
-    if (trial <= maxTrialEx1) {
+    if (trial === 1) {
       res.redirect('/experiment1/pre/' + trial + '/' + userId)
+    } else if (trial <= maxTrialEx1) {
+      res.redirect('/experiment1/' + trial + '/' + userId)
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
         let category = expGroup.slice(-1)
@@ -357,7 +359,7 @@ class Survey1Controller {
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
-    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + 1})
+    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1})
   }
 
   showQnPost1 (req, res) {
@@ -428,7 +430,8 @@ class Survey1Controller {
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
-      HpbData.getTrialSet(Number(trial) + 3, function (items) {
+      let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
+      HpbData.getTrialSet(Number(maskTrial), function (items) {
         let obj = experiments.sortByAssignedAlgo(items, algorithm)
         items = obj.data
         let defaultPoint = obj.defaultPoint
@@ -437,7 +440,7 @@ class Survey1Controller {
         defaultPoint.state = 'defaultPoint'
         left.state = 'tastiest/first'
         right.state = 'healthiest/last'
-        Experiments.getUserChoice(userId, trial, function (userChoice) {
+        Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
           userChoice.state = 'userChoice'
           // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
           res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
@@ -450,8 +453,9 @@ class Survey1Controller {
     console.log(req.body)
     let userId = req.body.userId
     let trial = req.body.trial
+    let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    if (trial < maxTrialEx1 + maxTrialEx2) {
+    if (maskTrial < maxTrialEx1 + maxTrialEx2) {
       trial++
       // res.redirect('/survey2/' + trial + '/1/' + userId)
       res.redirect('/survey1/' + trial + '/' + userId)

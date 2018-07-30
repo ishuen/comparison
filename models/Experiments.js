@@ -1,3 +1,4 @@
+/* global itemSetList */
 const pool = require('../db')
 const _ = require('lodash')
 class Experiments {
@@ -126,8 +127,8 @@ class Experiments {
   }
 
   getCustomSet (userId, trial, callback) {
-    let input = [userId, trial]
-    pool.query('SELECT * FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) WHERE user_id = $1 AND trial_num = $2', input, (err, res) => {
+    let input = [userId, itemSetList[trial - 1]]
+    pool.query('SELECT * FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) WHERE user_id = $1 AND food_id = ANY($2::varchar[])', input, (err, res) => {
       if (err) throw err
       // console.log(res.rows)
       let data = []
