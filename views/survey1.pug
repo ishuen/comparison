@@ -25,7 +25,9 @@ html
               li.navbar
                 a(href='#sectionA' + items[i].id)
                   div.littleCard
-                    h3 #{items[i].foodname}
+                    if (items[i].foodname.length < 21)
+                      br
+                    label #{items[i].foodname}
                     img(src= items[i].path alt= items[i].foodname)
                     table.scoresLittle
                       tr
@@ -46,6 +48,8 @@ html
                 div(class='row')
                   div(class='col-sm-3') 
                     div.mediumCard
+                      if (items[i].foodname.length < 21)
+                        br
                       label #{items[i].foodname}
                       img(src= items[i].path alt= items[i].foodname)
                       table.scoresMedium
