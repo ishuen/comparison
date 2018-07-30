@@ -54,6 +54,7 @@
   height: 200px;
   background-color: #D8D8D8;
 }
+
 #source .ui-selecting {
   background-color: #86C8EF;
 }
@@ -61,25 +62,54 @@
 #source .ui-selected {
   background-color: #67ACD4;
 }
-
-#tasteSort {
-  height: 200px;
-  background-color: #D8D8D8;
-  overflow-x: scroll;
-  white-space: nowrap;
-}
-#tasteSort div{
-  width: 142px;
-}
-#tasteSort .col-sm-1 {
+#source div {
   display: inline-block;
 }
+div #tasteSort {
+  height: 200px;
+  background-color: #D8D8D8;
+  /*overflow-x: scroll;*/
+  /*overflow-y: hidden;*/
+  /*white-space: nowrap;*/
+}
+/*#tasteSort .col-sm-1 {
+  display: inline-block;
+}*/
+#tasteSort div {
+  /*float: none;*/
+  display: inline-block;
+}
+
+.row > .col-sm-1 {
+  display:flex;
+  flex: 0 0 142px;
+  /*max-width: 25%*/
+}
+
+.flex-nowrap {
+  -webkit-flex-wrap: nowrap!important;
+  -ms-flex-wrap: nowrap!important;
+  flex-wrap: nowrap!important;
+}
+.flex-row {
+  display:flex;
+  -webkit-box-orient: horizontal!important;
+  -webkit-box-direction: normal!important;
+  -webkit-flex-direction: row!important;
+  -ms-flex-direction: row!important;
+  flex-direction: row!important;
+  overflow: auto
+}
+
 #tasteChart {
   float: right;
+  margin-left: auto;
+  /*float: none;*/
+  background-color: #D8D8D8;
   min-width: 350px;
   min-height: 200px;
 }
-.cardListEle {
+div .cardListEle {
   height: 200px;
   width: 142px;
 }
