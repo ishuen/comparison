@@ -422,8 +422,14 @@ class Survey1Controller {
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
     trial++
     if (trial <= maxTrialEx1) {
-      // res.redirect('/survey1/' + trial + '/1/' + userId)
-      res.redirect('/survey1/' + trial + '/' + userId)
+      Survey1.getUserGroup(userId, function (expGroup) {
+        if (expGroup.slice(0, 4) !== 'both') {
+          res.redirect('/survey1/' + trial + '/' + userId)
+        } else {
+          res.redirect('/experiment1/' + trial + '/' + userId) // start experiment
+        }
+      })
+      // res.redirect('/survey1/' + trial + '/' + userId)
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
         if (expGroup.slice(0, 4) !== 'both') {
