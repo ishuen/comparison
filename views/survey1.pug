@@ -131,7 +131,7 @@ html
           alert('The score must be filled out.')
           return false
         } else if (x.some(upperLimit) || y.some(upperLimit) || x.some(lowerLimit) || y.some(lowerLimit)) {
-          alert('The score must range from 1 to 100.')
+          alert('The score must range from 1 to 10.')
           return false
         } else if (x.some(checkInteger) || y.some(checkInteger)) {
           alert('The score must be integer.')
@@ -143,7 +143,7 @@ html
         return o.value === '' 
       }
       function upperLimit (o) {
-        return o.value > 100
+        return o.value > 10
       }
       function lowerLimit (o) {
         return o.value < 1
