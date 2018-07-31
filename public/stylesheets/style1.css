@@ -187,3 +187,8 @@ path {
   top: 100%;
   left: 0;
 }
+
+/*spreadsheet method*/
+.spreadsheetMethod td > img{
+  width: 100%;
+}

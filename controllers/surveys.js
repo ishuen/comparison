@@ -13,7 +13,7 @@ const groups = {
   c: 'taste',
   d: 'health',
   e: 'scatterPlot',
-  f: 'health',
+  f: 'spreadsheet',
   g: 'health'
 }
 
