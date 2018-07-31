@@ -185,7 +185,7 @@ class ExperimentsController {
     } else if (algorithm === 'taste') {
       obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
       obj.defaultPoint = obj.data[0]
-    } else { // scatterPlot
+    } else { // scatterPlot, spreadsheet
       obj.data = items
       obj.defaultPoint = items[0]
     }
@@ -209,8 +209,10 @@ class ExperimentsController {
         res.render('experiment2-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
       } else if (algorithm === 'heuristic' || algorithm === 'pareto') {
         res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      } else {
+      } else if (algorithm === 'scatterPlot') {
         res.render('experiment2-2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
+      } else if (algorithm === 'spreadsheet') {
+        res.render('experiment2-3', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
       }
     })
   }
