@@ -17,6 +17,7 @@ html
       label #{setDesc}
       form(id='form', action='/survey0/' + userId, method='post', onsubmit='return validateForm()')
         input(type='hidden', name='userId', value=userId)
+        input(type='hidden', name='startingTime', value=startingTime)
         table(class='table table-striped likertTable')
           tr
             th Food Type

@@ -93,6 +93,15 @@ class Survey1 {
       }
     }
   }
+  surveyTimeRecord (obj, callback) {
+    let start = new Date(Number(obj.startingTime))
+    console.log(start, obj.endTime)
+    let input = [obj.userId, obj.trial, start, obj.endTime, obj.timeUsed, obj.surveyName]
+    pool.query('INSERT INTO survey_time (user_id, trial_num, starting_time, end_time, time_used, survey_name) VALUES ($1, $2, $3, $4, $5, $6)', input, (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 
 module.exports = new Survey1()

@@ -23,7 +23,8 @@ class Survey1Controller {
     const userId = req.params.userId
     const setNum = [4, 5]
     Survey1.getQnSets(setNum, function (qnSet) {
-      res.render('survey0', {data: qnSet, userId: userId})
+      let now = new Date()
+      res.render('survey0', {data: qnSet, userId: userId, startingTime: now.getTime()})
       // res.send({data: qnSet})
     })
   }
@@ -31,6 +32,17 @@ class Survey1Controller {
     console.log(req.body)
     const userId = req.body.userId
     let combinedForm = JSON.parse(JSON.stringify(req.body))
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    const timeDetail = {
+      userId: userId,
+      trial: 0,
+      startingTime: req.body.startingTime,
+      timeUsed: timeUsed,
+      endTime: now,
+      surveyName: 'diet'
+    }
+    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     if (combinedForm.hasOwnProperty('others')) {
       combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
     }
@@ -325,7 +337,8 @@ class Survey1Controller {
     }
     Survey1.getQnSets(setNum, function (qnSet) {
       HpbData.getTrialSet(Number(trial), function (items) {
-        res.render('survey1', {data: qnSet, items: items, trial: trial, userId: userId, max: maxItemEx1})
+        let now = new Date()
+        res.render('survey1', {data: qnSet, items: items, trial: trial, userId: userId, startingTime: now.getTime(), max: maxItemEx1})
       })
     })
   }
@@ -335,6 +348,17 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     let qn = getAllQnAns(req.body)
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    const timeDetail = {
+      userId: userId,
+      trial: trial,
+      startingTime: req.body.startingTime,
+      timeUsed: timeUsed,
+      endTime: now,
+      surveyName: 'scores'
+    }
+    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
@@ -367,7 +391,8 @@ class Survey1Controller {
     const trial = req.params.trial
     const setNum = [6, 7]
     Survey1.getQnSets(setNum, function (qnSet) {
-      res.render('survey4', {data: qnSet, trial: trial, userId: userId})
+      let now = new Date()
+      res.render('survey4', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
 
@@ -375,6 +400,17 @@ class Survey1Controller {
     console.log(req.body)
     let trial = Number(req.body.trial)
     const userId = req.body.userId
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    const timeDetail = {
+      userId: userId,
+      trial: trial,
+      startingTime: req.body.startingTime,
+      timeUsed: timeUsed,
+      endTime: now,
+      surveyName: 'postSurveyExp1'
+    }
+    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     let combinedForm = JSON.parse(JSON.stringify(req.body))
     if (!combinedForm.hasOwnProperty('qn34') && combinedForm.others) {
       combinedForm['qn34'] = 4 + '-' + combinedForm.others
@@ -386,8 +422,14 @@ class Survey1Controller {
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
     trial++
     if (trial <= maxTrialEx1) {
-      // res.redirect('/survey1/' + trial + '/1/' + userId)
-      res.redirect('/survey1/' + trial + '/' + userId)
+      Survey1.getUserGroup(userId, function (expGroup) {
+        if (expGroup.slice(0, 4) !== 'both') {
+          res.redirect('/survey1/' + trial + '/' + userId)
+        } else {
+          res.redirect('/experiment1/' + trial + '/' + userId) // start experiment
+        }
+      })
+      // res.redirect('/survey1/' + trial + '/' + userId)
     } else {
       Survey1.getUserGroup(userId, function (expGroup) {
         if (expGroup.slice(0, 4) !== 'both') {
@@ -404,7 +446,8 @@ class Survey1Controller {
     const trial = req.params.trial
     const setNum = [8, 9]
     Survey1.getQnSets(setNum, function (qnSet) {
-      res.render('survey5', {data: qnSet, trial: trial, userId: userId})
+      let now = new Date()
+      res.render('survey5', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
 
@@ -412,6 +455,17 @@ class Survey1Controller {
     console.log(req.body)
     let trial = Number(req.body.trial)
     const userId = req.body.userId
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    const timeDetail = {
+      userId: userId,
+      trial: trial,
+      startingTime: req.body.startingTime,
+      timeUsed: timeUsed,
+      endTime: now,
+      surveyName: 'postSurveyExp2'
+    }
+    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     let combinedForm = JSON.parse(JSON.stringify(req.body))
     if (!combinedForm.hasOwnProperty('qn45') && combinedForm.others) {
       combinedForm['qn45'] = 4 + '-' + combinedForm.others
@@ -442,8 +496,9 @@ class Survey1Controller {
         right.state = 'healthiest/last'
         Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
           userChoice.state = 'userChoice'
+          let now = new Date()
           // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
-          res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
+          res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial})
         })
       })
     })
@@ -453,6 +508,17 @@ class Survey1Controller {
     console.log(req.body)
     let userId = req.body.userId
     let trial = req.body.trial
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    const timeDetail = {
+      userId: userId,
+      trial: trial,
+      startingTime: req.body.startingTime,
+      timeUsed: timeUsed,
+      endTime: now,
+      surveyName: 'exp2Satisfaction'
+    }
+    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
     if (maskTrial < maxTrialEx1 + maxTrialEx2) {

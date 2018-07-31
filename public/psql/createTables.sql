@@ -91,6 +91,14 @@ CREATE TABLE user_satisfaction(
     satisfaction integer,
     confidence integer);
 
+CREATE TABLE survey_time(
+    user_id serial REFERENCES user_data(user_id),
+    starting_time timestamp with time zone,
+    time_used int,
+    end_time timestamp with time zone,
+    survey_name VARCHAR(30),
+    trial_num integer);
+
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,
 --     high_score INT NOT NULL,
