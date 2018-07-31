@@ -19,6 +19,7 @@ html
       form(id='form', action='/survey4/' + trial + '/' + userId, method='post', onsubmit='return validateExpForm()')
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='userId', value=userId)
+        input(type='hidden', name='startingTime', value=startingTime)
         table(class='table table-striped likertTable')
           col(width='40%')
           tr

@@ -21,6 +21,7 @@ html
       form(id='form', name='foodForm', class='foodForm', action='/survey6/' + trial + '/' + userId, method='post', onsubmit='return validateFormSurvey6()')
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='userId', value=userId)
+        input(type='hidden', name='startingTime', value=startingTime)
         each i in items
           div(class='row')
             div(class='col-sm-2')
