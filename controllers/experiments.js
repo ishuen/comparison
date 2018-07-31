@@ -3,6 +3,7 @@ const Experiments = require('../models/Experiments')
 const Surveys = require('../models/Surveys')
 const heuristic = require('./behavioralRank')
 const pareto = require('./paretoFrontier')
+const genetic = require('./geneticSort')
 const _ = require('lodash')
 const maxTrialEx2 = 3
 class ExperimentsController {
@@ -185,6 +186,8 @@ class ExperimentsController {
     } else if (algorithm === 'taste') {
       obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
       obj.defaultPoint = obj.data[0]
+    } else if (algorithm === 'genetic') {
+      obj = genetic.showPathNewExp2(items)
     } else { // scatterPlot, spreadsheet
       obj.data = items
       obj.defaultPoint = items[0]
@@ -207,7 +210,7 @@ class ExperimentsController {
       let now = new Date()
       if (algorithm === 'taste' || algorithm === 'health') {
         res.render('experiment2-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      } else if (algorithm === 'heuristic' || algorithm === 'pareto') {
+      } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
         res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
       } else if (algorithm === 'scatterPlot') {
         res.render('experiment2-2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})

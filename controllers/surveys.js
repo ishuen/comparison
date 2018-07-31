@@ -14,7 +14,7 @@ const groups = {
   d: 'health',
   e: 'scatterPlot',
   f: 'spreadsheet',
-  g: 'health'
+  g: 'genetic'
 }
 
 class Survey1Controller {
