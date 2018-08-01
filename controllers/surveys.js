@@ -557,6 +557,7 @@ function getAllQnAns (obj) {
   let qn = Object.keys(obj).filter(k => !isNaN(parseInt(k.slice(0, 1))))
   let qnAns = []
   for (let q of qn) {
+    if (_.isEqual(obj[q], '')) { continue }
     let itemOrder = q.slice(0, q.indexOf('-'))
     let foodId = q.slice(q.indexOf('-') + 1, q.lastIndexOf('-'))
     let qnNum = q.slice(q.lastIndexOf('-') + 1)
