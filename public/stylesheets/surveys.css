@@ -271,12 +271,15 @@
   height: 2em;
 }
 /*survey 7, 8 (new survey 2, 1)*/
-div[id^='section'] {
+/*div[id^='section'] {
   height: 760px;
   border-bottom: black 3px solid;
 }
+*/
 div[id^='sectionA'] {
-  height: 530px;
+  /*height: 430px;*/
+  /*min-height: 430px;*/
+  padding-bottom: 20px;
   border-bottom: black 3px solid;
 }
 body.foodSurvey {
@@ -314,6 +317,7 @@ div.row {
 }
 #myScrollspy {
   width: 130px;
+  min-height: 550px;
 }
 .col-sm-2 ul {
   height: 850px;

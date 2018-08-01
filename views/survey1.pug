@@ -90,10 +90,10 @@ html
                       div(class='form-group col-sm-6')
                         label #{secondSet[2].description}
                           input(type='text', class='form-control', name= 'health-' + items[i].id, value= items[i].health)
-                div(class='endQn')
-                  label #{secondSet[3].description}
-                  br
-                  textarea(class='form-control', name= itemOrder + '-' + items[i].id + '-' + secondSet[3].qn_id, rows='4', style='width: 80%;')
+                    div(class='endQn')
+                      label #{secondSet[3].description}
+                      br
+                      textarea(class='form-control', name= itemOrder + '-' + items[i].id + '-' + secondSet[3].qn_id, rows='4', style='width: 80%;')
                   br
               - i++
             br
