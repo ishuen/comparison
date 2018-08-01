@@ -23,7 +23,7 @@
   text-align: center;
   padding: 0px;
   margin: 0px;
-  font-size: 10pt;
+  font-size: 12pt;
   position: relative;
   bottom: 0px;
 }
@@ -53,6 +53,7 @@
 #source {
   height: 200px;
   background-color: #D8D8D8;
+  overflow-y: hidden;
 }
 
 #source .ui-selecting {
@@ -98,7 +99,8 @@ div #tasteSort {
   -webkit-flex-direction: row!important;
   -ms-flex-direction: row!important;
   flex-direction: row!important;
-  overflow: auto
+  overflow-x: scroll;
+  overflow-y: hidden;
 }
 
 #tasteChart {

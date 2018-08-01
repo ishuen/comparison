@@ -33,7 +33,7 @@ html
         each item in data
           div(class='cardListEle card col-sm-1', id= 'food'+item.id, name='card')
             label #{item.foodname}
-            if item.foodname.length < 15
+            if item.foodname.length < 17
               br
               br
             div(style='visibility: hidden; font-size: 0pt; height: 0px')                p(name='foodId') #{item.id}
@@ -57,9 +57,29 @@ html
         input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)
         input(type='hidden', name='tracking', value=JSON.stringify(tracking))
-        button(type='submit' class='btn btn-primary') I'm done!
-      span(class='sliceSpace')
-      button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
+        div(class='row')
+          if (trial == 1)
+            div(class='col-xs-1 health' style='text-align: right;')
+              span(class="glyphicon glyphicon-triangle-left")
+            div(class='col-xs-3 health')
+              label decreasing health score
+            div(class='col-xs-3 health' style='text-align: right')
+              label increasing health score
+            div(class='col-xs-1 health')
+              span(class="glyphicon glyphicon-triangle-right")
+          else
+            div(class='col-xs-1 taste' style='text-align: right;')
+              span(class="glyphicon glyphicon-triangle-left")
+            div(class='col-xs-3 taste')
+              label increasing taste score
+            div(class='col-xs-3 taste' style='text-align: right')
+              label decreasing taste score
+            div(class='col-xs-1 taste')
+              span(class="glyphicon glyphicon-triangle-right")
+          div(class='col-xs-4')
+            button(type='submit' class='btn btn-primary') I'm done!
+            span(class='sliceSpace')
+            button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
       div(class='row flex-row flex-nowrap', id='tasteSort')
         div(class='col-sm-2', id='tasteChart')
 
