@@ -24,10 +24,10 @@ html
       button(class='btn btn-default', onclick="sortCardsBy1('taste')") Taste
       span(class='sliceSpace')
       button(class='btn btn-default', onclick="sortCardsBy1('health')") Health
-      span(class='sliceSpace')
-      label At most 5 cards are allowed to discard.
-      span(class='sliceSpace')
-      button(class='btn btn-info', onclick="discardItem()") Discard Card(s)
+      //- span(class='sliceSpace')
+      //- label At most 5 cards are allowed to discard.
+      //- span(class='sliceSpace')
+      //- button(class='btn btn-info', onclick="discardItem()") Discard Card(s)
     div(class='container-fluid')
       div(class='row flex-row flex-nowrap', id='source')
         each item in data
@@ -53,24 +53,24 @@ html
       //- h3 Practice trial - 1
       //- label Please use the cards above and sort the items to a list below by ascending taste score, i.e. right side is larger than the left.
       span(class='tabSpace')
-      form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
-        input(type='hidden', name='trial', value=trial)
-        input(type='hidden', name='userId', value=userId)
-        input(type='hidden', name='startingTime', value=startingTime)
-        input(type='hidden', name='tracking', value=JSON.stringify(tracking))
-        div(class='row')
-          div(class='col-xs-1 taste' style='text-align: right;')
-            span(class="glyphicon glyphicon-triangle-left")
-          div(class='col-xs-3 taste')
-            label increasing taste score
-          div(class='col-xs-3 health' style='text-align: right')
-            label increasing health score
-          div(class='col-xs-1 health')
-            span(class="glyphicon glyphicon-triangle-right")
-          div(class='col-xs-4')
+      div(class='row')
+        div(class='col-xs-1 taste' style='text-align: right;')
+          span(class="glyphicon glyphicon-triangle-left")
+        div(class='col-xs-3 taste')
+          label increasing taste score
+        div(class='col-xs-3 health' style='text-align: right')
+          label increasing health score
+        div(class='col-xs-1 health')
+          span(class="glyphicon glyphicon-triangle-right")
+        div(class='col-xs-4')
+          form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
+            input(type='hidden', name='trial', value=trial)
+            input(type='hidden', name='userId', value=userId)
+            input(type='hidden', name='startingTime', value=startingTime)
+            input(type='hidden', name='tracking', value=JSON.stringify(tracking))
             button(type='submit' class='btn btn-primary') I'm done!
-            span(class='sliceSpace')
-            button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
+          span(class='sliceSpace')
+          button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
       div(class='row' id='sortingRow')
         div(class='col-sm-8 flex-row flex-nowrap' id='tasteSort')
         div(class='col-sm-2 order-last', id='tasteChart')
@@ -101,9 +101,15 @@ html
         var ndivs = divs.length
         let source = document.getElementById('source')
         let cards = source.getElementsByClassName('card')
-        if (cards.length !== 0) {
-          alert('Please have all cards sorted.')
+        //- if (cards.length !== 0) {
+        //-   alert('Please have all cards sorted.')
+        //-   return false
+        //- }
+        if (ndivs <= 1) {
+          alert('Please have cards sorted.')
           return false
+        } else if (ndivs > 1) {
+          alert('Are you sure you\'ve done?')
         }
         var texta = document.createElement('TEXTAREA')
         texta.name = 'sorts'
