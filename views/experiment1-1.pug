@@ -36,7 +36,8 @@ html
             if item.foodname.length < 17
               br
               br
-            div(style='visibility: hidden; font-size: 0pt; height: 0px')                p(name='foodId') #{item.id}
+            div(style='visibility: hidden; font-size: 0pt; height: 0px')                
+              p(name='foodId') #{item.id}
             img(src= item.path alt= item.foodname)
             table.scores
               tr
@@ -94,9 +95,9 @@ html
       })
       function div2form(id) {
         var form = get(id)
-        if (!form) { return }
-        var divs = form.getElementsByTagName('div')
-        var ndivs = (divs.length - 1) / 2
+        if (!form) { return }        
+        let divs = $('#tasteSort > .card')
+        var ndivs = divs.length
         let source = document.getElementById('source')
         let cards = source.getElementsByClassName('card')
         if (cards.length !== 0) {
@@ -110,10 +111,10 @@ html
         for (var i = 0; i < ndivs; i++) {
           var obj = {
             ordering: i,
-            foodName: divs[0].getElementsByTagName('label')[i].innerHTML,
-            foodId: divs[0].getElementsByTagName('p')[i].innerHTML,
-            taste: divs[0].getElementsByTagName('td')[2 * i].innerHTML,
-            health: divs[0].getElementsByTagName('td')[2 * i + 1].innerHTML
+            foodName: $(divs).eq(i).find('label').html(),
+            foodId: $(divs).eq(i).find('p').html(),
+            taste: $(divs).eq(i).find('td').eq(0).text(),
+            health: $(divs).eq(i).find('td').eq(1).text()
           }
           var str = JSON.stringify(obj)
           temp.push(str)

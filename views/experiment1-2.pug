@@ -36,7 +36,8 @@ html
             if item.foodname.length < 17
               br
               br
-            div(style='visibility: hidden; font-size: 0pt; height: 0px')                p(name='foodId') #{item.id}
+            div(style='visibility: hidden; font-size: 0pt; height: 0px')
+              p(name='foodId') #{item.id}
             img(src= item.path alt= item.foodname)
             table.scores
               tr

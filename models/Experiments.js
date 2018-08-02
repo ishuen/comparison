@@ -122,18 +122,22 @@ class Experiments {
     let userId = details.userId
     let expData = [Number(userId), Number(details.trial)]
     let done = [0, 0, 0]
-    pool.query('SELECT * FROM sorting_experiment WHERE user_id = $1 AND trial_num = $2', expData, (err, res) => {
+    pool.connect((err, client, done) => {
       if (err) throw err
-      let exp = res.rows
-      for (let i = 0; i < details.ordering.length; i++) {
-        let expItem = _.find(exp, function (o) {
-          return o.food_id === details.ordering[i]
-        })
-        let input = [userId, details.ordering[i], i + 1, expItem['exp_id']]
-        pool.query('INSERT INTO user_sorting (user_id, food_id, ordering, exp_id) VALUES ($1, $2, $3, $4)', input, (err, res) => {
-          if (err) throw err
-        })
-      }
+      client.query('SELECT * FROM sorting_experiment WHERE user_id = $1 AND trial_num = $2', expData, (err, res) => {
+        done()
+        if (err) throw err
+        let exp = res.rows
+        for (let i = 0; i < details.ordering.length; i++) {
+          let expItem = _.find(exp, function (o) {
+            return _.isEqual(o.food_id, details.ordering[i])
+          })
+          let input = [userId, details.ordering[i], i + 1, expItem['exp_id']]
+          client.query('INSERT INTO user_sorting (user_id, food_id, ordering, exp_id) VALUES ($1, $2, $3, $4)', input, (err, res) => {
+            if (err) throw err
+          })
+        }
+      })
     })
     done[0] = 1
     let start = new Date(Number(details.startingTime))

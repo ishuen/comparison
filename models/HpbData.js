@@ -72,7 +72,6 @@ class HpbData {
     pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemSet], (err, res) => {
       if (err) throw err
       let data = []
-      console.log('SELEEEECT', res.rows.length)
       _.map(res.rows, function (i) {
         if (i.image != null) {
           i.path = i.image.toString('utf8')
