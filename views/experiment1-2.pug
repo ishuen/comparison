@@ -50,37 +50,35 @@ html
     div(class='container-fluid')
       h3 #{qn.section}
       label #{qn.description}
-      //- h3 Practice trial - 1
-      //- label Please use the cards above and sort the items to a list below by ascending taste score, i.e. right side is larger than the left.
       span(class='tabSpace')
-      form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/pre/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
-        input(type='hidden', name='trial', value=trial)
-        input(type='hidden', name='userId', value=userId)
-        input(type='hidden', name='startingTime', value=startingTime)
-        input(type='hidden', name='tracking', value=JSON.stringify(tracking))
-        div(class='row')
-          if (trial == 1)
-            div(class='col-xs-1 health' style='text-align: right;')
-              span(class="glyphicon glyphicon-triangle-left")
-            div(class='col-xs-3 health')
-              label decreasing health score
-            div(class='col-xs-3 health' style='text-align: right')
-              label increasing health score
-            div(class='col-xs-1 health')
-              span(class="glyphicon glyphicon-triangle-right")
-          else
-            div(class='col-xs-1 taste' style='text-align: right;')
-              span(class="glyphicon glyphicon-triangle-left")
-            div(class='col-xs-3 taste')
-              label increasing taste score
-            div(class='col-xs-3 taste' style='text-align: right')
-              label decreasing taste score
-            div(class='col-xs-1 taste')
-              span(class="glyphicon glyphicon-triangle-right")
-          div(class='col-xs-4')
+      div(class='row')
+        if (trial == 1)
+          div(class='col-xs-1 health' style='text-align: right;')
+            span(class="glyphicon glyphicon-triangle-left")
+          div(class='col-xs-3 health')
+            label decreasing health score
+          div(class='col-xs-3 health' style='text-align: right')
+            label increasing health score
+          div(class='col-xs-1 health')
+            span(class="glyphicon glyphicon-triangle-right")
+        else
+          div(class='col-xs-1 taste' style='text-align: right;')
+            span(class="glyphicon glyphicon-triangle-left")
+          div(class='col-xs-3 taste')
+            label increasing taste score
+          div(class='col-xs-3 taste' style='text-align: right')
+            label decreasing taste score
+          div(class='col-xs-1 taste')
+            span(class="glyphicon glyphicon-triangle-right")
+        div(class='col-xs-4')
+          form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/pre/'+ trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult','" + trial + "')")
+            input(type='hidden', name='trial', value=trial)
+            input(type='hidden', name='userId', value=userId)
+            input(type='hidden', name='startingTime', value=startingTime)
+            input(type='hidden', name='tracking', value=JSON.stringify(tracking))
             button(type='submit' class='btn btn-primary') I'm done!
-            span(class='sliceSpace')
-            button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
+          span(class='sliceSpace')
+          button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
       div(class='row' id='sortingRow')
         div(class='col-sm-8 flex-row flex-nowrap' id='tasteSort')
         div(class='col-sm-2', id='tasteChart')
@@ -101,54 +99,72 @@ html
       $('#source').selectable();
       var get = function(id){ return document.getElementById(id)}
       dragula([get('source'), get('tasteSort')], {})
-      $('#tasteSort').bind('DOMSubtreeModified', function() {
-        trackList(tracking)
-      })
-      function div2form(id) {
+      //- $('#tasteSort').bind('DOMSubtreeModified', function() {
+      //-   trackList(tracking)
+      //- })
+      function div2form(id, trial) {
+        console.log(trial)
         var form = get(id)
-        if (!form) { return }
-        var divs = form.getElementsByTagName('div')
-        var ndivs = (divs.length - 1) / 2
+        if (!form) { return }        
+        let divs = $('#tasteSort > .card')
+        var ndivs = divs.length
         let source = document.getElementById('source')
         let cards = source.getElementsByClassName('card')
         if (cards.length !== 0) {
           alert('Please have all cards sorted.')
           return false
         }
-        var texta = document.createElement('TEXTAREA')
-        texta.name = 'sorts'
-        texta.style.display = 'none'
-        temp = []
-        for (var i = 0; i < ndivs; i++) {
-          var obj = {
-            ordering: i,
-            foodName: divs[0].getElementsByTagName('label')[i].innerHTML,
-            foodId: divs[0].getElementsByTagName('p')[i].innerHTML,
-            taste: divs[0].getElementsByTagName('td')[2 * i].innerHTML,
-            health: divs[0].getElementsByTagName('td')[2 * i + 1].innerHTML
+        if (trial === '1') {
+          for (var i = 0; i < ndivs - 1; i++) {
+            if ($(divs).eq(i).find('td').eq(1).text() > $(divs).eq(i + 1).find('td').eq(1).text()) {
+              alert('Please sort by health score.')
+              return false
+            }
+            
           }
-          var str = JSON.stringify(obj)
-          temp.push(str)
+        } else {
+          for (var i = 0; i < ndivs - 1; i++) {
+            if ($(divs).eq(i).find('td').eq(0).text() < $(divs).eq(i + 1).find('td').eq(0).text()) {
+              alert('Please sort by taste score.')
+              return false
+            }
+          }
         }
-        texta.value = temp
-        form.appendChild(texta)
-        form.tracking.value = JSON.stringify(tracking)
+        
+        //- var texta = document.createElement('TEXTAREA')
+        //- texta.name = 'sorts'
+        //- texta.style.display = 'none'
+        //- temp = []
+        //- for (var i = 0; i < ndivs; i++) {
+        //-   var obj = {
+        //-     ordering: i,
+        //-     foodName: $(divs).eq(i).find('label').html(),
+        //-     foodId: $(divs).eq(i).find('p').html(),
+        //-     taste: $(divs).eq(i).find('td').eq(0).text(),
+        //-     health: $(divs).eq(i).find('td').eq(1).text()
+        //-   }
+        //-   var str = JSON.stringify(obj)
+        //-   temp.push(str)
+        //- }
+        //- texta.value = temp
+        //- form.appendChild(texta)
+        //- form.tracking.value = JSON.stringify(tracking)
       }
-      function trackList (tracking) {
-        let divs = $('#tasteSort > .card')
-        let len = divs.length
-        let arr = []
-        for (let i = 0; i < len; i++) {
-          let item = divs[i].id.slice(4)
-          arr.push(item)
-        }
-        if (tracking.length > 0 && isEqualTrackingArr(arr, tracking[tracking.length -1].order)) return
-        let now = new Date()
-        let temp = {
-          order: arr,
-          time_stamp: now.getTime()
-        }
-        tracking.push(temp)
-        console.log(tracking)
-      }
+      //- function trackList (tracking) {
+      //-   let divs = $('#tasteSort > .card')
+      //-   let len = divs.length
+      //-   let arr = []
+      //-   for (let i = 0; i < len; i++) {
+      //-     let item = divs[i].id.slice(4)
+      //-     arr.push(item)
+      //-   }
+      //-   if (tracking.length > 0 && isEqualTrackingArr(arr, tracking[tracking.length -1].order)) return
+      //-   let now = new Date()
+      //-   let temp = {
+      //-     order: arr,
+      //-     time_stamp: now.getTime()
+      //-   }
+      //-   tracking.push(temp)
+      //-   console.log(tracking)
+      //- }
 
