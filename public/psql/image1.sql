@@ -1,5 +1,5 @@
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ngr06san3b0gwcr/Caesar%20Salad.jpg?raw=1', taste=4, health=8 WHERE id = '458'; -- Caesar salad
-UPDATE hpbdata SET image = 'https://www.dropbox.com/s/b9iql12hcm0d3ae/Breakfast%20cereal%20mixed%20contains%20whole%20grains.jpg?raw=1', taste=5, health=6 WHERE id = '395'; -- Breakfast cereal mixed contains whole grains
+UPDATE hpbdata SET image = 'https://www.dropbox.com/s/b9iql12hcm0d3ae/Breakfast%20cereal%20mixed%20contains%20whole%20grains.jpg?raw=1', foodname='whole grain mixed cereal', taste=5, health=6 WHERE id = '395'; -- Breakfast cereal mixed contains whole grains
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ooblryl7bgqoirg/Bread%20oat%20bran.jpg?raw=1', taste=4, health=6 WHERE id = '372'; -- Bread oat bran
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/2xy21kcxgen2kgx/Bun%20fruit%20glazed.jpg?raw=1', taste=5, health=5 WHERE id = '426'; -- Bun fruit glazed
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ny9g6xmujm40jeg/Pandan%20bread%20enriched.jpg?raw=1', taste=4, health=5 WHERE id = '1885'; -- Pandan bread enriched
