@@ -6,6 +6,7 @@ const pareto = require('./paretoFrontier')
 const genetic = require('./geneticSort')
 const _ = require('lodash')
 const maxTrialEx2 = 3
+const maxPreTrial = 2
 class ExperimentsController {
   /**
   * @apiDefine arrayOfItemData
@@ -87,8 +88,8 @@ class ExperimentsController {
     if (Number(trial) === 1) {
       Surveys.checkGroup(userId, 1, function (done) { console.log(done) })
     }
-    const qnSet = [{section: 'Practice Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
-    {section: 'Practice Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
+    const qnSet = [{section: 'Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
+    {section: 'Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
     let qn = qnSet[trial - 1]
     Experiments.getCustomSet(userId, 1, function (items) {
       console.log(items)
@@ -98,7 +99,6 @@ class ExperimentsController {
   }
   submitSortingPre (req, res) {
     let trial = Number(req.body.trial) + 1
-    const maxPreTrial = 2
     const userId = req.body.userId
     // let sorts = JSON.parse('[' + req.body.sorts + ']')
     // let ordering = []
@@ -139,7 +139,7 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const qn = {
-      section: 'Experiment 1',
+      section: 'Trial - ' + (Number(trial) + maxPreTrial),
       description: 'Please use the cards above and sort the items to a list below by descending taste score and ascending health score, i.e. right side has smaller taste score and larger health score than the left.'
     }
     Experiments.getCustomSet(userId, trial, function (items) {

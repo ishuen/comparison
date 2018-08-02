@@ -81,7 +81,8 @@ html
             button(type='submit' class='btn btn-primary') I'm done!
             span(class='sliceSpace')
             button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
-      div(class='row flex-row flex-nowrap', id='tasteSort')
+      div(class='row' id='sortingRow')
+        div(class='col-sm-8 flex-row flex-nowrap' id='tasteSort')
         div(class='col-sm-2', id='tasteChart')
 
     script.
