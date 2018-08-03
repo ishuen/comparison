@@ -15,6 +15,10 @@ CREATE TABLE user_data(
     Ethnicity VARCHAR (50),
     exp_group VARCHAR(10)); -- Country of Residence -> CoR; exp_group: 1, 2a~2g, both1_2, both1_2a~g
 
+ALTER TABLE user_data
+ADD COLUMN code VARCHAR(10);
+
+
 CREATE TABLE user_rating(
     qn_id serial REFERENCES survey_questions(qn_id),
     user_id serial REFERENCES user_data(user_id),

@@ -1,10 +1,11 @@
 var express = require('express')
 var router = express.Router()
 const usersController = require('../controllers/users')
+const surveys = require('../controllers/surveys')
 
 /* GET home page. */
 router.get('/', usersController.getNewUser)
-router.get('/end', function (req, res) { res.render('end', {}) })
+router.get('/end/:userId', surveys.endOfExp)
 
 router.use('/topologicalSort', require('./topologicalSort'))
 router.use('/geneticSort', require('./geneticSort'))
