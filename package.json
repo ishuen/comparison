@@ -5,6 +5,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=prod node app.js",
     "dev": "cross-env NODE_ENV=dev node app.js",
+    "ubicomp": "NODE_ENV=ubicomp node proxy.js",
     "start-u": "NODE_ENV=prod node app.js",
     "dev-u": "NODE_ENV=dev node app.js",
     "standard": "standard --verbose | snazzy",
@@ -27,6 +28,7 @@
     "pareto-frontier":"~1.1.1",
     "pg":"~7.4.1",
     "pug": "~2.0.0-beta11",
+    "redbird": "~0.7.0",
     "serve-favicon": "~2.4.2"
   },
   "devDependencies": {

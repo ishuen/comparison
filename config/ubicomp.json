@@ -1,0 +1,24 @@
+{
+  "server": {
+    "host": "http://multisortlist.comp.nus.edu.sg",
+    "port": "9080"
+  },
+  "db": {
+    "user": "web",
+    "host": "localhost",
+    "database": "foods",
+    "pAsswOrd": "web123",
+    "port": "5432",
+    "max": 10, // max number of clients in the pool
+    "idleTimeoutMillis": 3000
+  }
+  // "db": {
+  //   "user": "ishuen",
+  //   "host": "localhost",
+  //   "database": "ishuen",
+  //   "pAsswOrd": "ubicomp2018",
+  //   "port": "5432",
+  //   "max": 10, // max number of clients in the pool
+  //   "idleTimeoutMillis": 3000
+  // }
+}
