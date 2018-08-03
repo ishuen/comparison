@@ -1,6 +1,6 @@
 {
   "server": {
-    "host": "http://multisortlist.comp.nus.edu.sg",
+    "host": "localhost/multisortlist-i",
     "port": "9080"
   },
   "db": {

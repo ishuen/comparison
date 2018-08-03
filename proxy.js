@@ -8,7 +8,7 @@ var reverseProxy = redbird(
     port: 9000
   })
 
-reverseProxy.register('http://multisortlist-i.comp.nus.edu.sg', 'http://multisortlist.comp.nus.edu.sg:9080', {useTargetHostHeader: true})
+reverseProxy.register('http://multisortlist.comp.nus.edu.sg', 'http://multisortlist-i.comp.nus.edu.sg:9080', {useTargetHostHeader: true})
 
 // Attach handlers to the proxy
 // reverseProxy.proxy.on('proxyReq', example.onRequest());
