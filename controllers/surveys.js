@@ -383,7 +383,8 @@ class Survey1Controller {
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
-    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1})
+    const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
+    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
   }
 
   showQnPost1 (req, res) {
@@ -435,7 +436,7 @@ class Survey1Controller {
         if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {
-          res.redirect('/end') // end of experiment
+          res.redirect('/end/' + userId) // end of experiment
         }
       })
     }
@@ -531,10 +532,15 @@ class Survey1Controller {
         if (expGroup.slice(0, 4) !== 'both') {
           res.redirect('/survey3/' + userId) // go to demographic
         } else {
-          res.redirect('/end') // end of experiment
+          res.redirect('/end/' + userId) // end of experiment
         }
       })
     }
+  }
+  endOfExp (req, res) {
+    const userId = req.params.userId
+    const surveyCode = getRandomCode(5, userId, 2)
+    res.render('end', {surveyCode: surveyCode})
   }
 }
 module.exports = new Survey1Controller()
@@ -583,4 +589,18 @@ function getAllScores (obj) {
     newScores.push(temp)
   }
   return newScores
+}
+function getRandomCode (length, userId, num) {
+  let str = ''
+  for (let i = 0; i < length; i++) {
+    let temp = Math.floor(Math.random() * 10)
+    str = str + String(temp)
+  }
+  if (num === 1) {
+    str = 'UN' + str
+  } else {
+    str = 'DU' + str
+  }
+  Survey1.recordSurveyCode(userId, str, function (done) { console.log(done) })
+  return str
 }

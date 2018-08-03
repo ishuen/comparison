@@ -111,6 +111,12 @@ class Survey1 {
       callback(res.rows)
     })
   }
+  recordSurveyCode (userId, code, callback) {
+    pool.query('UPDATE user_data SET code = $1 WHERE user_id = $2', [code, userId], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 
 module.exports = new Survey1()
