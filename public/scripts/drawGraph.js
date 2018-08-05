@@ -281,8 +281,8 @@ function drawScatterPlot (data, location, width, height) {
     .offset([-10, 0])
     .html(function(d) {
       let str = '<label>' + d['foodname'] + '</label><br>' + '<span>' + xCat + ':' + d[xCat] + '</span><br><span>' + yCat + ':' + d[yCat] + '</span><br>'
-      // return str + '<img src=' + d['path'] + '/>'
-      return str + '<img style="width: 50%; height: auto;", src="http://theplasticspoon.com/wp-content/uploads/2018/03/Miami-Food-Blog-TheFeistyP-300x300.jpg"/>'
+      return str + '<img style="width: 50%; height: auto;", src="' + d['path'] + '">'
+      // return str + '<img style="width: 50%; height: auto;", src="http://theplasticspoon.com/wp-content/uploads/2018/03/Miami-Food-Blog-TheFeistyP-300x300.jpg"/>'
     })
   var chart = d3.select(location)
     .append('svg:svg')
