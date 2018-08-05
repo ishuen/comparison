@@ -4,6 +4,7 @@ html
     title= 'experiment 2'
     link(rel='stylesheet', href='/stylesheets/jssorSlider.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
   body
     script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='/scripts/jssor.slider-27.2.0.min.js', type='text/javascript')
@@ -54,8 +55,11 @@ html
         jssor_1_slider.$On($JssorSlider$.$EVT_PARK, trackMovement)
             /*#endregion responsive code end*/
       }
-    h1 Please find out something healthy which you are also willing to eat.
-    h1 Navigate using the arrows or dragging, and then double click your choice.
+    h1 Experiment 2
+    label Please find out something healthy which you are also willing to eat. &nbsp;
+    label Navigate using the arrows or dragging, and then double click your choice.
+    br
+    label If you cannot see the cards below, please refresh the page.
     div(id='jssor_1')
       //- Loading Screen
       div(data-u='loading' class='jssorl-009-spin')

@@ -18,9 +18,9 @@ html
       div(id='nextExp', style='visibility: hidden; padding: 15px;')
         div
           label If you are an MTurk worker, this is the survey code:
-          p #{surveyCode}
-          p If you are willing to do the next experiment, you will have another new code after you finish that.
-        if (userId % 2 == 0)
+          label #{surveyCode}
+          label If you are willing to do the next experiment, you will have another new code after you finish that.
+        if (userId % 8 == 0)
           
           a(class='nextExpButton', href= '/survey1/'+ exp2Trial + '/' + userId)
             //- button(class='indexButton') Go to next experiment

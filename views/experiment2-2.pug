@@ -14,8 +14,10 @@ html
       let data = !{JSON.stringify(data)}
     div(class='container-fluid')
       h1 Experiment 2
-      label Please find out something healthy which you are also willing to eat.
+      label Please find out something healthy which you are also willing to eat. &nbsp;
       label Navigate using the mouse, and then double click your choice.
+      br
+      label If you cannot see the dots on the graph, please refresh the page.
       div(id='scatterPlot' class='text-center', style='height: 450px;')
       form(id='pickingTask' action='/experiment2/'+ trial + '/' + userId, method='post')
         input(type='hidden', name='trial', value=trial)
