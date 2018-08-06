@@ -7,15 +7,16 @@ const maxTrialEx1 = 3
 const maxTrialEx2 = 3
 const maxItemEx1 = 10
 const maxItemEx2 = 20
-const groups = {
-  a: 'heuristic',
-  b: 'pareto',
-  c: 'taste',
-  d: 'health',
-  e: 'scatterPlot',
-  f: 'spreadsheet',
-  g: 'genetic'
-}
+// const groups = {
+//   a: 'heuristic',
+//   b: 'pareto',
+//   c: 'taste',
+//   d: 'health',
+//   e: 'scatterPlot',
+//   f: 'spreadsheet',
+//   g: 'genetic'
+// }
+const groups = ['heuristic', 'pareto', 'taste', 'health', 'scatterPlot', 'spreadsheet', 'genetic']
 
 class Survey1Controller {
   // survey page for dietary restriction
@@ -48,12 +49,14 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    if (userId % 8 === 0) {
-      res.redirect('/survey1/1/' + userId)
-    } else {
-      let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-      res.redirect('/survey1/' + tr + '/' + userId)
-    }
+    // if (userId % 8 === 0) {
+    //   res.redirect('/survey1/1/' + userId)
+    // } else {
+    //   let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
+    //   res.redirect('/survey1/' + tr + '/' + userId)
+    // }
+    let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
+    res.redirect('/survey1/' + tr + '/' + userId)
   }
   /**
   * @api {get} /survey2/:trial/:itemOrder Request the survey question set
@@ -332,9 +335,9 @@ class Survey1Controller {
     let trial = req.params.trial
     let userId = req.params.userId
     const setNum = [1, 2]
-    if (Number(trial) === 7) {
-      Survey1.checkGroup(userId, 2, function (done) { console.log(done) }) // exp1 group go through second exp
-    }
+    // if (Number(trial) === 7) {
+    //   Survey1.checkGroup(userId, 2, function (done) { console.log(done) }) // exp1 group go through second exp
+    // }
     Survey1.getQnSets(setNum, function (qnSet) {
       HpbData.getTrialSet(Number(trial), function (items) {
         let now = new Date()
@@ -362,17 +365,23 @@ class Survey1Controller {
     Experiments.insertAllQnAns(qn, function (done) { console.log(done) })
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
+    trial = trial - 3
     if (trial === 1) {
       res.redirect('/experiment1/pre/' + trial + '/' + userId)
-    } else if (trial <= maxTrialEx1) {
-      res.redirect('/experiment1/' + trial + '/' + userId)
     } else {
-      Survey1.getUserGroup(userId, function (expGroup) {
-        let category = expGroup.slice(-1)
-        let algorithm = groups[category]
-        res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
-      })
+      res.redirect('/experiment1/' + trial + '/' + userId)
     }
+    // if (trial === 1) {
+    //   res.redirect('/experiment1/pre/' + trial + '/' + userId)
+    // } else if (trial <= maxTrialEx1) {
+    //   res.redirect('/experiment1/' + trial + '/' + userId)
+    // } else {
+    //   Survey1.getUserGroup(userId, function (expGroup) {
+    //     let category = expGroup.slice(-1)
+    //     let algorithm = groups[category]
+    //     res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+    //   })
+    // }
     // res.redirect('/experiment1/pre/' + trial + '/' + userId)
   }
 
@@ -383,8 +392,9 @@ class Survey1Controller {
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
-    const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
-    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
+    // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
+    // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
+    res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity})
   }
 
   showQnPost1 (req, res) {
@@ -421,25 +431,32 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    trial++
-    if (trial <= maxTrialEx1) {
-      Survey1.getUserGroup(userId, function (expGroup) {
-        if (expGroup.slice(0, 4) !== 'both') {
-          res.redirect('/survey1/' + trial + '/' + userId)
-        } else {
-          res.redirect('/experiment1/' + trial + '/' + userId) // start experiment
-        }
-      })
-      // res.redirect('/survey1/' + trial + '/' + userId)
-    } else {
-      Survey1.getUserGroup(userId, function (expGroup) {
-        if (expGroup.slice(0, 4) !== 'both') {
-          res.redirect('/survey3/' + userId) // go to demographic
-        } else {
-          res.redirect('/end/' + userId) // end of experiment
-        }
-      })
-    }
+    trial = trial + 3
+    Survey1.getUserGroup(userId, function (expGroup) {
+      let category = Number(expGroup)
+      let algorithm = groups[category]
+      console.log('****', category, algorithm)
+      res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+    })
+    // trial++
+    // if (trial <= maxTrialEx1) {
+    //   Survey1.getUserGroup(userId, function (expGroup) {
+    //     if (expGroup.slice(0, 4) !== 'both') {
+    //       res.redirect('/survey1/' + trial + '/' + userId)
+    //     } else {
+    //       res.redirect('/experiment1/' + trial + '/' + userId) // start experiment
+    //     }
+    //   })
+    //   // res.redirect('/survey1/' + trial + '/' + userId)
+    // } else {
+    //   Survey1.getUserGroup(userId, function (expGroup) {
+    //     if (expGroup.slice(0, 4) !== 'both') {
+    //       res.redirect('/survey3/' + userId) // go to demographic
+    //     } else {
+    //       res.redirect('/end/' + userId) // end of experiment
+    //     }
+    //   })
+    // }
   }
 
   showQnPost2 (req, res) {
@@ -485,8 +502,9 @@ class Survey1Controller {
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
-      let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-      HpbData.getTrialSet(Number(maskTrial), function (items) {
+      // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
+      // HpbData.getTrialSet(Number(maskTrial), function (items) {
+      HpbData.getTrialSet(Number(trial), function (items) {
         let obj = experiments.sortByAssignedAlgo(items, algorithm)
         items = obj.data
         let defaultPoint = obj.defaultPoint
@@ -495,7 +513,8 @@ class Survey1Controller {
         defaultPoint.state = 'defaultPoint'
         left.state = 'tastiest/first'
         right.state = 'healthiest/last'
-        Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
+        // Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
+        Experiments.getUserChoice(userId, trial, function (userChoice) {
           userChoice.state = 'userChoice'
           let now = new Date()
           // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
@@ -520,22 +539,29 @@ class Survey1Controller {
       surveyName: 'exp2Satisfaction'
     }
     Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
+    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    if (maskTrial < maxTrialEx1 + maxTrialEx2) {
+    if (trial < maxTrialEx1 + maxTrialEx2) {
       trial++
       // res.redirect('/survey2/' + trial + '/1/' + userId)
       res.redirect('/survey1/' + trial + '/' + userId)
     } else {
-      Survey1.getUserGroup(userId, function (expGroup) {
-        console.log('expGroup***', expGroup.slice(0, 4))
-        if (expGroup.slice(0, 4) !== 'both') {
-          res.redirect('/survey3/' + userId) // go to demographic
-        } else {
-          res.redirect('/end/' + userId) // end of experiment
-        }
-      })
+      res.redirect('/end/' + userId)
     }
+    // if (maskTrial < maxTrialEx1 + maxTrialEx2) {
+    //   trial++
+    //   // res.redirect('/survey2/' + trial + '/1/' + userId)
+    //   res.redirect('/survey1/' + trial + '/' + userId)
+    // } else {
+    //   Survey1.getUserGroup(userId, function (expGroup) {
+    //     console.log('expGroup***', expGroup.slice(0, 4))
+    //     if (expGroup.slice(0, 4) !== 'both') {
+    //       res.redirect('/survey3/' + userId) // go to demographic
+    //     } else {
+    //       res.redirect('/end/' + userId) // end of experiment
+    //     }
+    //   })
+    // }
   }
   endOfExp (req, res) {
     const userId = req.params.userId
