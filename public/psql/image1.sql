@@ -42,12 +42,12 @@ UPDATE hpbdata SET image = 'https://www.dropbox.com/s/pw6281ftdohto1f/Tuna%20sal
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/0xhyaq4of50n21e/Roast%20Beef%20Salad.jpg?raw=1', taste=4, health=7, foodname='Roast Beef Salad' WHERE id = '2263'; -- Roast Beef Salad
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/gdnzm4l71wdehud/Stir%20fried%20potato%20spinach.jpg?raw=1', taste=3, health=7, foodname='Stir fried potato spinach ' WHERE id = '2150'; -- Stir fried potato spinach 
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/sluhoh5xi263wou/Chicken%20porridge.jpg?raw=1', taste=4, health=7 WHERE id = '615'; -- Chicken porridge
-UPDATE hpbdata SET image = 'https://www.dropbox.com/s/8mmbm931iaotsyw/Boild%20chicken%20drumstick.jpg?raw=1', taste=5, health=6, foodname='Boiled chicken drumstick' WHERE id = '652'; -- Boiled chicken drumstick
+UPDATE hpbdata SET image = 'https://www.dropbox.com/s/8mmbm931iaotsyw/Boild%20chicken%20drumstick.jpg?raw=1', taste=3, health=6, foodname='Boiled chicken drumstick' WHERE id = '652'; -- Boiled chicken drumstick
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/jhppmlool96lutt/Baked%20chicken%20breast.jpg?raw=1', taste=4, health=6, foodname='Baked chicken breast' WHERE id = '632'; -- Baked chicken breast
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/5rvdcrtjumw5d0q/Vegetarian%20fried%20rice.jpg?raw=1', taste=5, health=6 WHERE id = '2863'; -- Vegetarian fried rice
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/8j2psr5t9i6yity/Claypot%20rice%20with%20mixed%20vegetable.jpg?raw=1', taste=6, health=6 WHERE id = '758'; -- Claypot rice with mixed vegetable
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/b6h8se1q9zi644u/Roasted%20Turkey%20fryer-roasters%20breast.jpg?raw=1', taste=6, health=6, foodname='Roasted Turkey fryer-roasters breast' WHERE id = '2791'; -- Roasted Turkey fryer-roasters breast
-UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ba3g6vz2nka9uy4/Smoked%20salmon%20sliced.jpg?raw=1', taste=6, health=6, foodname='Smoked salmon sliced' WHERE id = '2301'; -- Smoked salmon sliced
+UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ba3g6vz2nka9uy4/Smoked%20salmon%20sliced.jpg?raw=1', taste=4, health=6, foodname='Smoked salmon sliced' WHERE id = '2301'; -- Smoked salmon sliced
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/tza7ugf2tog5fll/Omu%20rice.jpg?raw=1', taste=6, health=6 WHERE id = '1821'; -- Omu rice
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/tvhg62u00wgo97l/Grilled%20beef%20round%20steak.jpg?raw=1', taste=7, health=6, foodname='Grilled beef round steak' WHERE id = '212'; -- Grilled beef round steak
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ldqk2g4jyb3t3hm/Indian%20style%20curry%20chicken%20with%20low%20fat%20milk.jpg?raw=1', taste=8, health=5, foodname='Indian style curry chicken with low fat milk' WHERE id = '869'; -- Indian style curry chicken with low fat milk
