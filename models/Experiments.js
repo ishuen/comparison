@@ -164,7 +164,8 @@ class Experiments {
           foodname: i.foodname,
           health: i.new_health,
           taste: i.new_taste,
-          path: i.path
+          path: i.path,
+          exp_id: i.exp_id
         }
         data.push(temp)
       })
