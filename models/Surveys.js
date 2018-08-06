@@ -18,20 +18,20 @@ class Survey1 {
     })
   }
   getNewId (callback) {
-    pool.query('INSERT INTO user_data (age) VALUES ($1) RETURNING user_id', [0], (err, res) => {
+    pool.connect((err, client, done) => {
       if (err) throw err
-      if (res.rows[0]['user_id'] % 8 === 0) {
-        pool.query('UPDATE user_data SET exp_group = $1', [1], (err, res) => {
-          if (err) throw err
-        })
-      } else {
-        let conditions = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-        let input = '2' + conditions[res.rows[0]['user_id'] % 8 - 1]
-        pool.query('UPDATE user_data SET exp_group = $1', [input], (err, res) => {
-          if (err) throw err
-        })
-      }
-      callback(res.rows[0]['user_id'])
+      client.query('INSERT INTO user_data (age) VALUES ($1) RETURNING user_id', [0], (err, res) => {
+        done()
+        if (err) {
+          console.log(err.stack)
+        } else {
+          let group = res.rows[0]['user_id'] % 7
+          client.query('UPDATE user_data SET exp_group = $1', [group], (err, res) => {
+            if (err) throw err
+          })
+          callback(res.rows[0]['user_id'])
+        }
+      })
     })
   }
   getUserGroup (userId, callback) {
@@ -40,6 +40,7 @@ class Survey1 {
       callback(res.rows[0]['exp_group'])
     })
   }
+  // discard
   checkGroup (userId, expNum, callback) {
     if (userId % 8 === 0 && expNum === 2) {
       let num = (userId / 8) % 7

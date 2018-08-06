@@ -48,9 +48,13 @@ class Experiments {
       pool.connect((err, client, done) => {
         if (err) throw err
         // insert into rating
+        let checked = false
         for (let rating of likert) {
           client.query('INSERT INTO user_rating (qn_id, user_id, rating, trial, item_order) VALUES ($1, $2, $3, $4, $5) RETURNING rating_id', rating, (err, res) => {
-            done()
+            if (checked === false) {
+              done()
+              checked = true
+            }
             if (err) {
               console.log(err.stack)
             } else {
@@ -74,8 +78,12 @@ class Experiments {
     let qnId = arr.map(x => x[0])
     pool.connect((err, client, done) => {
       if (err) throw err
+      let checked = false
       client.query('SELECT * FROM survey_questions WHERE qn_id = ANY($1::integer[])', [qnId], (err, res) => {
-        done()
+        if (checked === false) {
+          done()
+          checked = true
+        }
         if (err) throw err
         // check the ans type and divide into 2
         let allQns = res.rows

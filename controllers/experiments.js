@@ -1,11 +1,11 @@
 const Experiments = require('../models/Experiments')
 // const HpbData = require('../models/HpbData')
-const Surveys = require('../models/Surveys')
+// const Surveys = require('../models/Surveys')
 const heuristic = require('./behavioralRank')
 const pareto = require('./paretoFrontier')
 const genetic = require('./geneticSort')
 const _ = require('lodash')
-const maxTrialEx2 = 3
+// const maxTrialEx2 = 3
 const maxPreTrial = 2
 class ExperimentsController {
   /**
@@ -85,9 +85,9 @@ class ExperimentsController {
   showItemsPre (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
-    if (Number(trial) === 1) {
-      Surveys.checkGroup(userId, 1, function (done) { console.log(done) })
-    }
+    // if (Number(trial) === 1) {
+    //   Surveys.checkGroup(userId, 1, function (done) { console.log(done) })
+    // }
     const qnSet = [{section: 'Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
     {section: 'Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
     let qn = qnSet[trial - 1]
@@ -135,6 +135,7 @@ class ExperimentsController {
   *
   * @apiUse arrayOfItemData
   */
+  // experiment 1
   showItems (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
@@ -199,8 +200,9 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const algorithm = req.params.alg
-    let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-    Experiments.getCustomSet(userId, Number(maskTrial), function (items) {
+    Experiments.getCustomSet(userId, Number(trial), function (items) {
+    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
+    // Experiments.getCustomSet(userId, Number(maskTrial), function (items) {
     // HpbData.getTrialSet(Number(trial) + 3, function (items) {
       let obj = module.exports.sortByAssignedAlgo(items, algorithm)
       items = obj.data
@@ -225,7 +227,7 @@ class ExperimentsController {
     let picked = JSON.parse(req.body.picked)
     console.log(picked)
     let trial = Number(req.body.trial)
-    let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
+    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
     const userId = req.body.userId
     let now = new Date()
     let start = new Date(Number(req.body.startingTime))
@@ -233,7 +235,8 @@ class ExperimentsController {
     console.log('timeUsed', timeUsed)
     let details = {
       userId: userId,
-      trial: maskTrial,
+      // trial: maskTrial,
+      trial: trial,
       item: picked,
       startingTime: start,
       endTime: now,
