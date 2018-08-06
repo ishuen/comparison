@@ -120,11 +120,11 @@ class Experiments {
 
   userSorting (details, callback) {
     let userId = details.userId
-    let expData = [Number(userId), Number(details.trial)]
+    let expData = [Number(userId), Number(details.trial), Number(details.trial) + 3]
     let done = [0, 0, 0]
     pool.connect((err, client, done) => {
       if (err) throw err
-      client.query('SELECT * FROM sorting_experiment WHERE user_id = $1 AND trial_num = $2', expData, (err, res) => {
+      client.query('SELECT * FROM sorting_experiment WHERE user_id = $1 AND (trial_num = $2 OR trial_num = $3)', expData, (err, res) => {
         done()
         if (err) throw err
         let exp = res.rows
