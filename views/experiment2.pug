@@ -61,47 +61,96 @@ html
     label Navigate using the arrows or dragging, and then double click your choice.
     br
     label If you cannot see the cards below, please refresh the page.
-    div(id='jssor_1')
-      //- Loading Screen
-      div(data-u='loading' class='jssorl-009-spin')
-        img(src='/images/spin.svg')
-      div(data-u='slides' class='slides')
-        each item in data
-          - var foodName = item.foodname
-          - var taste = item.taste
-          - var health = item.health
-          - var imgPath = item.path
-          div(data-p='138' class='container')
-            form(id='pickingTask'+item.id action='/experiment2/'+ trial + '/' + userId, method='post')
-              input(type='hidden', name='trial', value=trial)
-              input(type='hidden', name='userId', value=userId)
-              input(type='hidden', name='startingTime', value=startingTime)
-              input(type='hidden', name='defaultIndex', value=defaultIndex)
-              input(type='hidden', name='tracking', value=JSON.stringify(tracking))
-              div.card.selectable(id= 'food'+item.id, name='card', data-u='image', ondblclick="submitForm('pickingTask"+ item.id + "','food"+item.id+"')")
-                h3 #{foodName}
-                if foodName.length < 27
-                  br
-                div(style='visibility: hidden; font-size: 0pt')
-                  p(name='foodId') #{item.id}
-                img(src= imgPath alt= foodName)
-                table.scores
-                  tr
-                    th.taste Taste
-                    th.health Health
-                  tr
-                    td.taste(name='taste') #{taste}
-                    td.health(name='health') #{health}
-      //- div(data-u='navigator' class='jssorb051' style='position:absolute;bottom:0px;right:12px; background-color: black;' data-autocenter='1' data-scale='0.5' data-scale-bottom='0.75')
-      //-   div(data-u='prototype' class='i' style='width:16px;height:16px;')
-      //-     svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
-      //-       circle(class='b' cx='8000' cy='8000' r='5800')
-      div(data-u='arrowleft' class='jssora051' style='width:65px;height:570px;top:0px;left:0px; background-color: red;' data-autocenter='2' data-scale='0.75' data-scale-left='0.75')
-        svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
-          polyline(class='a' points='11040,1920 4960,8000 11040,14080 ')
-      div(data-u='arrowright' class='jssora051' style='width:65px;height:570px;top:0px;right:0px; background-color: green;' data-autocenter='2' data-scale='0.75' data-scale-right='0.75')
-        svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
-          polyline(class='a' points='4960,1920 11040,8000 4960,14080 ')
+    br
+    div(class='container')
+      div(class='row')
+        div(class='col-sm-1 vcenter')
+          span(class='taste align-middle') tastier
+        div(class='col-sm-8')
+          div(id='jssor_1')
+            //- Loading Screen
+            div(data-u='loading' class='jssorl-009-spin')
+              img(src='/images/spin.svg')
+            div(data-u='slides' class='slides')
+              each item in data
+                - var foodName = item.foodname
+                - var taste = item.taste
+                - var health = item.health
+                - var imgPath = item.path
+                div(data-p='138' class='container')
+                  form(id='pickingTask'+item.id action='/experiment2/'+ trial + '/' + userId, method='post')
+                    input(type='hidden', name='trial', value=trial)
+                    input(type='hidden', name='userId', value=userId)
+                    input(type='hidden', name='startingTime', value=startingTime)
+                    input(type='hidden', name='defaultIndex', value=defaultIndex)
+                    input(type='hidden', name='tracking', value=JSON.stringify(tracking))
+                    div.card.selectable(id= 'food'+item.id, name='card', data-u='image', ondblclick="submitForm('pickingTask"+ item.id + "','food"+item.id+"')")
+                      h3 #{foodName}
+                      if foodName.length < 27
+                        br
+                      div(style='visibility: hidden; font-size: 0pt')
+                        p(name='foodId') #{item.id}
+                      img(src= imgPath alt= foodName)
+                      table.scores
+                        tr
+                          th.taste Taste
+                          th.health Health
+                        tr
+                          td.taste(name='taste') #{taste}
+                          td.health(name='health') #{health}
+            //- div(data-u='navigator' class='jssorb051' style='position:absolute;bottom:0px;right:12px; background-color: black;' data-autocenter='1' data-scale='0.5' data-scale-bottom='0.75')
+            //-   div(data-u='prototype' class='i' style='width:16px;height:16px;')
+            //-     svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
+            //-       circle(class='b' cx='8000' cy='8000' r='5800')
+            div(data-u='arrowleft' class='jssora051' style='width:65px;height:570px;top:0px;left:0px; background-color: red;' data-autocenter='2' data-scale='0.75' data-scale-left='0.75')
+              svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
+                polyline(class='a' points='11040,1920 4960,8000 11040,14080 ')
+            div(data-u='arrowright' class='jssora051' style='width:65px;height:570px;top:0px;right:0px; background-color: green;' data-autocenter='2' data-scale='0.75' data-scale-right='0.75')
+              svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
+                polyline(class='a' points='4960,1920 11040,8000 4960,14080 ')
+        div(class='col-sm-1')
+          div(class='health vcenter') healthier
+    //- div(id='jssor_1')
+    //-   //- Loading Screen
+    //-   div(data-u='loading' class='jssorl-009-spin')
+    //-     img(src='/images/spin.svg')
+    //-   div(data-u='slides' class='slides')
+    //-     each item in data
+    //-       - var foodName = item.foodname
+    //-       - var taste = item.taste
+    //-       - var health = item.health
+    //-       - var imgPath = item.path
+    //-       div(data-p='138' class='container')
+    //-         form(id='pickingTask'+item.id action='/experiment2/'+ trial + '/' + userId, method='post')
+    //-           input(type='hidden', name='trial', value=trial)
+    //-           input(type='hidden', name='userId', value=userId)
+    //-           input(type='hidden', name='startingTime', value=startingTime)
+    //-           input(type='hidden', name='defaultIndex', value=defaultIndex)
+    //-           input(type='hidden', name='tracking', value=JSON.stringify(tracking))
+    //-           div.card.selectable(id= 'food'+item.id, name='card', data-u='image', ondblclick="submitForm('pickingTask"+ item.id + "','food"+item.id+"')")
+    //-             h3 #{foodName}
+    //-             if foodName.length < 27
+    //-               br
+    //-             div(style='visibility: hidden; font-size: 0pt')
+    //-               p(name='foodId') #{item.id}
+    //-             img(src= imgPath alt= foodName)
+    //-             table.scores
+    //-               tr
+    //-                 th.taste Taste
+    //-                 th.health Health
+    //-               tr
+    //-                 td.taste(name='taste') #{taste}
+    //-                 td.health(name='health') #{health}
+    //-   //- div(data-u='navigator' class='jssorb051' style='position:absolute;bottom:0px;right:12px; background-color: black;' data-autocenter='1' data-scale='0.5' data-scale-bottom='0.75')
+    //-   //-   div(data-u='prototype' class='i' style='width:16px;height:16px;')
+    //-   //-     svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
+    //-   //-       circle(class='b' cx='8000' cy='8000' r='5800')
+    //-   div(data-u='arrowleft' class='jssora051' style='width:65px;height:570px;top:0px;left:0px; background-color: red;' data-autocenter='2' data-scale='0.75' data-scale-left='0.75')
+    //-     svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
+    //-       polyline(class='a' points='11040,1920 4960,8000 11040,14080 ')
+    //-   div(data-u='arrowright' class='jssora051' style='width:65px;height:570px;top:0px;right:0px; background-color: green;' data-autocenter='2' data-scale='0.75' data-scale-right='0.75')
+    //-     svg(viewbox='0 0 16000 16000' style='position:absolute;top:0;left:0;width:100%;height:100%;')
+    //-       polyline(class='a' points='4960,1920 11040,8000 4960,14080 ')
     script.
       jssor_1_slider_init()
       function submitSelected(formId, cardId) {
