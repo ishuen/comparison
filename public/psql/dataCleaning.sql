@@ -1,0 +1,11 @@
+DELETE FROM survey_time;
+DELETE FROM user_choice;
+DELETE FROM user_choosing_process;
+DELETE FROM user_comment;
+DELETE FROM user_rating;
+DELETE FROM user_satisfaction;
+DELETE FROM user_sorting;
+DELETE FROM user_track;
+DELETE FROM user_sorting_record;
+DELETE FROM sorting_experiment;
+DELETE FROM user_data WHERE user_id > 30;
