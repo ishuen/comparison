@@ -431,13 +431,22 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    trial = trial + 3
-    Survey1.getUserGroup(userId, function (expGroup) {
-      let category = Number(expGroup)
-      let algorithm = groups[category]
-      console.log('****', category, algorithm)
-      res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
-    })
+
+    if (trial < maxTrialEx1) {
+      trial = trial + 4
+      res.redirect('/survey1/' + trial + '/' + userId)
+    } else {
+      res.redirect('/end/' + userId) // end of experiment
+    }
+
+    // trial = trial + 3
+    // Survey1.getUserGroup(userId, function (expGroup) {
+    //   let category = Number(expGroup)
+    //   let algorithm = groups[category]
+    //   console.log('****', category, algorithm)
+    //   res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
+    // })
+
     // trial++
     // if (trial <= maxTrialEx1) {
     //   Survey1.getUserGroup(userId, function (expGroup) {
@@ -565,7 +574,8 @@ class Survey1Controller {
   }
   endOfExp (req, res) {
     const userId = req.params.userId
-    const surveyCode = getRandomCode(5, userId, 2)
+    // const surveyCode = getRandomCode(5, userId, 2)
+    const surveyCode = getRandomCode(5, userId, 1)
     res.render('end', {surveyCode: surveyCode})
   }
 }
