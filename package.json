@@ -24,6 +24,7 @@
     "express-status-monitor": "~1.1.5",
     "grunt-apidoc":"~0.11",
     "lodash":"~4.17.5",
+    "mathjs":"~5.0.4",
     "morgan": "~1.8.1",
     "pareto-frontier":"~1.1.1",
     "pg":"~7.4.1",

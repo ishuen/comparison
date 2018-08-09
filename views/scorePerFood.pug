@@ -1,0 +1,58 @@
+doctype html
+html
+  head
+    title= 'experiment 2'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/analysis.js', type='text/javascript')
+    script(src="https://cdn.plot.ly/plotly-latest.min.js", charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+      let item = !{JSON.stringify(item)}
+    div(class='container-fluid')
+      div(class='row')
+        div(class='col-sm-10')
+          h2 User-defined Score Distribution: #{item.foodname}
+      div(class='row')
+        div(class='col-sm-3', id='summary')
+          table(class='table')
+            tr
+              th
+              th Taste
+              th Health
+            tr
+              th Original score
+              td #{item.taste}
+              td #{item.health}
+            tr
+              th Observations
+              td #{data.length}
+              td #{data.length}
+            tr
+              th Mean
+              td #{sum.meanTaste}
+              td #{sum.meanHealth}
+            tr
+              th Median
+              td #{sum.medianTaste}
+              td #{sum.medianHealth}
+            tr
+              th Standard deviation
+              td #{sum.stdTaste}
+              td #{sum.stdHealth}
+            tr
+              th Min
+              td #{sum.minTaste}
+              td #{sum.minHealth}
+            tr
+              th Max
+              td #{sum.maxTaste}
+              td #{sum.maxHealth}
+        div(class='col-sm-4', id='boxplotDiv')
+        div(class='col-sm-4', id='histogramDiv')
+    script.
+      drawBoxPlot(data)
+      drawHistogram(data)
