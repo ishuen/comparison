@@ -20,7 +20,7 @@ class Experiments {
             checked = true
           }
           if (err) {
-            console.log(err.stack)
+            throw err
           } else {
             callback(res.rows)
           }
@@ -56,7 +56,7 @@ class Experiments {
               checked = true
             }
             if (err) {
-              console.log(err.stack)
+              throw err
             } else {
               console.log(res.rows)
             }
@@ -99,7 +99,7 @@ class Experiments {
         for (let rating of likert) {
           client.query('INSERT INTO user_rating (qn_id, user_id, rating, trial, item_order, food_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING rating_id', rating, (err, res) => {
             if (err) {
-              console.log(err.stack)
+              throw err
             } else {
               console.log(res.rows)
             }
@@ -119,6 +119,7 @@ class Experiments {
             })
           }
         }
+        callback(res.rows)
       })
     })
   }

@@ -36,6 +36,9 @@ CREATE TABLE user_comment(
     trial INT,
     item_order INT); -- other ans eg: fill, choice, diet_5
 
+ALTER TABLE user_comment
+ADD COLUMN food_id varchar REFERENCES hpbdata(id);
+
 -- ALTER TABLE hpbdata
 --   ADD CONSTRAINT hpbdata_pk
 --     PRIMARY KEY (id);

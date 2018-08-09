@@ -156,7 +156,8 @@ class ExperimentsController {
     for (let item of sorts) {
       ordering.push(item.foodId)
     }
-    // console.log(ordering)
+    console.log(ordering)
+    console.log(sorts)
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     let now = new Date()
