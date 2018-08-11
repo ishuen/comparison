@@ -168,6 +168,22 @@ class BehavioralRankController {
     let resData = tGroup.concat(hGroup)
     return {data: resData, defaultPoint: defaultPoint}
   }
+
+  pathGivenUserSet (data) {
+    let minTaste = _.minBy(data, function (o) { return o['new_taste'] })
+    let minTasteSet = _.filter(data, function (o) { return o['new_taste'] === minTaste['new_taste'] })
+    let defaultPoint = _.minBy(minTasteSet, function (o) { return o['new_health'] })
+    // let defaultPoint = _.minBy(data, function (o) { return o['health'] + o['taste'] })
+    // console.log(defaultPoint.foodname, defaultPoint['taste'] , defaultPoint['health'])
+    const obj = groupDataUser(data, defaultPoint, data.length)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    tGroup = _.sortBy(tGroup, [function (o) { return o['new_taste'] }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return o['new_health'] }])
+    let resData = tGroup.concat(hGroup)
+    return {data: resData, defaultPoint: defaultPoint}
+  }
 }
 
 module.exports = new BehavioralRankController()
@@ -181,6 +197,24 @@ function groupData (data, mid, number) {
     } else if (item['health'] <= mid['health'] && item['taste'] > mid['taste']) {
       tGroup.push(item)
     } else if (item['health'] >= item['taste']) {
+      hGroup.push(item)
+    } else {
+      tGroup.push(item)
+    }
+  }
+  let obj = checkLength(tGroup, hGroup, mid, number)
+  return obj
+}
+
+function groupDataUser (data, mid, number) {
+  let tGroup = []
+  let hGroup = []
+  for (let item of data) {
+    if (item['new_health'] >= mid['new_health'] && item['new_taste'] <= mid['new_taste']) {
+      hGroup.push(item)
+    } else if (item['new_health'] <= mid['new_health'] && item['new_taste'] > mid['new_taste']) {
+      tGroup.push(item)
+    } else if (item['new_health'] >= item['new_taste']) {
       hGroup.push(item)
     } else {
       tGroup.push(item)

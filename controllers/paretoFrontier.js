@@ -150,6 +150,30 @@ class ParetoFrontierController {
     let defaultPoint = resData[Math.floor(resData.length / 2)]
     return {data: resData, defaultPoint: defaultPoint}
   }
+  relaxedPathGivenUserSet (data) {
+    let location = []
+    for (let index in data) {
+      let temp = [parseFloat(data[index]['new_health']), parseFloat(data[index]['new_taste'])]
+      location.push(temp)
+    }
+    const proportion = 1 / 2 // depends on how many data points have the same values
+    let maxLen = data.length
+    let result = []
+    let count = 0
+    while (count < maxLen && result.length < proportion * maxLen) {
+      let temp = pf.getParetoFrontier(location)
+      result = _.concat(result, temp)
+      result = _.sortBy(result, function (r) { return r[0] })
+      console.log(result)
+      location = _.filter(location, function (loc) {
+        return (_.findIndex(temp, {'0': loc[0], '1': loc[1]}) === -1)
+      })
+      count++
+    }
+    let resData = reorderData(result, data)
+    let defaultPoint = resData[Math.floor(resData.length / 2)]
+    return {data: resData, defaultPoint: defaultPoint}
+  }
 }
 
 // function reorderData (locations, data) {
