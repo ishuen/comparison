@@ -48,6 +48,30 @@ class GeneticSortController {
     let defaultPoint = resData[defaultIndex]
     return {data: resData, defaultPoint: defaultPoint}
   }
+
+  showPathUserSet (data) {
+    let generation = 20
+    let len = data.length
+    let defaultIndex = getDefaultIndex(len)
+    let population = initPopulation(len) // record the order of the items
+    let n = 0
+    let currentArr = []
+    while (n < generation) {
+      let fittestTwo = get2FittestUser(population, data, defaultIndex)
+      currentArr = fittestTwo
+      currentArr[1] = mutation(currentArr[1])
+      for (let i = 0; i < population.length - 2; i++) {
+        let temp = crossover(population[i], population[i + 1])
+        currentArr.push(mutation(temp))
+      }
+      population = currentArr
+      n++
+    }
+    let fittest = getFittestUser(population, data, defaultIndex)
+    let resData = orderToObj(fittest, data)
+    let defaultPoint = resData[defaultIndex]
+    return {data: resData, defaultPoint: defaultPoint}
+  }
 }
 
 module.exports = new GeneticSortController()
@@ -179,4 +203,54 @@ function get2Fittest (population, data, defaultIndex) {
     }
   }
   return [population[max1], population[max2]]
+}
+function getFittestUser (population, data, defaultIndex) {
+  let fitnessArr = []
+  for (let i = 0; i < population.length; i++) {
+    let fitness = calculateFitnessUser(population[i], data, defaultIndex)
+    fitnessArr.push(fitness)
+  }
+  let fittest = _.maxBy(fitnessArr)
+  let index = _.findIndex(fitnessArr, function (o) { return _.isEqual(o, fittest) })
+  return population[index]
+}
+function get2FittestUser (population, data, defaultIndex) {
+  let fitnessArr = []
+  for (let i = 0; i < population.length; i++) {
+    let fitness = calculateFitnessUser(population[i], data, defaultIndex)
+    fitnessArr.push(fitness)
+  }
+  let max1 = 0
+  let max2 = 0
+  for (let i = 0; i < fitnessArr.length; i++) {
+    if (fitnessArr[i] > fitnessArr[max1]) {
+      max2 = max1
+      max1 = i
+    } else if (fitnessArr[i] > fitnessArr[max2]) {
+      max2 = i
+    }
+  }
+  return [population[max1], population[max2]]
+}
+function calculateFitnessUser (arr, data, defaultIndex) {
+  let len = arr.length
+  let changePoint = defaultIndex
+  let fitness = 0
+  for (let i = 0; i < changePoint - 1; i++) {
+    if (data[arr[i]].new_taste >= data[arr[i + 1]].new_taste) {
+      fitness = fitness + 6
+    }
+    if (data[arr[i]].new_health >= data[arr[i + 1]].new_health) {
+      fitness = fitness + 4
+    }
+  }
+  for (let i = changePoint - 1; i < len - 1; i++) {
+    if (data[arr[i]].new_taste >= data[arr[i + 1]].new_taste) {
+      fitness = fitness + 4
+    }
+    if (data[arr[i]].new_health >= data[arr[i + 1]].new_health) {
+      fitness = fitness + 6
+    }
+  }
+  return fitness
 }
