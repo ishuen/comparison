@@ -19,7 +19,24 @@ html
       - var i = 1
       while i <= rowNum
         div(class='row')
-          div(class='col-sm-3', id='lineChart' + i)
+          div(class='col-sm-3')
+            div(class='col-sm-12', id='lineChart' + i)
+            div(class='col-sm-12', id='compareTable' + i)
+              table(class='table table-condensed table-bordered')
+                tr
+                  th(colspan='2') Minimum edit distance
+                tr
+                  th user-pareto
+                  td #{sortings[i-1].diff[0].distance}
+                tr
+                  th user-heuristic
+                  td #{sortings[i-1].diff[1].distance}
+                tr
+                  th user-genetic
+                  td #{sortings[i-1].diff[2].distance}
+                tr
+                  th similar to
+                  th #{sortings[i-1].sim}
           div(class='col-sm-7', id='dualYChart' + i)
             div(class='col-sm-6', id='dualYChart' + i + 'user')
             div(class='col-sm-6', id='dualYChart' + i + 'pareto')

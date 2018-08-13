@@ -119,8 +119,8 @@ function drawLineChart (data, destination) {
   let traces = [trace1, trace2, trace3, trace4]
   let layout = {
     // barmode: 'overlay',
-    width: 300,
-    height: 300,
+    width: 400,
+    height: 250,
     autosize: false,
     margin: {
       l: 30,
@@ -130,7 +130,7 @@ function drawLineChart (data, destination) {
       pad: 4
     },
     showlegend: true,
-    legend: {"orientation": "h"}
+    // legend: {"orientation": "h"}
   }
   Plotly.newPlot(destination, traces, layout)
 }
@@ -248,12 +248,12 @@ function drawPareto (data, destination) {
       t: 30,
       pad: 4
     },
-    showlegend: false,
-    // legend: {
-    //   "orientation": "h",
-    //   x: 0,
-    //   y: -0.2
-    // },
+    showlegend: true,
+    legend: {
+      // "orientation": "h",
+      x: 1.1,
+      // y: -0.2
+    },
   }
   let traces = [trace1, trace2]
   Plotly.newPlot(destination + 'pareto', traces, layout)
@@ -314,12 +314,12 @@ function drawHeuristic (data, destination) {
       t: 30,
       pad: 4
     },
-    showlegend: true,
-    legend: {
-      "orientation": "h",
-      x: 0,
-      y: -0.2
-    },
+    showlegend: false,
+    // legend: {
+    //   "orientation": "h",
+    //   x: 0,
+    //   y: -0.2
+    // },
   }
   let traces = [trace1, trace2]
   Plotly.newPlot(destination + 'heuristic', traces, layout)
