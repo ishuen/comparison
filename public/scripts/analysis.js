@@ -389,9 +389,78 @@ function drawGenetic (data, destination) {
   let traces = [trace1, trace2]
   Plotly.newPlot(destination + 'genetic', traces, layout)
 }
-function drawDualYChart(data, destination) {
+function drawDualYChart (data, destination) {
   drawForUser(data, destination)
   drawPareto(data, destination)
   drawHeuristic(data, destination)
   drawGenetic(data, destination)
+}
+
+function drawPieChart (data, title, destination) {
+  var trace = [{
+  values: data,
+  labels: ['OK', 'Allergic', 'Intolerant', 'Choose not to eat', 'Dislike'],
+  type: 'pie'
+  }]
+  if (title.includes('(')) {
+    let index = title.indexOf('(')
+    title = title.slice(0, index-1)
+  }
+  if (title === 'Others') {
+    var layout = {
+      autosize: false,
+      title: title,
+      height: 250,
+      width: 400,
+      showlegend: true,
+      margin: {
+        l: 10,
+        r: 10,
+        b: 30,
+        t: 50,
+        pad: 4
+      },
+    }
+  } else {
+    var layout = {
+      autosize: false,
+      title: title,
+      height: 250,
+      width: 250,
+      showlegend: false,
+      margin: {
+        l: 10,
+        r: 10,
+        b: 30,
+        t: 50,
+        pad: 4
+      },
+    }
+  }
+  
+
+  Plotly.newPlot(destination, trace, layout)
+}
+
+function drawPieChartVeg (data, destination) {
+  var trace = [{
+  values: data,
+  labels: ['Vegan', 'Ovo-vegetarian', 'Lacto-vegetarian', 'Lacto-ovo vegetarian', 'Pescatarian', 'neither'],
+  type: 'pie'
+  }]
+  var layout = {
+    autosize: false,
+    title: 'vegan/ vegetarian',
+    height: 250,
+    width: 400,
+    showlegend: true,
+    margin: {
+      l: 10,
+      r: 10,
+      b: 30,
+      t: 50,
+      pad: 4
+    },
+  }
+  Plotly.newPlot(destination, trace, layout)
 }
