@@ -19,5 +19,11 @@ class Analyses {
       callback(res.rows)
     })
   }
+  getVeg (callback) {
+    pool.query('SELECT user_comment.description AS answer, survey_questions.qn_id, survey_questions.display_num, user_comment.user_id FROM survey_questions INNER JOIN user_comment ON (user_comment.qn_id = survey_questions.qn_id) WHERE qn_set = $1 ORDER BY survey_questions.qn_id', [5], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 module.exports = new Analyses()

@@ -439,5 +439,28 @@ function drawPieChart (data, title, destination) {
   }
   
 
-  Plotly.newPlot(destination, trace, layout);
+  Plotly.newPlot(destination, trace, layout)
+}
+
+function drawPieChartVeg (data, destination) {
+  var trace = [{
+  values: data,
+  labels: ['Vegan', 'Ovo-vegetarian', 'Lacto-vegetarian', 'Lacto-ovo vegetarian', 'Pescatarian', 'neither'],
+  type: 'pie'
+  }]
+  var layout = {
+    autosize: false,
+    title: 'vegan/ vegetarian',
+    height: 250,
+    width: 400,
+    showlegend: true,
+    margin: {
+      l: 10,
+      r: 10,
+      b: 30,
+      t: 50,
+      pad: 4
+    },
+  }
+  Plotly.newPlot(destination, trace, layout)
 }

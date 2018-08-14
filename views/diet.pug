@@ -12,7 +12,8 @@ html
     script.
       let data = !{JSON.stringify(data)}
       let countAns = !{JSON.stringify(countAns)}
-      console.log(data)
+      let vegType = !{JSON.stringify(vegType)}
+      let otherRes = !{JSON.stringify(otherRes)}
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-5')
@@ -23,7 +24,24 @@ html
       while i < rowNum
         div(class='col-sm-3', id='pieChart' + i)
         - i++
+      div(class='row')
+        div(class='col-sm-3', id='pieChartVeg')
+        div(class='col-sm-3', id='otherTable')
+          h3 Other dietary restrictions
+          table(class='table')
+            tr
+              th No.
+              th Participants response
+            - let k = 1
+            - let len = otherRes.length
+            while k <= len
+              tr
+                td #{k}
+                - var r = k - 1
+                td #{otherRes[r].answer}
+              - k++
     script.
       for (let i = 0; i < data.length; i++) {
         drawPieChart(countAns[i], data[i][0].question, 'pieChart' + Number(i))
       }
+      drawPieChartVeg(vegType, pieChartVeg)

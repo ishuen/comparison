@@ -95,7 +95,18 @@ class AnalysisController {
         countAns.push(likert)
         qnAns.push(temp)
       }
-      res.render('diet', {data: qnAns, countAns: countAns})
+      Analyses.getVeg(function (qnVeg) {
+        let vegType = _.filter(qnVeg, function (o) { return o.qn_id === 14 })
+        let otherRes = _.filter(qnVeg, function (o) { return o.qn_id === 15 && o.answer.length > 0 })
+        let types = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian', 'I\'m neither a vegan nor a vegetarian']
+        let ans = _.countBy(vegType, 'answer')
+        let veg = [0, 0, 0, 0, 0, 0]
+        for (let a in ans) {
+          let index = types.findIndex(function (o) { return _.isEqual(o, a) })
+          veg[index] = ans[a]
+        }
+        res.render('diet', {data: qnAns, countAns: countAns, vegType: veg, otherRes: otherRes})
+      })
     })
   }
 }
