@@ -396,6 +396,28 @@ class Survey1Controller {
     // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
     res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity})
   }
+  showDemographicsIVLE (req, res) {
+    const fs = require('fs')
+    const userId = req.params.userId
+    const country = require('../public/json/nationality.json')
+    let countryArr = Object.values(country)
+    const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
+    let ethnicity = text.split('\n')
+    // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
+    // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
+    res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity})
+  }
+  showDemographicsMTurk (req, res) {
+    const fs = require('fs')
+    const userId = req.params.userId
+    const country = require('../public/json/nationality.json')
+    let countryArr = Object.values(country)
+    const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
+    let ethnicity = text.split('\n')
+    // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
+    // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
+    res.render('survey3MTurk', {userId: userId, country: countryArr, ethnicity: ethnicity})
+  }
 
   showQnPost1 (req, res) {
     const userId = req.params.userId
