@@ -74,5 +74,29 @@ class AnalysisController {
       res.render('userSortings', {userId: userId, sortings: results})
     })
   }
+  getDietarySummary (req, res) {
+    Analyses.getDietData(function (data) {
+      let maxQn = _.max(_.map(data, function (i) { return i.display_num }))
+      let qnAns = []
+      let countAns = []
+      let likertList = ['OK', 'Allergic', 'Intolerant', 'Choose not to eat', 'Dislike']
+      for (let i = 1; i <= maxQn; i++) {
+        let temp = _.filter(data, function (o) { return _.isEqual(o.display_num, i) })
+        let ans = _.countBy(temp, 'answer')
+        let likert = [0, 0, 0, 0, 0]
+        for (let a in ans) {
+          let propName = a
+          if (a.includes('-')) {
+            propName = propName.slice(0, a.length - 1)
+          }
+          let index = likertList.findIndex(function (o) { return _.isEqual(o, propName) })
+          likert[index] = ans[a]
+        }
+        countAns.push(likert)
+        qnAns.push(temp)
+      }
+      res.render('diet', {data: qnAns, countAns: countAns})
+    })
+  }
 }
 module.exports = new AnalysisController()
