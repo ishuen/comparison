@@ -1,0 +1,87 @@
+doctype html
+html
+  head
+    title= 'experiment 2'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style1.css')
+    link(rel='stylesheet', href='https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js', charset='utf-8')
+    script(src='https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js', charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+    div(class='container spreadsheetMethod')
+      h1 Experiment 2
+      label Please find out something healthy which you are also willing to eat. Navigate by scrolling, and then double click your choice.
+      table(id='spreadsheet', class='table table-hover spreadsheetMethod')
+        thead
+          tr
+            th image
+            th name
+            th taste
+            th health
+        tbody
+          each item in data
+            tr(id='food' + item.id)
+              td(class='col-md-2')
+                div(class='col-md-6')
+                  img(class='img-responsive', src= item.path, alt= item.foodname)
+              td(class='col-md-3') #{item.foodname}
+              td(class='col-md-1') #{item.taste}
+              td(class='col-md-1') #{item.health}
+        tfoot
+          tr
+            th image
+            th name
+            th taste
+            th health
+      form(id='pickingTask' action='/experiment2/'+ env + '/' + trial + '/' + userId, method='post')
+        input(type='hidden', name='env', value=env)
+        input(type='hidden', name='trial', value=trial)
+        input(type='hidden', name='userId', value=userId)
+        input(type='hidden', name='startingTime', value=startingTime)
+        input(type='hidden', name='defaultIndex', value=defaultIndex)
+    script.
+      $('tr[id^="food"]').dblclick(function() {
+        submitForm('pickingTask', $(this).attr('id'))
+      })
+      $(document).ready(function() {
+        $('#spreadsheet').DataTable({
+          'columnDefs': [ { 'targets': [0], 'searchable': false, 'orderable': false, 'visible': true } ],
+          'order': [[ 1, 'asc' ]]
+        })
+      } )
+      function submitSelected(formId, foodId) {
+        var form = document.getElementById(formId)
+        if (!form) { return }
+        //- var div = form.getElementsByTagName('div')
+        var texta = document.createElement('TEXTAREA')
+        texta.name = 'picked'
+        texta.style.display = 'none'
+        //- texta.value = JSON.stringify({
+        //-   itemName: div[0].getElementsByTagName('h3')[0].innerHTML,
+        //-   foodId: div[0].getElementsByTagName('p')[0].innerHTML,
+        //-   taste: div[0].getElementsByTagName('td')[0].innerHTML,
+        //-   health: div[0].getElementsByTagName('td')[1].innerHTML
+        //- })
+        let target = data.find(function(d) { return d.id == foodId.slice(4)})
+        console.log(target)
+        texta.value = JSON.stringify({
+          itemName: target.foodname,
+          foodId: target.id,
+          taste: target.taste,
+          health: target.health
+        })
+        form.appendChild(texta)
+      }
+      window.submitForm = function(formId, foodId) {
+        submitSelected(formId, foodId)
+        var form = document.getElementById(formId)
+        var button = document.createElement('input')
+        button.style.display = 'none'
+        button.type = 'submit'
+        form.appendChild(button).click()
+      }

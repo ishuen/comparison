@@ -6,4 +6,6 @@ const surveys = require('../controllers/surveys')
 // router.post('/:trial/:itemOrder/:userId', surveys.scoreSubmit)
 router.get('/:trial/:userId', surveys.showAllQuestionsModValue)
 router.post('/:trial/:userId', surveys.allScoreSubmit)
+router.get('/:env/:trial/:userId', surveys.showAllQuestionsModValueEnv)
+router.post('/:env/:trial/:userId', surveys.allScoreSubmitEnv)
 module.exports = router
