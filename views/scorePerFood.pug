@@ -12,6 +12,7 @@ html
     script.
       let data = !{JSON.stringify(data)}
       let item = !{JSON.stringify(item)}
+      let agreements = !{JSON.stringify(agreements)}
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-10')
@@ -51,8 +52,10 @@ html
               th Max
               td #{sum.maxTaste}
               td #{sum.maxHealth}
-        div(class='col-sm-4', id='boxplotDiv')
-        div(class='col-sm-4', id='histogramDiv')
+        div(class='col-sm-3', id='boxplotDiv')
+        div(class='col-sm-3', id='histogramDiv')
+        div(class='col-sm-3', id='piechartDiv')
     script.
       drawBoxPlot(data)
       drawHistogram(data)
+      drawAgreementPie(agreements, 'piechartDiv')

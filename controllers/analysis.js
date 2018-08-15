@@ -23,7 +23,14 @@ class AnalysisController {
           maxTaste: _.max(_.map(data, function (i) { return i.new_taste })),
           maxHealth: _.max(_.map(data, function (i) { return i.new_health }))
         }
-        res.render('scorePerFood', {foodId: foodId, item: item[0], data: data, sum: summary})
+        Analyses.getItemAgreement(foodId, function (agreements) {
+          let agr = [0, 0, 0, 0, 0]
+          let temp = _.countBy(agreements, 'rating')
+          for (let t in temp) {
+            agr[t - 1] = temp[t]
+          }
+          res.render('scorePerFood', {foodId: foodId, item: item[0], data: data, sum: summary, agreements: agr})
+        })
       })
     })
   }
