@@ -444,9 +444,9 @@ function drawPieChart (data, title, destination) {
 
 function drawPieChartVeg (data, destination) {
   var trace = [{
-  values: data,
-  labels: ['Vegan', 'Ovo-vegetarian', 'Lacto-vegetarian', 'Lacto-ovo vegetarian', 'Pescatarian', 'neither'],
-  type: 'pie'
+    values: data,
+    labels: ['Vegan', 'Ovo-vegetarian', 'Lacto-vegetarian', 'Lacto-ovo vegetarian', 'Pescatarian', 'neither'],
+    type: 'pie'
   }]
   var layout = {
     autosize: false,
@@ -461,6 +461,34 @@ function drawPieChartVeg (data, destination) {
       t: 50,
       pad: 4
     },
+  }
+  Plotly.newPlot(destination, trace, layout)
+}
+
+function drawAgreementPie (data, destination) {
+  var trace = [{
+    values: data,
+    labels: ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'],
+    type: 'pie'
+  }]
+  var layout = {
+    autosize: false,
+    title: 'agreement',
+    height: 450,
+    width: 400,
+    showlegend: true,
+    margin: {
+      l: 10,
+      r: 10,
+      b: 10,
+      t: 40,
+      pad: 2
+    },
+    legend: {
+      "orientation": "h",
+      x: 1,
+      y: -0.1
+    }
   }
   Plotly.newPlot(destination, trace, layout)
 }
