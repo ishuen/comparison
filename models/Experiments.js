@@ -136,7 +136,13 @@ class Experiments {
 
   userSorting (details, callback) {
     let userId = details.userId
-    let expData = [Number(userId), Number(details.trial), Number(details.trial) + 3]
+    let expData = []
+    if (details.trial < 0) {
+      expData = [Number(userId), 1, 4]
+    } else {
+      expData = [Number(userId), Number(details.trial), Number(details.trial) + 3]
+    }
+    console.log(expData)
     let done = [0, 0, 0]
     pool.connect((err, client, done) => {
       if (err) throw err

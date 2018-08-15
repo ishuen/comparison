@@ -111,9 +111,9 @@ html
       $('#source').selectable();
       var get = function(id){ return document.getElementById(id)}
       dragula([get('source'), get('tasteSort')], {})
-      //- $('#tasteSort').bind('DOMSubtreeModified', function() {
-      //-   trackList(tracking)
-      //- })
+      $('#tasteSort').bind('DOMSubtreeModified', function() {
+        trackList(tracking)
+      })
       function div2form(id, trial) {
         console.log(trial)
         var form = get(id)
@@ -143,40 +143,40 @@ html
           }
         }
         
-        //- var texta = document.createElement('TEXTAREA')
-        //- texta.name = 'sorts'
-        //- texta.style.display = 'none'
-        //- temp = []
-        //- for (var i = 0; i < ndivs; i++) {
-        //-   var obj = {
-        //-     ordering: i,
-        //-     foodName: $(divs).eq(i).find('label').html(),
-        //-     foodId: $(divs).eq(i).find('p').html(),
-        //-     taste: $(divs).eq(i).find('td').eq(0).text(),
-        //-     health: $(divs).eq(i).find('td').eq(1).text()
-        //-   }
-        //-   var str = JSON.stringify(obj)
-        //-   temp.push(str)
-        //- }
-        //- texta.value = temp
-        //- form.appendChild(texta)
-        //- form.tracking.value = JSON.stringify(tracking)
+        var texta = document.createElement('TEXTAREA')
+        texta.name = 'sorts'
+        texta.style.display = 'none'
+        temp = []
+        for (var i = 0; i < ndivs; i++) {
+          var obj = {
+            ordering: i,
+            foodName: $(divs).eq(i).find('label').html(),
+            foodId: $(divs).eq(i).find('p').html(),
+            taste: $(divs).eq(i).find('td').eq(0).text(),
+            health: $(divs).eq(i).find('td').eq(1).text()
+          }
+          var str = JSON.stringify(obj)
+          temp.push(str)
+        }
+        texta.value = temp
+        form.appendChild(texta)
+        form.tracking.value = JSON.stringify(tracking)
       }
-      //- function trackList (tracking) {
-      //-   let divs = $('#tasteSort > .card')
-      //-   let len = divs.length
-      //-   let arr = []
-      //-   for (let i = 0; i < len; i++) {
-      //-     let item = divs[i].id.slice(4)
-      //-     arr.push(item)
-      //-   }
-      //-   if (tracking.length > 0 && isEqualTrackingArr(arr, tracking[tracking.length -1].order)) return
-      //-   let now = new Date()
-      //-   let temp = {
-      //-     order: arr,
-      //-     time_stamp: now.getTime()
-      //-   }
-      //-   tracking.push(temp)
-      //-   console.log(tracking)
-      //- }
+      function trackList (tracking) {
+        let divs = $('#tasteSort > .card')
+        let len = divs.length
+        let arr = []
+        for (let i = 0; i < len; i++) {
+          let item = divs[i].id.slice(4)
+          arr.push(item)
+        }
+        if (tracking.length > 0 && isEqualTrackingArr(arr, tracking[tracking.length -1].order)) return
+        let now = new Date()
+        let temp = {
+          order: arr,
+          time_stamp: now.getTime()
+        }
+        tracking.push(temp)
+        console.log(tracking)
+      }
 

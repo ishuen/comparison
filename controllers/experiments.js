@@ -115,27 +115,28 @@ class ExperimentsController {
   }
 
   submitSortingPre (req, res) {
-    let trial = Number(req.body.trial) + 1
+    let trial = Number(req.body.trial)
     const userId = req.body.userId
-    // let sorts = JSON.parse('[' + req.body.sorts + ']')
-    // let ordering = []
-    // for (let item of sorts) {
-    //   ordering.push(item.foodId)
-    // }
-    // console.log(ordering)
-    // let now = new Date()
-    // const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    // console.log('timeUsed', timeUsed)
-    // let details = {
-    //   ordering: ordering,
-    //   tracking: JSON.parse('[' + req.body.tracking + ']'),
-    //   trial: trial,
-    //   userId: userId,
-    //   timeUsed: timeUsed,
-    //   startingTime: req.body.startingTime,
-    //   endTime: now
-    // }
-    // Experiments.userSorting(details, function (out) { console.log(out) })
+    let sorts = JSON.parse('[' + req.body.sorts + ']')
+    let ordering = []
+    for (let item of sorts) {
+      ordering.push(item.foodId)
+    }
+    console.log(ordering)
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    console.log('timeUsed', timeUsed)
+    let details = {
+      ordering: ordering,
+      tracking: JSON.parse('[' + req.body.tracking + ']'),
+      trial: -trial,
+      userId: userId,
+      timeUsed: timeUsed,
+      startingTime: req.body.startingTime,
+      endTime: now
+    }
+    Experiments.userSorting(details, function (out) { console.log(out) })
+    trial++
     if (trial <= maxPreTrial) {
       res.redirect('/experiment1/pre/' + trial + '/' + userId)
     } else {
@@ -143,28 +144,29 @@ class ExperimentsController {
     }
   }
   submitSortingPreEnv (req, res) {
-    let trial = Number(req.body.trial) + 1
+    let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
-    // let sorts = JSON.parse('[' + req.body.sorts + ']')
-    // let ordering = []
-    // for (let item of sorts) {
-    //   ordering.push(item.foodId)
-    // }
-    // console.log(ordering)
-    // let now = new Date()
-    // const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    // console.log('timeUsed', timeUsed)
-    // let details = {
-    //   ordering: ordering,
-    //   tracking: JSON.parse('[' + req.body.tracking + ']'),
-    //   trial: trial,
-    //   userId: userId,
-    //   timeUsed: timeUsed,
-    //   startingTime: req.body.startingTime,
-    //   endTime: now
-    // }
-    // Experiments.userSorting(details, function (out) { console.log(out) })
+    let sorts = JSON.parse('[' + req.body.sorts + ']')
+    let ordering = []
+    for (let item of sorts) {
+      ordering.push(item.foodId)
+    }
+    console.log(ordering)
+    let now = new Date()
+    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+    console.log('timeUsed', timeUsed)
+    let details = {
+      ordering: ordering,
+      tracking: JSON.parse('[' + req.body.tracking + ']'),
+      trial: -trial,
+      userId: userId,
+      timeUsed: timeUsed,
+      startingTime: req.body.startingTime,
+      endTime: now
+    }
+    Experiments.userSorting(details, function (out) { console.log(out) })
+    trial++
     if (trial <= maxPreTrial) {
       res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
     } else {
