@@ -16,16 +16,30 @@ html
       let data = !{JSON.stringify(data)}
       let tracking = []
     div(class='container-fluid', id='sort')
-      h3 Resource Card Set
-      label Order By
-      span(class='sliceSpace')
-      button(class='btn btn-default', onclick="sortCardsBy1('alphabet')") Alphabet
-      span(class='sliceSpace')
-      button(class='btn btn-default', onclick="sortCardsBy1('taste')") Taste
-      span(class='sliceSpace')
-      button(class='btn btn-default', onclick="sortCardsBy1('health')") Health
-      span(class='sliceSpace')
-      label If you cannot see the cards below at the beginning of the trial, please refresh the page.
+      div(class='row')
+        div(class='col-sm-4')
+          h3 Resource Card Set
+          label Order By
+          span(class='sliceSpace')
+          button(class='btn btn-default', onclick="sortCardsBy1('alphabet')") Alphabet
+          span(class='sliceSpace')
+          button(class='btn btn-default', onclick="sortCardsBy1('taste')") Taste
+          span(class='sliceSpace')
+          button(class='btn btn-default', onclick="sortCardsBy1('health')") Health
+          span(class='sliceSpace')
+        div(class='col-sm-4')
+          br
+          br
+          label If you cannot see the cards below at the beginning of the trial, please refresh the page.
+        div(class='col-sm-4' style='background-color: #f5f5f5')
+          h4 progress
+          div(class='progress')
+            if trial > 1
+              - var str = Number(30 * trial - 5) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trial - 5) + '%;' aria-valuenow= Number(30 * trial - 5) aria-valuemin='0' aria-valuemax='100') #{str}
+            else
+              - var str = Number(30 * trial) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trial) + '%;' aria-valuenow= Number(30 * trial) aria-valuemin='0' aria-valuemax='100') #{str}
       //- span(class='sliceSpace')
       //- label At most 5 cards are allowed to discard.
       //- span(class='sliceSpace')
@@ -65,7 +79,7 @@ html
         div(class='col-xs-1 health')
           span(class="glyphicon glyphicon-triangle-right")
         div(class='col-xs-4')
-          form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/'+ env + '/' + trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
+          form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/for/'+ env + '/' + trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
             input(type='hidden', name='trial', value=trial)
             input(type='hidden', name='env', value=env)
             input(type='hidden', name='userId', value=userId)

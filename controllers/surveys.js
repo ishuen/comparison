@@ -427,7 +427,7 @@ class Survey1Controller {
     if (trial === 1) {
       res.redirect('/experiment1/pre/' + trial + '/' + userId)
     } else {
-      res.redirect('/experiment1/' + trial + '/' + userId)
+      res.redirect('/experiment1/for/' + trial + '/' + userId)
     }
     // if (trial === 1) {
     //   res.redirect('/experiment1/pre/' + trial + '/' + userId)
@@ -467,7 +467,7 @@ class Survey1Controller {
     if (trial === 1) {
       res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
     } else {
-      res.redirect('/experiment1/' + env + '/' + trial + '/' + userId)
+      res.redirect('/experiment1/for/' + env + '/' + trial + '/' + userId)
     }
     // if (trial === 1) {
     //   res.redirect('/experiment1/pre/' + trial + '/' + userId)

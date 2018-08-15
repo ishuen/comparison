@@ -11,16 +11,20 @@ html
     script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     div(class='container-fluid')
       div(class='row')
-        div(class='col-sm-5')
+        div(class='col-sm-8')
           h1 Thank you!
           label This is the end of experiments. Thanks for attendance.
-          label If you are an MTurk worker, please use this survey code:
-          p #{surveyCode}
-        div(class='col-sm-2')
-          h5 &nbsp;
-          if env
-            a(href= '/' + env + '/')
-              button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment
-          else
-            a(href= '/')
-              button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment
+          label If you are an MTurk worker, please use this survey code: #{surveyCode}
+        div(class='col-sm-4')
+          div(class='col-sm-12' style='background-color: #f5f5f5')
+            h4 progress
+            div(class='progress')
+                div(class='progress-bar progress-bar-success' role='progressbar' style='width: 100%;' aria-valuenow= '100' aria-valuemin='0' aria-valuemax='100') 100%
+          div(class='col-sm-12')
+            br
+            if env
+              a(href= '/' + env + '/')
+                button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment
+            else
+              a(href= '/')
+                button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment

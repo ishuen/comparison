@@ -12,25 +12,31 @@ html
       let userId = !{JSON.stringify(userId)}
       let ethnicity = !{JSON.stringify(ethnicity)}
     - var setDesc = 'Demographics'
-    div(class='container-fluid')
-      h1 #{setDesc}
-      div(id='surveyContainer')
-      div(id='nextExp', style='visibility: hidden; padding: 15px;')
-        //- div
-        //-   label If you are an MTurk worker, this is the survey code:
-        //-   label #{surveyCode}
-        //-   label If you are willing to do the next experiment, you will have another new code after you finish that.
-        a(class='nextExpButton', href= '/survey0/sg/' + userId)
-            button(class='btn btn-primary btn-lg', type='button') Next
-        //- if (userId % 8 == 0)
+    div(class='container')
+      div(class='row')
+        div(class='col-sm-8')    
+          h1 #{setDesc}
+        div(class='col-sm-4' style='background-color: #f5f5f5')
+          h4 progress
+          div(class='progress')
+            div(class='progress-bar progress-bar-success' role='progressbar' style='width: 0%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100') 0%
+      div(class='row')
+        div(class='col-sm-12')
+          div(id='surveyContainer')
+      div(class='row')
+        div(class='col-sm-12')
+          div(id='nextExp', style='visibility: hidden; padding: 15px;')
+            a(class='nextExpButton', href= '/survey0/sg/' + userId)
+                button(class='btn btn-primary btn-lg', type='button') Next
+            //- if (userId % 8 == 0)
           
-        //-   a(class='nextExpButton', href= '/survey1/'+ exp2Trial + '/' + userId)
-        //-     //- button(class='indexButton') Go to next experiment
-        //-     button(class='btn btn-primary btn-lg', type='button') Go to next experiment
-        //- else
-        //-   a(class='nextExpButton', href= '/experiment1/pre/1/' + userId)
-        //-     //- button(class='indexButton') Go to next experiment
-        //-     button(class='btn btn-primary btn-lg', type='button') Go to next experiment
+            //-   a(class='nextExpButton', href= '/survey1/'+ exp2Trial + '/' + userId)
+            //-     //- button(class='indexButton') Go to next experiment
+            //-     button(class='btn btn-primary btn-lg', type='button') Go to next experiment
+            //- else
+            //-   a(class='nextExpButton', href= '/experiment1/pre/1/' + userId)
+            //-     //- button(class='indexButton') Go to next experiment
+            //-     button(class='btn btn-primary btn-lg', type='button') Go to next experiment
     script.
       Survey.Survey.cssType = 'bootstrap'
       var surveyJSON = {pages:[{name:"page1",elements:[{type:"radiogroup",name:"gender",title:"Gender",isRequired:true,choices:[{value:"item1",text:"Male"},{value:"item2",text:"Female"}]},{type:"text",name:"age",title:"Age",isRequired:true,inputType:"number"},{type:"text",name:"occupation",title:"Occupation",isRequired:true},{type:"dropdown",name:"country of residence",title:"Country of Residence",isRequired:true,choices: country},{type:"dropdown",name:"ethnicity",title:"Ethnicity",isRequired:true,choices: ethnicity},{type:"text",name:"email",title:"Email (We will inform you about the reimbursement via email or contact number.)",inputType:"email"},{type:"text",name:"contact number",title:"Contact Number (We will inform you about the reimbursement via email or sms.)",inputType:"tel"}, {type:'text',name:'userId',visible:false,title:'UserId', defaultValue: userId}]}], clearInvisibleValues:'none', completedHtml: "<label>Thank you for completing this form.</label><br><label>Press the button below and go to the next stage.</label>"}
