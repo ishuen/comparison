@@ -65,7 +65,7 @@ html
         div(class='col-xs-1 health')
           span(class="glyphicon glyphicon-triangle-right")
         div(class='col-xs-4')
-          form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/'+ env + '/' + trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
+          form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/for/'+ env + '/' + trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
             input(type='hidden', name='trial', value=trial)
             input(type='hidden', name='env', value=env)
             input(type='hidden', name='userId', value=userId)

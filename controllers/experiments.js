@@ -139,7 +139,7 @@ class ExperimentsController {
     if (trial <= maxPreTrial) {
       res.redirect('/experiment1/pre/' + trial + '/' + userId)
     } else {
-      res.redirect('/experiment1/1/' + userId)
+      res.redirect('/experiment1/for/1/' + userId)
     }
   }
   submitSortingPreEnv (req, res) {
@@ -168,7 +168,7 @@ class ExperimentsController {
     if (trial <= maxPreTrial) {
       res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
     } else {
-      res.redirect('/experiment1/' + env + '/1/' + userId)
+      res.redirect('/experiment1/for/' + env + '/1/' + userId)
     }
   }
   /**
