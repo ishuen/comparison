@@ -18,5 +18,9 @@ html
           p #{surveyCode}
         div(class='col-sm-2')
           h5 &nbsp;
-          a(href= '/')
-            button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment
+          if env
+            a(href= '/' + env + '/')
+              button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment
+          else
+            a(href= '/')
+              button(class='btn btn-primary btn-lg', type='button') Go back to the start of experiment
