@@ -465,7 +465,7 @@ function drawPieChartVeg (data, destination) {
   Plotly.newPlot(destination, trace, layout)
 }
 
-function drawAgreementPie (data, destination) {
+function drawAgreementPie (data, title, destination) {
   var trace = [{
     values: data,
     labels: ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'],
@@ -473,7 +473,7 @@ function drawAgreementPie (data, destination) {
   }]
   var layout = {
     autosize: false,
-    title: 'agreement',
+    title: title,
     height: 450,
     width: 400,
     showlegend: true,
