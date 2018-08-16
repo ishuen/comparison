@@ -492,3 +492,40 @@ function drawAgreementPie (data, title, destination) {
   }
   Plotly.newPlot(destination, trace, layout)
 }
+function drawSmallAgreementPie (data, title, destination, legend) {
+  var trace = [{
+    values: data,
+    labels: ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'],
+    type: 'pie'
+  }]
+  let index = title.indexOf(',')
+  if (index != -1) {
+    let str = title.slice(0, index + 2) + '<br>' + title.slice(index + 2)
+    title = str
+  }
+  let width = 300
+  if (legend == true) width = 500
+  var layout = {
+    autosize: false,
+    title: title,
+    height: 260,
+    width: width,
+    showlegend: legend,
+    margin: {
+      l: 10,
+      r: 10,
+      b: 10,
+      t: 40,
+      pad: 2
+    },
+    legend: {
+      // orientation: 'h',
+      x: 1,
+      y: 0.5
+    },
+    titlefont: {
+      size: 12
+    },
+  }
+  Plotly.newPlot(destination, trace, layout)
+}

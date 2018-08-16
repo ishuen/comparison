@@ -130,5 +130,30 @@ class AnalysisController {
       })
     })
   }
+  getPost1Summary (req, res) {
+    Analyses.getPostSurveyComment([6, 7], function (data) {
+      let userComments = []
+      let num = _.countBy(data, 'question')
+      for (let qn in num) {
+        let temp = _.filter(data, function (o) { return o.question === qn })
+        temp = _.map(temp, function (o) { return o.answer })
+        userComments.push({qn: qn, comments: temp})
+      }
+      Analyses.getPostSurveyRating([6, 7], function (rates) {
+        let userRatings = []
+        let num2 = _.countBy(rates, 'description')
+        for (let qn in num2) {
+          let temp2 = _.filter(rates, function (o) { return o.description === qn })
+          let ans = _.countBy(temp2, 'rating')
+          let rate = [0, 0, 0, 0, 0]
+          for (let a in ans) {
+            rate[a - 1] = ans[a]
+          }
+          userRatings.push({qn: qn, rates: rate})
+        }
+        res.render('postSurvey1', {data: userComments, rates: userRatings})
+      })
+    })
+  }
 }
 module.exports = new AnalysisController()

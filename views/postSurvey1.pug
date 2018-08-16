@@ -1,0 +1,52 @@
+doctype html
+html
+  head
+    title= 'analysis - post survey 1'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/analysis.js', type='text/javascript')
+    script(src="https://cdn.plot.ly/plotly-latest.min.js", charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+      let rates = !{JSON.stringify(rates)}
+    div(class='container-fluid')
+      div(class='row')
+        div(class='col-sm-5')
+          h1 Post survey - experiment 1
+      div(class='row')
+        - let rowNum = rates.length
+        - let i = 0
+        while i < rowNum
+          if (i < rowNum - 1)
+            div(class='col-sm-3', id='pieChart' + i)
+          else
+            div(class='col-sm-5', id='pieChart' + i)
+          - i++
+      div(class='row')
+        - let colNum = data.length
+        - let j = 0
+        while j < colNum
+          div(class='col-sm-5')
+            table(class='table table-striped')
+              tr
+                th
+                th #{data[j].qn}
+              - let k = 0
+              - let length = data[j].comments.length
+              while k < length
+                tr
+                  td #{k + 1}
+                  td #{data[j].comments[k]}
+                - k++
+          - j++
+    script.
+      for (let i = 0; i < rates.length; i++) {
+        if (i == rates.length - 1) {
+          drawSmallAgreementPie(rates[i].rates, rates[i].qn, 'pieChart' + Number(i), true)
+        } else {
+          drawSmallAgreementPie(rates[i].rates, rates[i].qn, 'pieChart' + Number(i), false)
+        }
+      }
