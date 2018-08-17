@@ -1,0 +1,42 @@
+extends layout
+
+block content
+  div(class='container')
+    div(class='row')
+      div(class='col-sm-8')
+      div(class='col-sm-4' style='background-color: #f5f5f5')
+        h4 progress
+        div(class='progress')
+          div(class='progress-bar progress-bar-success' role='progressbar' style='width: 0%;' aria-valuenow='0' aria-valuemin='0' aria-valuemax='100') 0%
+    div(class='row')
+      div(class='col-sm-4')
+      div(class='col-sm-4 text-center')
+        form(id='form', class='form-inline', name='form', action='/fetch/' + env, method='post', onsubmit='return validateForm()')
+          input(type='hidden', name='env', value=env)
+          label If you attended the previous experiment before, please enter your entry code.
+          div(class='form-group') 
+            input(type='text', class='form-control', id='str', name='str')
+            label(style='color: red;') #{msg} &nbsp;
+          button(type="submit" class="btn btn-primary btn-md") Next
+      div(class='col-sm-4')
+    hr
+    div(class='row')
+      div(class='col-sm-4')
+      div(class='col-sm-4 text-center')
+        a(href= '/survey3/' + env)
+              button(class='btn btn-success btn-lg', type='button') I'm a new participant.
+      div(class='col-sm-4')
+  script.
+    function validateForm() {
+      if ($('#str').val().length < 10) {
+        alert('Please enter correct code.')
+        return false
+      }
+      let user = $('#str').val().slice(7)
+      for (let i = 0; i < user.length; i++) {
+        if (Number.isInteger(Number(user[i])) == false) {
+          alert('Please enter correct code.')
+          return false
+        }
+      }
+    }

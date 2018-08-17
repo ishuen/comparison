@@ -5,8 +5,9 @@ const surveys = require('../controllers/surveys')
 
 /* GET home page. */
 router.get('/', usersController.getNewUser)
-router.get('/sg/', usersController.registrationIVLE)
-router.get('/se/', usersController.getNewUserIVLE)
+router.get('/sg/', usersController.registrationIVLE) // register point
+router.get('/sf/', usersController.getNewUserIVLE) // exp 2 entry
+router.get('/se/', usersController.getNewUserIVLE) // exp 1 entry
 router.get('/int/', usersController.getNewUserMTurk)
 router.get('/end/:userId', surveys.endOfExp)
 router.get('/end/:env/:userId', surveys.endOfExp)
@@ -27,4 +28,5 @@ router.use('/survey6', require('./survey6'))
 router.use('/experiment1', require('./experiment1'))
 router.use('/experiment2', require('./experiment2'))
 router.use('/analysis', require('./analysis'))
+router.use('/fetch', require('./fetch'))
 module.exports = router

@@ -496,14 +496,26 @@ class Survey1Controller {
   }
   showDemographicsIVLE (req, res) {
     const fs = require('fs')
-    const userId = req.params.userId
     const country = require('../public/json/nationality.json')
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
-    // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
-    // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
-    res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity})
+    let env = req.url
+    env = env.slice(1)
+    if (env.includes('/')) {
+      let len = env.length - 1
+      env = env.slice(0, len)
+    }
+    let userId = req.params.userId || ''
+    if (env === 'sf') {
+      Survey1.getNewId(function (newId) {
+        res.render('survey3IVLE', {userId: newId, country: countryArr, ethnicity: ethnicity})
+      })
+    } else {
+      // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
+      // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
+      res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity})
+    }
   }
   showDemographicsMTurk (req, res) {
     const fs = require('fs')
