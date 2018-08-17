@@ -48,6 +48,10 @@ class AnalysisController {
         let temp = {}
         temp.userResult = _.filter(sortings, function (x) { return x.trial_num === Number(base + i) })
         if (temp.userResult.length > 0) {
+          let checkPractice = _.countBy(temp.userResult, 'ordering')
+          if (checkPractice['1'] === 3) {
+            temp.userResult = temp.userResult.slice(20)
+          }
           temp.userResult = temp.userResult.sort(function (a, b) { return a.ordering - b.ordering })
           temp.pareto = pareto.relaxedPathGivenUserSet(temp.userResult)
           temp.heuristic = heuristic.pathGivenUserSet(temp.userResult)
