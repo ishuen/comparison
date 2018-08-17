@@ -5,7 +5,8 @@ const surveys = require('../controllers/surveys')
 
 /* GET home page. */
 router.get('/', usersController.getNewUser)
-router.get('/sg/', usersController.getNewUserIVLE)
+router.get('/sg/', usersController.registrationIVLE)
+router.get('/se/', usersController.getNewUserIVLE)
 router.get('/int/', usersController.getNewUserMTurk)
 router.get('/end/:userId', surveys.endOfExp)
 router.get('/end/:env/:userId', surveys.endOfExp)

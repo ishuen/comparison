@@ -15,6 +15,9 @@ class UsersController {
       res.render('indexMturk', { userId: newId })
     })
   }
+  registrationIVLE (req, res, next) {
+    res.render('registration', { })
+  }
 }
 
 module.exports = new UsersController()
