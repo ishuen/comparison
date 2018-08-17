@@ -92,6 +92,7 @@ class AnalysisController {
       let qnAns = []
       let countAns = []
       let likertList = ['OK', 'Allergic', 'Intolerant', 'Choose not to eat', 'Dislike']
+      let otherFoods = []
       for (let i = 1; i <= maxQn; i++) {
         let temp = _.filter(data, function (o) { return _.isEqual(o.display_num, i) })
         let ans = _.countBy(temp, 'answer')
@@ -99,7 +100,15 @@ class AnalysisController {
         for (let a in ans) {
           let propName = a
           if (a.includes('-')) {
-            propName = propName.slice(0, a.length - 1)
+            let index = a.indexOf('-')
+            propName = propName.slice(0, index)
+            if (index !== a.length - 1) {
+              let food = {
+                foodName: a.slice(index + 1),
+                reason: propName
+              }
+              otherFoods.push(food)
+            }
           }
           let index = likertList.findIndex(function (o) { return _.isEqual(o, propName) })
           likert[index] = ans[a]
@@ -109,7 +118,7 @@ class AnalysisController {
       }
       Analyses.getVeg(function (qnVeg) {
         let vegType = _.filter(qnVeg, function (o) { return o.qn_id === 14 })
-        let otherRes = _.filter(qnVeg, function (o) { return o.qn_id === 15 && o.answer.length > 0 })
+        let otherRes = _.filter(qnVeg, function (o) { return o.qn_id === 15 && o.answer.length > 0 && o.answer.toLowerCase() !== 'no' })
         let types = ['Vegan', 'Ovo-vegetarian (no meat/seafood or dairy, but eggs OK)', 'Lacto-vegetarian (no meat/seafood or eggs, but dairy OK)', 'Lacto-ovo vegetarian (no meat/seafood, but eggs and dairy OK)', 'Pescatarian', 'I\'m neither a vegan nor a vegetarian']
         let ans = _.countBy(vegType, 'answer')
         let veg = [0, 0, 0, 0, 0, 0]
@@ -117,7 +126,32 @@ class AnalysisController {
           let index = types.findIndex(function (o) { return _.isEqual(o, a) })
           veg[index] = ans[a]
         }
-        res.render('diet', {data: qnAns, countAns: countAns, vegType: veg, otherRes: otherRes})
+        res.render('diet', {data: qnAns, countAns: countAns, vegType: veg, otherRes: otherRes, otherFoods: otherFoods})
+      })
+    })
+  }
+  getPost1Summary (req, res) {
+    Analyses.getPostSurveyComment([6, 7], function (data) {
+      let userComments = []
+      let num = _.countBy(data, 'question')
+      for (let qn in num) {
+        let temp = _.filter(data, function (o) { return o.question === qn })
+        temp = _.map(temp, function (o) { return o.answer })
+        userComments.push({qn: qn, comments: temp})
+      }
+      Analyses.getPostSurveyRating([6, 7], function (rates) {
+        let userRatings = []
+        let num2 = _.countBy(rates, 'description')
+        for (let qn in num2) {
+          let temp2 = _.filter(rates, function (o) { return o.description === qn })
+          let ans = _.countBy(temp2, 'rating')
+          let rate = [0, 0, 0, 0, 0]
+          for (let a in ans) {
+            rate[a - 1] = ans[a]
+          }
+          userRatings.push({qn: qn, rates: rate})
+        }
+        res.render('postSurvey1', {data: userComments, rates: userRatings})
       })
     })
   }

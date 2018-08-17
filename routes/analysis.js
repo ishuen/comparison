@@ -5,5 +5,6 @@ const analysis = require('../controllers/analysis')
 router.get('/scores/:foodId', analysis.userDefinedScore)
 router.get('/user/:userId', analysis.showSortingsPerUser)
 router.get('/dietAvg', analysis.getDietarySummary)
+router.get('/postSurvey1', analysis.getPost1Summary)
 
 module.exports = router
