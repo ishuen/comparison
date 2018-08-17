@@ -17,10 +17,23 @@ html
       let userChoice = !{JSON.stringify(userChoice)}
     - var items = Array.from(new Set([defaultPoint, left, right, userChoice]))
     div(class='container-fluid')
-      h1 Satisfaction of the Choice
-      form(id='form', name='foodForm', class='foodForm', action='/survey6/' + env + '/' + trial + '/' + userId, method='post', onsubmit='return validateFormSurvey6()')
+      div(class='row')
+        div(class='col-sm-6')
+          h1 Satisfaction of the Choice
+        div(class='col-sm-4' style='background-color: #f5f5f5')
+          h4 progress
+          div(class='progress')
+            if newPar == 'f'
+              - var str = Number(16 * (trialNum-10) + 16) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(16 * (trialNum-10) + 16) + '%;' aria-valuenow= Number(16 * (trialNum-10) + 16) aria-valuemin='0' aria-valuemax='100') #{str}
+            else if newPar == 't'
+              - var str = Number(30 * trialNum) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trialNum) + '%;' aria-valuenow= Number(30 * trialNum) aria-valuemin='0' aria-valuemax='100') #{str}
+      form(id='form', name='foodForm', class='foodForm', action='/survey6/' + env + '/' + trial + '/' + userId + '/' + trialNum + '/' + newPar, method='post', onsubmit='return validateFormSurvey6()')
         input(type='hidden', name='env', value=env)
         input(type='hidden', name='trial', value=trial)
+        input(type='hidden', name='newPar', value=newPar)
+        input(type='hidden', name='trialNum', value=trialNum)
         input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)
         each i in items

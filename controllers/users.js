@@ -1,3 +1,4 @@
+/* global groups */
 const Users = require('../models/Surveys')
 class UsersController {
   getNewUser (req, res, next) {
@@ -39,7 +40,12 @@ class UsersController {
     let userId = str.slice(7)
     Users.checkIdentity(userId, code, function (permission) {
       if (permission === true) {
-        res.redirect('/survey3/' + env + '/' + userId) // need to go to exp2
+        let trial = 4 // get customized item set
+        Users.getUserGroup(userId, function (expGroup) {
+          let category = Number(expGroup)
+          let algorithm = groups[category]
+          res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/10/f')
+        })
       } else {
         let msg = 'You have a wrong entry code.'
         res.render('fetch', {env: env, msg: msg})

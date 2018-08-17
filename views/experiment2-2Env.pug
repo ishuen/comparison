@@ -13,14 +13,29 @@ html
     script.
       let data = !{JSON.stringify(data)}
     div(class='container-fluid')
-      h1 Experiment 2
-      label Please find out something healthy which you are also willing to eat. &nbsp;
-      label Navigate using the mouse, and then double click your choice.
-      br
-      label If you cannot see the dots on the graph, please refresh the page.
+      div(class='row')
+        div(class='col-sm-6')
+          h1 Experiment 2
+        div(class='col-sm-4' style='background-color: #f5f5f5')
+          h4 progress
+          div(class='progress')
+            if newPar == 'f'
+              - var str = Number(16 * (trialNum-10) + 4) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(16 * (trialNum-10) + 4) + '%;' aria-valuenow= Number(16 * (trialNum-10) + 4) aria-valuemin='0' aria-valuemax='100') #{str}
+            else if newPar == 't'
+              - var str = Number(30 * trialNum) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trialNum) + '%;' aria-valuenow= Number(30 * trialNum) aria-valuemin='0' aria-valuemax='100') #{str}
+      div(class='row')
+        div(class='col-sm-12')
+          label Please find out something healthy which you are also willing to eat. &nbsp;
+          label Navigate using the mouse, and then double click your choice.
+          br
+          label If you cannot see the dots on the graph, please refresh the page. Image may load slower than food data, please wait with patience.
       div(id='scatterPlot' class='text-center', style='height: 450px;')
-      form(id='pickingTask' action='/experiment2/'+ env + '/' + trial + '/' + userId, method='post')
+      form(id='pickingTask' action='/experiment2/'+ env + '/' + trial + '/' + userId + '/' + trialNum + '/' + newPar, method='post')
         input(type='hidden', name='env', value=env)
+        input(type='hidden', name='newPar', value=newPar)
+        input(type='hidden', name='trialNum', value=trialNum)
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)

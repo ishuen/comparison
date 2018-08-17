@@ -87,7 +87,7 @@ function validateExpForm() {
   let ans = form.getElementsByTagName('input')
   let names = $('input').map(function(){ return $(this).attr('name') })
   let distinctNames = $.unique(names)
-  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'others' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env')})
+  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'others' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env' && distinctNames[o] !== 'trialNum' && distinctNames[o] !== 'newPar')})
   for (let qn of distinctNames) {
     if (qn === 'qn29') {
       if (document.getElementsByName(qn)[0].value === '') {
@@ -130,7 +130,7 @@ function validateFormSurvey6() {
   let ans = form.getElementsByTagName('input')
   let names = $('input').map(function(){ return $(this).attr('name') })
   let distinctNames = $.unique(names)
-  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env')})
+  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env' && distinctNames[o] !== 'trialNum' && distinctNames[o] !== 'newPar')})
   for (let qn of distinctNames) {
     let radioSet = document.getElementsByName(qn)
     let selected = false
