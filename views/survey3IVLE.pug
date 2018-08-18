@@ -29,8 +29,8 @@ html
       div(class='row')
         div(class='col-sm-12')
           div(id='nextExp', style='visibility: hidden; padding: 15px;')
-            a(class='nextExpButton', href= '/survey0/sg/' + userId)
-                button(class='btn btn-primary btn-lg', type='button') Next
+            a(class='nextExpButton', href= '/survey0/' + env + '/' + userId)
+              button(class='btn btn-primary btn-lg', type='button') Next
             //- if (userId % 8 == 0)          
             //-   a(class='nextExpButton', href= '/survey1/'+ exp2Trial + '/' + userId)
             //-     //- button(class='indexButton') Go to next experiment

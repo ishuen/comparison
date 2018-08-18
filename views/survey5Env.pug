@@ -23,8 +23,8 @@ html
               - var str = Number(16 * (trialNum-10) + 12) + '%'
               div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(16 * (trialNum-10) + 12) + '%;' aria-valuenow= Number(16 * (trialNum-10) + 12) aria-valuemin='0' aria-valuemax='100') #{str}
             else if newPar == 't'
-              - var str = Number(30 * trialNum) + '%'
-              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trialNum) + '%;' aria-valuenow= Number(30 * trialNum) aria-valuemin='0' aria-valuemax='100') #{str}
+              - var str = Number(30 * (trialNum - 3)) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * (trialNum - 3)) + '%;' aria-valuenow= Number(30 * (trialNum - 3)) aria-valuemin='0' aria-valuemax='100') #{str}
       div(class='row')
       h3 Overall opinion about the sorted list
       label #{setDesc}

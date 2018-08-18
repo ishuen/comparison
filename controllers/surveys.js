@@ -91,12 +91,6 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    // if (userId % 8 === 0) {
-    //   res.redirect('/survey1/1/' + userId)
-    // } else {
-    //   let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    //   res.redirect('/survey1/' + tr + '/' + userId)
-    // }
     let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
     res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
   }
@@ -465,23 +459,18 @@ class Survey1Controller {
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
     trial = trial - 3
-    if (trial === 1) {
+    if (env === 'se' && trial === 1) {
       res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
-    } else {
+    } else if (env === 'se' && trial !== 1) {
       res.redirect('/experiment1/for/' + env + '/' + trial + '/' + userId)
+    } else if (env === 'sf') {
+      Survey1.getUserGroup(userId, function (expGroup) {
+        trial = trial + 3
+        let category = Number(expGroup)
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/' + trial + '/t')
+      })
     }
-    // if (trial === 1) {
-    //   res.redirect('/experiment1/pre/' + trial + '/' + userId)
-    // } else if (trial <= maxTrialEx1) {
-    //   res.redirect('/experiment1/' + trial + '/' + userId)
-    // } else {
-    //   Survey1.getUserGroup(userId, function (expGroup) {
-    //     let category = expGroup.slice(-1)
-    //     let algorithm = groups[category]
-    //     res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
-    //   })
-    // }
-    // res.redirect('/experiment1/pre/' + trial + '/' + userId)
   }
 
   showDemographics (req, res) {
@@ -503,15 +492,14 @@ class Survey1Controller {
     let ethnicity = text.split('\n')
     let env = req.url
     env = env.slice(1)
-    if (env.includes('/')) {
-      let len = env.length - 1
-      env = env.slice(0, len)
-    }
+    env = env.slice(0, 2)
     let userId = req.params.userId || ''
     if (env === 'sf') {
       Survey1.getNewId(function (newId) {
-        res.render('survey3IVLE', {userId: newId, country: countryArr, ethnicity: ethnicity})
+        res.render('survey3IVLE', {userId: newId, country: countryArr, ethnicity: ethnicity, env: env, newPar: 't'})
       })
+    } else if (env === 'se') {
+      res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity, env: env})
     } else {
       // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
       // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
@@ -873,7 +861,7 @@ class Survey1Controller {
     if (trial < maxTrialEx1 + maxTrialEx2 && newPar === 't') {
       trial++
       res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
-    } else if (trial === maxTrialEx1 + maxTrialEx2 && newPar === 't') {
+    } else if (Number(trial) === maxTrialEx1 + maxTrialEx2 && newPar === 't') {
       res.redirect('/end/' + env + '/' + userId)
     } else if (trialNum < 15 && newPar === 'f') {
       if (trial < maxTrialEx1 + maxTrialEx2) {
@@ -894,8 +882,12 @@ class Survey1Controller {
   endOfExp (req, res) {
     const userId = req.params.userId
     const env = req.params.env
-    // const surveyCode = getRandomCode(5, userId, 2)
-    const surveyCode = getRandomCode(5, userId, 1)
+    let surveyCode = ''
+    if (env === 'sf') {
+      surveyCode = getRandomCode(5, userId, 2)
+    } else {
+      surveyCode = getRandomCode(5, userId, 1)
+    }
     res.render('end', {surveyCode: surveyCode, env: env})
   }
 }

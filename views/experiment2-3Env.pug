@@ -24,8 +24,8 @@ html
               - var str = Number(16 * (trialNum-10) + 4) + '%'
               div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(16 * (trialNum-10) + 4) + '%;' aria-valuenow= Number(16 * (trialNum-10) + 4) aria-valuemin='0' aria-valuemax='100') #{str}
             else if newPar == 't'
-              - var str = Number(30 * trialNum) + '%'
-              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trialNum) + '%;' aria-valuenow= Number(30 * trialNum) aria-valuemin='0' aria-valuemax='100') #{str}
+              - var str = Number(25 + 30 * (trialNum - 4)) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(25 + 30 * (trialNum - 4)) + '%;' aria-valuenow= Number(25 + 30 * (trialNum - 4)) aria-valuemin='0' aria-valuemax='100') #{str}
       div(class='row')
         div(class='col-sm-12')
           label Please find out something healthy which you are also willing to eat. Navigate by scrolling, and then double click your choice.

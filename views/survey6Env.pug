@@ -27,8 +27,8 @@ html
               - var str = Number(16 * (trialNum-10) + 16) + '%'
               div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(16 * (trialNum-10) + 16) + '%;' aria-valuenow= Number(16 * (trialNum-10) + 16) aria-valuemin='0' aria-valuemax='100') #{str}
             else if newPar == 't'
-              - var str = Number(30 * trialNum) + '%'
-              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trialNum) + '%;' aria-valuenow= Number(30 * trialNum) aria-valuemin='0' aria-valuemax='100') #{str}
+              - var str = Number(5 + 30 * (trialNum - 3)) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(5 + 30 * (trialNum - 3)) + '%;' aria-valuenow= Number(5 + 30 * (trialNum - 3)) aria-valuemin='0' aria-valuemax='100') #{str}
       form(id='form', name='foodForm', class='foodForm', action='/survey6/' + env + '/' + trial + '/' + userId + '/' + trialNum + '/' + newPar, method='post', onsubmit='return validateFormSurvey6()')
         input(type='hidden', name='env', value=env)
         input(type='hidden', name='trial', value=trial)
