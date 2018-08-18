@@ -861,9 +861,9 @@ class Survey1Controller {
     if (trial < maxTrialEx1 + maxTrialEx2 && newPar === 't') {
       trial++
       res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
-    } else if (Number(trial) === maxTrialEx1 + maxTrialEx2 && newPar === 't') {
+    } else if (newPar === 't' && Number(trial) === maxTrialEx1 + maxTrialEx2) {
       res.redirect('/end/' + env + '/' + userId)
-    } else if (trialNum < 15 && newPar === 'f') {
+    } else if (newPar === 'f' && Number(trialNum) < 15) {
       if (trial < maxTrialEx1 + maxTrialEx2) {
         trial++
       } else {
@@ -871,11 +871,11 @@ class Survey1Controller {
       }
       trialNum++
       Survey1.getUserGroup(userId, function (expGroup) {
-        let category = Number(expGroup)
+        let category = switchGroup(Number(expGroup), trialNum, userId)
         let algorithm = groups[category]
         res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/' + trialNum + '/' + newPar)
       })
-    } else if (trialNum === 15 && newPar === 'f') {
+    } else if (Number(trialNum) === 15 && newPar === 'f') {
       res.redirect('/end/' + env + '/' + userId)
     }
   }
@@ -951,4 +951,20 @@ function getRandomCode (length, userId, num) {
   }
   Survey1.recordSurveyCode(userId, str, function (done) { console.log(done) })
   return str
+}
+// same as in user controller
+function switchGroup (expGroup, trialNum, userId) {
+  // trialNum 10~12 first condition, trialNum 13~15 second condition
+  if (trialNum <= 12 && expGroup >= 2 && expGroup <= 5) {
+    return expGroup
+  } else if (trialNum > 12 && trialNum <= 15 && expGroup >= 2 && expGroup <= 5) {
+    let num = userId % 3
+    if (num === 2) return 6
+    return num
+  } else if (trialNum <= 12 && (expGroup < 2 || expGroup === 6)) {
+    let num = userId % 4
+    return num + 2
+  } else if (trialNum > 12 && (expGroup < 2 || expGroup === 6)) {
+    return expGroup
+  }
 }
