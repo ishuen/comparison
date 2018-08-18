@@ -313,14 +313,13 @@ class ExperimentsController {
   }
 
   showItemsExp2Env (req, res) {
-    const trial = req.params.trial
+    const trial = req.params.trial // trail --> customized item set
     const userId = req.params.userId
     const algorithm = req.params.alg
     const env = req.params.env
+    const trialNum = req.params.trialNum // trialNum starts from 10
+    const newPar = req.params.newPar
     Experiments.getCustomSet(userId, Number(trial), function (items) {
-    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-    // Experiments.getCustomSet(userId, Number(maskTrial), function (items) {
-    // HpbData.getTrialSet(Number(trial) + 3, function (items) {
       let obj = module.exports.sortByAssignedAlgo(items, algorithm)
       items = obj.data
       let defaultPoint = obj.defaultPoint
@@ -328,13 +327,13 @@ class ExperimentsController {
       console.log(items.length)
       let now = new Date()
       if (algorithm === 'taste' || algorithm === 'health') {
-        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, trialNum: trialNum, newPar: newPar})
       } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
-        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, trialNum: trialNum, newPar: newPar})
       } else if (algorithm === 'scatterPlot') {
-        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, trialNum: trialNum, newPar: newPar})
       } else if (algorithm === 'spreadsheet') {
-        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, trialNum: trialNum, newPar: newPar})
       }
     })
   }
@@ -368,17 +367,17 @@ class ExperimentsController {
     let picked = JSON.parse(req.body.picked)
     console.log(picked)
     let trial = Number(req.body.trial)
-    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
     const userId = req.body.userId
     const env = req.body.env
+    const trialNum = req.body.trialNum
+    const newPar = req.body.newPar
     let now = new Date()
     let start = new Date(Number(req.body.startingTime))
     const timeUsed = now.getTime() - start // msec
     console.log('timeUsed', timeUsed)
     let details = {
       userId: userId,
-      // trial: maskTrial,
-      trial: trial,
+      trial: trialNum,
       item: picked,
       startingTime: start,
       endTime: now,
@@ -387,7 +386,7 @@ class ExperimentsController {
       defaultIndex: req.body.defaultIndex
     }
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
-    res.redirect('/survey5/' + env + '/' + trial + '/' + userId) // go to post-survey
+    res.redirect('/survey5/' + env + '/' + trial + '/' + userId + '/' + trialNum + '/' + newPar) // go to post-survey
   }
 }
 

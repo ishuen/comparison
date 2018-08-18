@@ -1,3 +1,4 @@
+/* global groups */
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
@@ -16,7 +17,7 @@ const maxItemEx2 = 20
 //   f: 'spreadsheet',
 //   g: 'genetic'
 // }
-const groups = ['heuristic', 'pareto', 'taste', 'health', 'scatterPlot', 'spreadsheet', 'genetic']
+global.groups = ['heuristic', 'pareto', 'taste', 'health', 'scatterPlot', 'spreadsheet', 'genetic']
 
 class Survey1Controller {
   // survey page for dietary restriction
@@ -90,12 +91,6 @@ class Survey1Controller {
     }
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    // if (userId % 8 === 0) {
-    //   res.redirect('/survey1/1/' + userId)
-    // } else {
-    //   let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    //   res.redirect('/survey1/' + tr + '/' + userId)
-    // }
     let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
     res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
   }
@@ -464,23 +459,18 @@ class Survey1Controller {
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
     trial = trial - 3
-    if (trial === 1) {
+    if (env === 'se' && trial === 1) {
       res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
-    } else {
+    } else if (env === 'se' && trial !== 1) {
       res.redirect('/experiment1/for/' + env + '/' + trial + '/' + userId)
+    } else if (env === 'sf') {
+      Survey1.getUserGroup(userId, function (expGroup) {
+        trial = trial + 3
+        let category = Number(expGroup)
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/' + trial + '/t')
+      })
     }
-    // if (trial === 1) {
-    //   res.redirect('/experiment1/pre/' + trial + '/' + userId)
-    // } else if (trial <= maxTrialEx1) {
-    //   res.redirect('/experiment1/' + trial + '/' + userId)
-    // } else {
-    //   Survey1.getUserGroup(userId, function (expGroup) {
-    //     let category = expGroup.slice(-1)
-    //     let algorithm = groups[category]
-    //     res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
-    //   })
-    // }
-    // res.redirect('/experiment1/pre/' + trial + '/' + userId)
   }
 
   showDemographics (req, res) {
@@ -496,14 +486,25 @@ class Survey1Controller {
   }
   showDemographicsIVLE (req, res) {
     const fs = require('fs')
-    const userId = req.params.userId
     const country = require('../public/json/nationality.json')
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
-    // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
-    // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
-    res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity})
+    let env = req.url
+    env = env.slice(1)
+    env = env.slice(0, 2)
+    let userId = req.params.userId || ''
+    if (env === 'sf') {
+      Survey1.getNewId(function (newId) {
+        res.render('survey3IVLE', {userId: newId, country: countryArr, ethnicity: ethnicity, env: env, newPar: 't'})
+      })
+    } else if (env === 'se') {
+      res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity, env: env})
+    } else {
+      // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
+      // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
+      res.render('survey3IVLE', {userId: userId, country: countryArr, ethnicity: ethnicity})
+    }
   }
   showDemographicsMTurk (req, res) {
     const fs = require('fs')
@@ -673,12 +674,14 @@ class Survey1Controller {
 
   showQnPost2Env (req, res) {
     const env = req.params.env
+    const trialNum = req.params.trialNum
+    const newPar = req.params.newPar
     const userId = req.params.userId
     const trial = req.params.trial
     const setNum = [8, 9]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
-      res.render('survey5Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
+      res.render('survey5Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env, trialNum: trialNum, newPar: newPar})
     })
   }
 
@@ -714,11 +717,13 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    const trialNum = req.params.trialNum
+    const newPar = req.params.newPar
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
       userId: userId,
-      trial: trial,
+      trial: trialNum,
       startingTime: req.body.startingTime,
       timeUsed: timeUsed,
       endTime: now,
@@ -734,7 +739,7 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    res.redirect('/survey6/' + env + '/' + trial + '/' + userId)
+    res.redirect('/survey6/' + env + '/' + trial + '/' + userId + '/' + trialNum + '/' + newPar)
   }
 
   showSatisfaction (req, res) {
@@ -768,6 +773,8 @@ class Survey1Controller {
     const trial = req.params.trial
     const userId = req.params.userId
     const env = req.params.env
+    const trialNum = req.params.trialNum
+    const newPar = req.params.newPar
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
@@ -783,11 +790,11 @@ class Survey1Controller {
         left.state = 'tastiest/first'
         right.state = 'healthiest/last'
         // Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
-        Experiments.getUserChoice(userId, trial, function (userChoice) {
+        Experiments.getUserChoice(userId, trialNum, function (userChoice) {
           userChoice.state = 'userChoice'
           let now = new Date()
           // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
-          res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+          res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env, trialNum: trialNum, newPar: newPar})
         })
       })
     })
@@ -837,46 +844,50 @@ class Survey1Controller {
     let userId = req.body.userId
     let trial = req.body.trial
     const env = req.body.env
+    let trialNum = req.body.trialNum
+    const newPar = req.body.newPar
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
       userId: userId,
-      trial: trial,
+      trial: trialNum,
       startingTime: req.body.startingTime,
       timeUsed: timeUsed,
       endTime: now,
       surveyName: 'exp2Satisfaction'
     }
     Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    if (trial < maxTrialEx1 + maxTrialEx2) {
+    if (trial < maxTrialEx1 + maxTrialEx2 && newPar === 't') {
       trial++
-      // res.redirect('/survey2/' + trial + '/1/' + userId)
       res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
-    } else {
+    } else if (Number(trial) === maxTrialEx1 + maxTrialEx2 && newPar === 't') {
+      res.redirect('/end/' + env + '/' + userId)
+    } else if (trialNum < 15 && newPar === 'f') {
+      if (trial < maxTrialEx1 + maxTrialEx2) {
+        trial++
+      } else {
+        trial = 4
+      }
+      trialNum++
+      Survey1.getUserGroup(userId, function (expGroup) {
+        let category = Number(expGroup)
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/' + trialNum + '/' + newPar)
+      })
+    } else if (trialNum === 15 && newPar === 'f') {
       res.redirect('/end/' + env + '/' + userId)
     }
-    // if (maskTrial < maxTrialEx1 + maxTrialEx2) {
-    //   trial++
-    //   // res.redirect('/survey2/' + trial + '/1/' + userId)
-    //   res.redirect('/survey1/' + trial + '/' + userId)
-    // } else {
-    //   Survey1.getUserGroup(userId, function (expGroup) {
-    //     console.log('expGroup***', expGroup.slice(0, 4))
-    //     if (expGroup.slice(0, 4) !== 'both') {
-    //       res.redirect('/survey3/' + userId) // go to demographic
-    //     } else {
-    //       res.redirect('/end/' + userId) // end of experiment
-    //     }
-    //   })
-    // }
   }
   endOfExp (req, res) {
     const userId = req.params.userId
     const env = req.params.env
-    // const surveyCode = getRandomCode(5, userId, 2)
-    const surveyCode = getRandomCode(5, userId, 1)
+    let surveyCode = ''
+    if (env === 'sf') {
+      surveyCode = getRandomCode(5, userId, 2)
+    } else {
+      surveyCode = getRandomCode(5, userId, 1)
+    }
     res.render('end', {surveyCode: surveyCode, env: env})
   }
 }

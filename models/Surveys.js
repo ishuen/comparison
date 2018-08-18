@@ -118,6 +118,14 @@ class Survey1 {
       callback(res.rows)
     })
   }
+  checkIdentity (userId, code, callback) {
+    pool.query('SELECT * FROM user_data WHERE user_id = $1 AND code = $2', [userId, code], (err, res) => {
+      if (err) throw err
+      let result = false
+      if (res.rows.length > 0) result = true
+      callback(result)
+    })
+  }
 }
 
 module.exports = new Survey1()
