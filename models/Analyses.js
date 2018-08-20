@@ -61,5 +61,25 @@ class Analyses {
       callback(res.rows)
     })
   }
+  getUserSortingProcess (userId, callback) {
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      let checked = false
+      pool.query('SELECT * FROM user_track INNER JOIN sorting_experiment ON (sorting_experiment.food_id = user_track.food_id) WHERE user_track.user_id = $1', [userId], (err, res) => {
+        if (checked === false) {
+          done()
+          checked = true
+        }
+        if (err) throw err
+        let procedures = res.rows
+        pool.query('SELECT * FROM user_sorting WHERE user_id = $1', [userId], (err, res) => {
+          if (err) throw err
+          let results = res.rows
+          let obj = {procedures: procedures, results: results}
+          callback(obj)
+        })
+      })
+    })
+  }
 }
 module.exports = new Analyses()
