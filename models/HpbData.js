@@ -68,7 +68,9 @@ class HpbData {
 
   getTrialSet (trialNum, callback) {
     trialNum = Number(trialNum)
-    let itemSet = itemSetList[trialNum - 1]
+    let maskTrial = trialNum
+    if (trialNum >= 10) maskTrial = maskTrial - 6
+    let itemSet = itemSetList[maskTrial - 1]
     pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemSet], (err, res) => {
       if (err) throw err
       let data = []

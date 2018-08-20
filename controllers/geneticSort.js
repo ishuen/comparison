@@ -26,7 +26,7 @@ class GeneticSortController {
   }
 
   showPathNewExp2 (data) {
-    let generation = 20
+    let generation = 200
     let len = data.length
     let defaultIndex = getDefaultIndex(len)
     let population = initPopulation(len) // record the order of the items
