@@ -162,5 +162,32 @@ class AnalysisController {
       })
     })
   }
+  sortingProcess (req, res) {
+    const userId = req.params.userId
+    Analyses.getUserSortingProcess(userId, function (data) {
+      let procedures = _.groupBy(data.procedures, 'time_stamp')
+      for (let p in procedures) {
+        procedures[p] = procedures[p].sort(function (a, b) { return a.ordering - b.ordering })
+        let arr = []
+        for (let item of procedures[p]) {
+          if (arr.length > 0 && item.ordering === arr[arr.length - 1]['ordering']) continue
+          arr.push(item)
+        }
+        procedures[p] = arr
+      }
+      let len = data.results.length
+      let results = []
+      let temp = [data.results[0]]
+      for (let i = 1; i < len; i++) {
+        if (!_.isEqual(data.results[i].ordering, 1)) {
+          temp.push(data.results[i])
+        } else {
+          results.push(temp)
+          temp = [data.results[i]]
+        }
+      }
+      res.render('sortingProcess', {procedures: procedures, results: results})
+    })
+  }
 }
 module.exports = new AnalysisController()
