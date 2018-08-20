@@ -23,7 +23,10 @@ class AnalysisController {
           maxTaste: _.max(_.map(data, function (i) { return i.new_taste })),
           maxHealth: _.max(_.map(data, function (i) { return i.new_health }))
         }
-        Analyses.getItemAgreement(foodId, function (agreements) {
+        Analyses.getItemAgreement(foodId, function (feedback) {
+          let agreements = feedback.ratings
+          let justifications = feedback.comments
+          let comments = _.map(justifications, function (o) { return o.description })
           let agrFami = [0, 0, 0, 0, 0]
           let agrAcc = [0, 0, 0, 0, 0]
           let agreementsFami = _.filter(agreements, function (o) { return o.qn_id === 2 })
@@ -34,7 +37,7 @@ class AnalysisController {
             agrFami[t - 1] = temp1[t]
             agrAcc[t - 1] = temp2[t]
           }
-          res.render('scorePerFood', {foodId: foodId, item: item[0], data: data, sum: summary, agreements1: agrFami, agreements2: agrAcc})
+          res.render('scorePerFood', {foodId: foodId, item: item[0], data: data, sum: summary, agreements1: agrFami, agreements2: agrAcc, comments: comments})
         })
       })
     })

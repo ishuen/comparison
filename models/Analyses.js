@@ -8,9 +8,27 @@ class Analyses {
     })
   }
   getItemAgreement (foodId, callback) {
-    pool.query('SELECT * FROM user_rating WHERE food_id = $1', [foodId], (err, res) => {
+    pool.connect((err, client, done) => {
       if (err) throw err
-      callback(res.rows)
+      let checked = false
+      client.query('SELECT * FROM user_rating WHERE food_id = $1', [foodId], (err, res) => {
+        if (checked === false) {
+          done()
+          checked = true
+        }
+        if (err) {
+          throw err
+        } else {
+          let ratings = res.rows
+          let qnId = 25
+          client.query('SELECT * FROM user_comment WHERE qn_id = $1 AND food_id = $2', [qnId, foodId], (err, res) => {
+            if (err) throw err
+            let comments = res.rows
+            let obj = {comments: comments, ratings: ratings}
+            callback(obj)
+          })
+        }
+      })
     })
   }
   getUserSortings (userId, callback) {
