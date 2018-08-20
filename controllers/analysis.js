@@ -23,7 +23,10 @@ class AnalysisController {
           maxTaste: _.max(_.map(data, function (i) { return i.new_taste })),
           maxHealth: _.max(_.map(data, function (i) { return i.new_health }))
         }
-        Analyses.getItemAgreement(foodId, function (agreements) {
+        Analyses.getItemAgreement(foodId, function (feedback) {
+          let agreements = feedback.ratings
+          let justifications = feedback.comments
+          let comments = _.map(justifications, function (o) { return o.description })
           let agrFami = [0, 0, 0, 0, 0]
           let agrAcc = [0, 0, 0, 0, 0]
           let agreementsFami = _.filter(agreements, function (o) { return o.qn_id === 2 })
@@ -34,7 +37,7 @@ class AnalysisController {
             agrFami[t - 1] = temp1[t]
             agrAcc[t - 1] = temp2[t]
           }
-          res.render('scorePerFood', {foodId: foodId, item: item[0], data: data, sum: summary, agreements1: agrFami, agreements2: agrAcc})
+          res.render('scorePerFood', {foodId: foodId, item: item[0], data: data, sum: summary, agreements1: agrFami, agreements2: agrAcc, comments: comments})
         })
       })
     })
@@ -157,6 +160,24 @@ class AnalysisController {
         }
         res.render('postSurvey1', {data: userComments, rates: userRatings})
       })
+    })
+  }
+  sortingProcess (req, res) {
+    const userId = req.params.userId
+    Analyses.getUserSortingProcess(userId, function (data) {
+      let procedures = _.groupBy(data.procedures, 'time_stamp')
+      let len = data.results.length
+      let results = []
+      let temp = [data.results[0]]
+      for (let i = 1; i < len; i++) {
+        if (!_.isEqual(data.results[i].ordering, 1)) {
+          temp.push(data.results[i])
+        } else {
+          results.push(temp)
+          temp = [data.results[i]]
+        }
+      }
+      res.render('sortingProcess', {procedures: procedures, results: results})
     })
   }
 }

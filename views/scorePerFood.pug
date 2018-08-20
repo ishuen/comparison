@@ -14,6 +14,7 @@ html
       let item = !{JSON.stringify(item)}
       let agreements1 = !{JSON.stringify(agreements1)}
       let agreements2 = !{JSON.stringify(agreements2)}
+      let comments = !{JSON.stringify(comments)}
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-10')
@@ -56,8 +57,22 @@ html
         div(class='col-sm-3', id='boxplotDiv')
         div(class='col-sm-3', id='histogramDiv')
       div(class='row')
-        div(class='col-sm-3', id='piechartDiv1')
-        div(class='col-sm-3', id='piechartDiv2')
+        div(class='col-sm-4', id='piechartDiv1')
+        div(class='col-sm-4', id='piechartDiv2')
+        div(class='col-sm-4', id='justification')
+          table(class='table')
+            tr
+              th #
+              th comments
+            - var k = 0
+            while k < comments.length
+              tr
+                th #{k + 1}
+                td #{comments[k]}
+              - k++
+
+
+
     script.
       drawBoxPlot(data)
       drawHistogram(data)

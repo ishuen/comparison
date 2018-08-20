@@ -8,9 +8,27 @@ class Analyses {
     })
   }
   getItemAgreement (foodId, callback) {
-    pool.query('SELECT * FROM user_rating WHERE food_id = $1', [foodId], (err, res) => {
+    pool.connect((err, client, done) => {
       if (err) throw err
-      callback(res.rows)
+      let checked = false
+      client.query('SELECT * FROM user_rating WHERE food_id = $1', [foodId], (err, res) => {
+        if (checked === false) {
+          done()
+          checked = true
+        }
+        if (err) {
+          throw err
+        } else {
+          let ratings = res.rows
+          let qnId = 25
+          client.query('SELECT * FROM user_comment WHERE qn_id = $1 AND food_id = $2', [qnId, foodId], (err, res) => {
+            if (err) throw err
+            let comments = res.rows
+            let obj = {comments: comments, ratings: ratings}
+            callback(obj)
+          })
+        }
+      })
     })
   }
   getUserSortings (userId, callback) {
@@ -41,6 +59,26 @@ class Analyses {
     pool.query('SELECT user_rating.rating, survey_questions.description, survey_questions.qn_id FROM survey_questions INNER JOIN user_rating ON (user_rating.qn_id = survey_questions.qn_id) WHERE qn_set = ANY($1::int[]) ORDER BY survey_questions.qn_id', [qnSet], (err, res) => {
       if (err) throw err
       callback(res.rows)
+    })
+  }
+  getUserSortingProcess (userId, callback) {
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      let checked = false
+      pool.query('SELECT * FROM user_track INNER JOIN sorting_experiment ON (sorting_experiment.food_id = user_track.food_id) WHERE user_track.user_id = $1', [userId], (err, res) => {
+        if (checked === false) {
+          done()
+          checked = true
+        }
+        if (err) throw err
+        let procedures = res.rows
+        pool.query('SELECT * FROM user_sorting WHERE user_id = $1', [userId], (err, res) => {
+          if (err) throw err
+          let results = res.rows
+          let obj = {procedures: procedures, results: results}
+          callback(obj)
+        })
+      })
     })
   }
 }

@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title= 'analysis - dietary restriction'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/analysis.js', type='text/javascript')
+    script(src="https://cdn.plot.ly/plotly-latest.min.js", charset='utf-8')
+    script.
+      let procedures = !{JSON.stringify(procedures)}
+      let results = !{JSON.stringify(results)}
+      console.log(procedures, results)
+    div(class='container')
+      div(class='col-sm-5')
+        table(class='table')

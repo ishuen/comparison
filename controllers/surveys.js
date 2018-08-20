@@ -92,6 +92,9 @@ class Survey1Controller {
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
     let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
+    if (env === 'sf') {
+      tr = tr + 6
+    }
     res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
   }
 
@@ -385,14 +388,15 @@ class Survey1Controller {
 
   showAllQuestionsModValueEnv (req, res) {
     let trial = req.params.trial
+    let trialMask = trial
+    if (trial >= 10) {
+      trialMask = trial - 6
+    }
     let userId = req.params.userId
     let env = req.params.env
     const setNum = [1, 2]
-    // if (Number(trial) === 7) {
-    //   Survey1.checkGroup(userId, 2, function (done) { console.log(done) }) // exp1 group go through second exp
-    // }
     Survey1.getQnSets(setNum, function (qnSet) {
-      HpbData.getTrialSet(Number(trial), function (items) {
+      HpbData.getTrialSet(Number(trialMask), function (items) {
         let now = new Date()
         res.render('survey1Env', {data: qnSet, items: items, trial: trial, userId: userId, startingTime: now.getTime(), max: maxItemEx1, env: env})
       })
@@ -468,7 +472,7 @@ class Survey1Controller {
         trial = trial + 3
         let category = Number(expGroup)
         let algorithm = groups[category]
-        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/' + trial + '/t')
+        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm)
       })
     }
   }
@@ -674,14 +678,12 @@ class Survey1Controller {
 
   showQnPost2Env (req, res) {
     const env = req.params.env
-    const trialNum = req.params.trialNum
-    const newPar = req.params.newPar
     const userId = req.params.userId
     const trial = req.params.trial
     const setNum = [8, 9]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
-      res.render('survey5Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env, trialNum: trialNum, newPar: newPar})
+      res.render('survey5Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
     })
   }
 
@@ -717,13 +719,11 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
-    const trialNum = req.params.trialNum
-    const newPar = req.params.newPar
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
       userId: userId,
-      trial: trialNum,
+      trial: trial,
       startingTime: req.body.startingTime,
       timeUsed: timeUsed,
       endTime: now,
@@ -739,7 +739,7 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    res.redirect('/survey6/' + env + '/' + trial + '/' + userId + '/' + trialNum + '/' + newPar)
+    res.redirect('/survey6/' + env + '/' + trial + '/' + userId)
   }
 
   showSatisfaction (req, res) {
@@ -773,13 +773,9 @@ class Survey1Controller {
     const trial = req.params.trial
     const userId = req.params.userId
     const env = req.params.env
-    const trialNum = req.params.trialNum
-    const newPar = req.params.newPar
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
-      // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-      // HpbData.getTrialSet(Number(maskTrial), function (items) {
       HpbData.getTrialSet(Number(trial), function (items) {
         let obj = experiments.sortByAssignedAlgo(items, algorithm)
         items = obj.data
@@ -789,12 +785,10 @@ class Survey1Controller {
         defaultPoint.state = 'defaultPoint'
         left.state = 'tastiest/first'
         right.state = 'healthiest/last'
-        // Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
-        Experiments.getUserChoice(userId, trialNum, function (userChoice) {
+        Experiments.getUserChoice(userId, trial, function (userChoice) {
           userChoice.state = 'userChoice'
           let now = new Date()
-          // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
-          res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env, trialNum: trialNum, newPar: newPar})
+          res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
         })
       })
     })
@@ -844,13 +838,11 @@ class Survey1Controller {
     let userId = req.body.userId
     let trial = req.body.trial
     const env = req.body.env
-    let trialNum = req.body.trialNum
-    const newPar = req.body.newPar
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
       userId: userId,
-      trial: trialNum,
+      trial: trial,
       startingTime: req.body.startingTime,
       timeUsed: timeUsed,
       endTime: now,
@@ -858,24 +850,10 @@ class Survey1Controller {
     }
     Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    if (trial < maxTrialEx1 + maxTrialEx2 && newPar === 't') {
+    if (trial < maxTrialEx1 + maxTrialEx2 + 6) {
       trial++
       res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
-    } else if (newPar === 't' && Number(trial) === maxTrialEx1 + maxTrialEx2) {
-      res.redirect('/end/' + env + '/' + userId)
-    } else if (newPar === 'f' && Number(trialNum) < 15) {
-      if (trial < maxTrialEx1 + maxTrialEx2) {
-        trial++
-      } else {
-        trial = 4
-      }
-      trialNum++
-      Survey1.getUserGroup(userId, function (expGroup) {
-        let category = switchGroup(Number(expGroup), trialNum, userId)
-        let algorithm = groups[category]
-        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm + '/' + trialNum + '/' + newPar)
-      })
-    } else if (Number(trialNum) === 15 && newPar === 'f') {
+    } else {
       res.redirect('/end/' + env + '/' + userId)
     }
   }
@@ -953,18 +931,18 @@ function getRandomCode (length, userId, num) {
   return str
 }
 // same as in user controller
-function switchGroup (expGroup, trialNum, userId) {
-  // trialNum 10~12 first condition, trialNum 13~15 second condition
-  if (trialNum <= 12 && expGroup >= 2 && expGroup <= 5) {
-    return expGroup
-  } else if (trialNum > 12 && trialNum <= 15 && expGroup >= 2 && expGroup <= 5) {
-    let num = userId % 3
-    if (num === 2) return 6
-    return num
-  } else if (trialNum <= 12 && (expGroup < 2 || expGroup === 6)) {
-    let num = userId % 4
-    return num + 2
-  } else if (trialNum > 12 && (expGroup < 2 || expGroup === 6)) {
-    return expGroup
-  }
-}
+// function switchGroup (expGroup, trialNum, userId) {
+//   // trialNum 10~12 first condition, trialNum 13~15 second condition
+//   if (trialNum <= 12 && expGroup >= 2 && expGroup <= 5) {
+//     return expGroup
+//   } else if (trialNum > 12 && trialNum <= 15 && expGroup >= 2 && expGroup <= 5) {
+//     let num = userId % 3
+//     if (num === 2) return 6
+//     return num
+//   } else if (trialNum <= 12 && (expGroup < 2 || expGroup === 6)) {
+//     let num = userId % 4
+//     return num + 2
+//   } else if (trialNum > 12 && (expGroup < 2 || expGroup === 6)) {
+//     return expGroup
+//   }
+// }
