@@ -469,7 +469,10 @@ function drawAgreementPie (data, title, destination) {
   var trace = [{
     values: data,
     labels: ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'],
-    type: 'pie'
+    type: 'pie',
+    marker: {
+      colors: ['rgb(31, 119, 180)', 'rgb(255, 127, 14)', 'rgb(44, 160, 44)', 'rgb(214, 39, 40)', 'rgb(148, 103, 189)']
+    }
   }]
   var layout = {
     autosize: false,
@@ -496,7 +499,10 @@ function drawSmallAgreementPie (data, title, destination, legend) {
   var trace = [{
     values: data,
     labels: ['Strongly disagree', 'Disagree', 'Neither agree nor disagree', 'Agree', 'Strongly agree'],
-    type: 'pie'
+    type: 'pie',
+    marker: {
+      colors: ['rgb(31, 119, 180)', 'rgb(255, 127, 14)', 'rgb(44, 160, 44)', 'rgb(214, 39, 40)', 'rgb(148, 103, 189)']
+    }
   }]
   let index = title.indexOf(',')
   if (index != -1) {
