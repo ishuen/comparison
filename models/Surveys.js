@@ -66,6 +66,30 @@ class Survey1 {
       })
     }
   }
+  addCandidates (obj, userId, trial, callback) {
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      let checked = false
+      let input = [userId, trial, obj.defaultPoint.id, 'defaultPoint']
+      client.query('INSERT INTO user_satisfaction (user_id, trial_num, food_id, state) VALUES ($1, $2, $3, $4)', input, (err, res) => {
+        if (checked === false) {
+          done()
+          checked = true
+        }
+        if (err) throw err
+      })
+      let input2 = [userId, trial, obj.data[0].id, 'tastiest/first']
+      client.query('INSERT INTO user_satisfaction (user_id, trial_num, food_id, state) VALUES ($1, $2, $3, $4)', input2, (err, res) => {
+        if (err) throw err
+      })
+      let length = obj.data.length
+      let input3 = [userId, trial, obj.data[length - 1].id, 'healthiest/last']
+      client.query('INSERT INTO user_satisfaction (user_id, trial_num, food_id, state) VALUES ($1, $2, $3, $4)', input3, (err, res) => {
+        if (err) throw err
+        callback(res.rows)
+      })
+    })
+  }
   userSatisfaction (obj, callback) {
     let userId = obj.userId
     let trial = obj.trial

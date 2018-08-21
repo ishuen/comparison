@@ -1,6 +1,6 @@
 const Experiments = require('../models/Experiments')
 // const HpbData = require('../models/HpbData')
-// const Surveys = require('../models/Surveys')
+const Surveys = require('../models/Surveys')
 const heuristic = require('./behavioralRank')
 const pareto = require('./paretoFrontier')
 const genetic = require('./geneticSort')
@@ -327,6 +327,9 @@ class ExperimentsController {
       if (algorithm === 'taste' || algorithm === 'health') {
         res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
       } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
+        if (algorithm === 'genetic') {
+          Surveys.addCandidates(obj, userId, trial, function (done) { console.log(done) })
+        }
         res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
       } else if (algorithm === 'scatterPlot') {
         res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
