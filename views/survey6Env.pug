@@ -15,10 +15,10 @@ html
       let left = !{JSON.stringify(left)}
       let right = !{JSON.stringify(right)}
       let userChoice = !{JSON.stringify(userChoice)}
-    //- var items = Array.from(new Set([defaultPoint, left, right, userChoice]))
-    - var items = [defaultPoint, right]
-    - console.log(defaultPoint, left, right, userChoice)
+    - var items = [defaultPoint]
+    //- console.log(defaultPoint, left, right, userChoice)
     - if (defaultPoint.id != left.id) items.push(left)
+    - if (defaultPoint.id != right.id) items.push(right)
     - if (defaultPoint.id != userChoice.id && left.id != userChoice.id && right.id != userChoice.id) items.push(userChoice)
     div(class='container-fluid')
       div(class='row')

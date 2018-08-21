@@ -93,6 +93,30 @@ class HpbData {
     })
   }
 
+  getCandidateSet (trialNum, userId, callback) {
+    pool.query('SELECT * FROM user_satisfaction INNER JOIN hpbdata ON (user_satisfaction.food_id = hpbdata.id) WHERE user_satisfaction.trial_num = $1 AND user_satisfaction.user_id= $2', [trialNum, userId], (err, res) => {
+      if (err) throw err
+      let data = []
+      _.map(res.rows, function (i) {
+        if (i.image != null) {
+          i.path = i.image.toString('utf8')
+        } else {
+          i.path = '/images/abs_food.png'
+        }
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.health,
+          taste: i.taste,
+          path: i.path,
+          state: i.state
+        }
+        data.push(temp)
+      })
+      callback(data)
+    })
+  }
+
   getOneItemFromList (trialNum, itemOrder, callback) {
     let itemId = itemSetList[trialNum - 1][itemOrder - 1]
     pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {

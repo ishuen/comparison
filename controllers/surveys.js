@@ -776,21 +776,34 @@ class Survey1Controller {
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
-      HpbData.getTrialSet(Number(trial), function (items) {
-        let obj = experiments.sortByAssignedAlgo(items, algorithm)
-        items = obj.data
-        let defaultPoint = obj.defaultPoint
-        let left = items[0] // tastiest
-        let right = items[items.length - 1] // healthiest
-        defaultPoint.state = 'defaultPoint'
-        left.state = 'tastiest/first'
-        right.state = 'healthiest/last'
-        Experiments.getUserChoice(userId, trial, function (userChoice) {
-          userChoice.state = 'userChoice'
-          let now = new Date()
-          res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+      if (algorithm === 'genetic') {
+        HpbData.getCandidateSet(Number(trial), userId, function (items) {
+          let defaultPoint = items[0]
+          let left = items[1]
+          let right = items[2]
+          Experiments.getUserChoice(userId, trial, function (userChoice) {
+            userChoice.state = 'userChoice'
+            let now = new Date()
+            res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+          })
         })
-      })
+      } else {
+        HpbData.getTrialSet(Number(trial), function (items) {
+          let obj = experiments.sortByAssignedAlgo(items, algorithm)
+          items = obj.data
+          let defaultPoint = obj.defaultPoint
+          let left = items[0] // tastiest
+          let right = items[items.length - 1] // healthiest
+          defaultPoint.state = 'defaultPoint'
+          left.state = 'tastiest/first'
+          right.state = 'healthiest/last'
+          Experiments.getUserChoice(userId, trial, function (userChoice) {
+            userChoice.state = 'userChoice'
+            let now = new Date()
+            res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+          })
+        })
+      }
     })
   }
 
