@@ -50,13 +50,13 @@ class Analyses {
     })
   }
   getPostSurveyComment (qnSet, callback) {
-    pool.query('SELECT user_comment.description AS answer, survey_questions.description AS question, survey_questions.qn_id FROM survey_questions INNER JOIN user_comment ON (user_comment.qn_id = survey_questions.qn_id) WHERE qn_set = ANY($1::int[]) ORDER BY survey_questions.qn_id', [qnSet], (err, res) => {
+    pool.query('SELECT user_comment.description AS answer, survey_questions.description AS question, user_comment.user_id, user_comment.trial, survey_questions.qn_id FROM survey_questions INNER JOIN user_comment ON (user_comment.qn_id = survey_questions.qn_id) WHERE qn_set = ANY($1::int[]) ORDER BY survey_questions.qn_id', [qnSet], (err, res) => {
       if (err) throw err
       callback(res.rows)
     })
   }
   getPostSurveyRating (qnSet, callback) {
-    pool.query('SELECT user_rating.rating, survey_questions.description, survey_questions.qn_id FROM survey_questions INNER JOIN user_rating ON (user_rating.qn_id = survey_questions.qn_id) WHERE qn_set = ANY($1::int[]) ORDER BY survey_questions.qn_id', [qnSet], (err, res) => {
+    pool.query('SELECT user_rating.rating, survey_questions.description, survey_questions.qn_id, user_rating.user_id, user_rating.trial FROM survey_questions INNER JOIN user_rating ON (user_rating.qn_id = survey_questions.qn_id) WHERE qn_set = ANY($1::int[]) ORDER BY survey_questions.qn_id', [qnSet], (err, res) => {
       if (err) throw err
       callback(res.rows)
     })

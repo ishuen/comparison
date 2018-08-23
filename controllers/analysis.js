@@ -162,6 +162,38 @@ class AnalysisController {
       })
     })
   }
+  getPost1Detail (req, res) {
+    let responses = []
+    Analyses.getPostSurveyComment([6, 7], function (data) {
+      let comments = []
+      for (let i = 1; i <= 3; i++) {
+        comments.push(_.groupBy(_.filter(data, function (d) { return d.trial === i }), 'user_id'))
+      }
+      Analyses.getPostSurveyRating([6, 7], function (rates) {
+        let ratings = []
+        for (let i = 1; i <= 3; i++) {
+          ratings.push(_.groupBy(_.filter(rates, function (d) { return d.trial === i }), 'user_id'))
+        }
+        for (let i = 0; i < 3; i++) {
+          for (let rate in ratings[i]) {
+            let temp = {
+              userId: rate,
+              trial: ratings[i][rate][0]['trial']
+            }
+            for (let r of ratings[i][rate]) {
+              temp[r.description] = r.rating
+            }
+            for (let c of comments[i][rate]) {
+              temp[c.question] = c.answer
+            }
+            responses.push(temp)
+            console.log(temp)
+          }
+        }
+        res.send({data: responses})
+      })
+    })
+  }
   sortingProcess (req, res) {
     const userId = req.params.userId
     Analyses.getUserSortingProcess(userId, function (data) {
