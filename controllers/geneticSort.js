@@ -50,7 +50,7 @@ class GeneticSortController {
   }
 
   showPathUserSet (data) {
-    let generation = 20
+    let generation = 200
     let len = data.length
     let defaultIndex = getDefaultIndex(len)
     let population = initPopulation(len) // record the order of the items
@@ -71,6 +71,86 @@ class GeneticSortController {
     let resData = orderToObj(fittest, data)
     let defaultPoint = resData[defaultIndex]
     return {data: resData, defaultPoint: defaultPoint}
+  }
+  showProcedure (req, res) {
+    let data = [
+      { new_health: 7,
+        new_taste: 3,
+        id: '2150'},
+      { new_health: 3,
+        new_taste: 7,
+        id: '2384'},
+      { new_health: 5,
+        new_taste: 8,
+        id: '869'},
+      { new_health: 6,
+        new_taste: 4,
+        id: '2301'},
+      { new_health: 5,
+        new_taste: 6,
+        id: '516'},
+      { new_health: 7,
+        new_taste: 4,
+        id: '2263'},
+      { new_health: 6,
+        new_taste: 6,
+        id: '758'},
+      { new_health: 5,
+        new_taste: 6,
+        id: '1241'},
+      { new_health: 7,
+        new_taste: 4,
+        id: '615'},
+      { new_health: 6,
+        new_taste: 7,
+        id: '212'} ]
+    let process = []
+    let generation = 200
+    let len = data.length
+    let defaultIndex = getDefaultIndex(len)
+    let population = initPopulation(len) // record the order of the items
+    // let tempMatrix = []
+    for (let j = 0; j < population.length; j++) {
+      let tempArr = []
+      tempArr.push(calculateFitnessUser(population[j], data, defaultIndex))
+      for (let k = 0; k < population[j].length; k++) {
+        let num = population[j][k]
+        tempArr.push([data[num].new_taste, data[num].new_health])
+      }
+      // tempMatrix.push(tempArr)
+      process.push(tempArr)
+    }
+    // process.push(tempMatrix)
+    let n = 0
+    let currentArr = []
+    while (n < generation) {
+      let fittestTwo = get2FittestUser(population, data, defaultIndex)
+      currentArr = fittestTwo
+      currentArr[1] = mutation(currentArr[1])
+      for (let i = 0; i < population.length - 2; i++) {
+        let temp = crossover(population[i], population[i + 1])
+        currentArr.push(mutation(temp))
+      }
+      population = currentArr
+      // let tempMatrix = []
+      for (let j = 0; j < currentArr.length; j++) {
+        let tempArr = []
+        tempArr.push(calculateFitnessUser(population[j], data, defaultIndex))
+        for (let k = 0; k < currentArr[j].length; k++) {
+          let num = currentArr[j][k]
+          tempArr.push([data[num].new_taste, data[num].new_health])
+        }
+        // tempMatrix.push(tempArr)
+        process.push(tempArr)
+      }
+      // process.push(tempMatrix)
+      n++
+    }
+    // let fittest = getFittestUser(population, data, defaultIndex)
+    // let resData = orderToObj(fittest, data)
+    // let defaultPoint = resData[defaultIndex]
+    // res.send({data: resData, defaultPoint: defaultPoint, process: process})
+    res.send({process: process})
   }
 }
 
@@ -193,8 +273,12 @@ function get2Fittest (population, data, defaultIndex) {
     fitnessArr.push(fitness)
   }
   let max1 = 0
-  let max2 = 0
-  for (let i = 0; i < fitnessArr.length; i++) {
+  let max2 = 1
+  if (fitnessArr[0] < fitnessArr[1]) {
+    max1 = 1
+    max2 = 0
+  }
+  for (let i = 2; i < fitnessArr.length; i++) {
     if (fitnessArr[i] > fitnessArr[max1]) {
       max2 = max1
       max1 = i
@@ -221,8 +305,12 @@ function get2FittestUser (population, data, defaultIndex) {
     fitnessArr.push(fitness)
   }
   let max1 = 0
-  let max2 = 0
-  for (let i = 0; i < fitnessArr.length; i++) {
+  let max2 = 1
+  if (fitnessArr[0] < fitnessArr[1]) {
+    max1 = 1
+    max2 = 0
+  }
+  for (let i = 2; i < fitnessArr.length; i++) {
     if (fitnessArr[i] > fitnessArr[max1]) {
       max2 = max1
       max1 = i
