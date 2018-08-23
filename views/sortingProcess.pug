@@ -11,39 +11,53 @@ html
     script(src="https://cdn.plot.ly/plotly-latest.min.js", charset='utf-8')
     script.
       let procedures = !{JSON.stringify(procedures)}
-      //- let results = !{JSON.stringify(results)}
-      //- console.log(procedures, results)
+      let results = !{JSON.stringify(results)}
     div(class='container')
-      div(class='col-sm-7')
-        table(class='table' style='table-layout: fixed;')
-          tr
-            td
-            - var i = 1
-            while i < 11
-              td #{i}
-              - i++
-          - var j = 0
-          - let length = Object.keys(procedures).length
-          - let keyArr = Object.keys(procedures).sort(function(a, b){ return Date.parse(a) - Date.parse(b) })
-          each item in keyArr
-            - let k = 0
-            tr
-              td
-                | #{procedures[item][0]['record_number']}
-                //- | - #{item}
-              while k < 10
-                if k < procedures[item].length
-                  td 
-                    span(style='color: red') #{procedures[item][k]['new_taste']}
-                    | :
-                    span(style='color: green') #{procedures[item][k]['new_health']}
-                    br
-                    | (#{procedures[item][k]['ordering'] + 1})
-                else
-                  td
-                - k++
+      h1 User sorting procedures
+      each procedure in procedures
+        - let length = Object.keys(procedure).length
+        - let keyArr = Object.keys(procedure).sort(function(a, b){ return Date.parse(a) - Date.parse(b) })
+        div(class='row')
+          div(class='col-sm-7')
+            table(class='table table-striped' style='table-layout: fixed;')
+              tr
+                th step#
+                - var i = 1
+                while i < 11
+                  th #{i}
+                  - i++
+              - var j = 1
+              each item in keyArr
+                - let k = 0
+                tr
+                  th
+                    //- | #{procedure[item][0]['record_number']}
+                    | #{j}
+                  while k < 10
+                    if k < procedure[item].length
+                      td 
+                        span(style='color: red') #{procedure[item][k]['new_taste']}
+                        | :
+                        span(style='color: green') #{procedure[item][k]['new_health']}
+                        br
+                        | (#{procedure[item][k]['ordering'] + 1})
+                    else
+                      td
+                    - k++
+                - j++
+          div(class='col-sm-5' id='animation' + procedure[keyArr[0]][0]['record_number'])
+
     script.
-      //- function replaceRow (procedures, results, rowId) {
-      //-   let new_row = '<'
-      //-   $('#sort').replaceWith(new_row)
-      //- }
+      function animatedChart (ordering, keyArr, data, destination) {
+        if (ordering < keyArr.length) {
+          drawDualY(data[keyArr[ordering]], destination)
+          setTimeout(function() { animatedChart(ordering + 1, keyArr, data, destination) }, 1000)
+        } else {
+          setTimeout(function() { animatedChart(0, keyArr, data, destination) }, 1000)
+        }
+      }
+      for (let pName of Object.keys(procedures)) {
+        let keyArr = Object.keys(procedures[pName]).sort(function(a, b){ return Date.parse(a) - Date.parse(b) })
+        setTimeout(function() { animatedChart(0, keyArr, procedures[pName], 'animation' + procedures[pName][keyArr[0]][0]['record_number']) }, 1000)
+      }
+      

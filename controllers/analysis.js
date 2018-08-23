@@ -162,18 +162,55 @@ class AnalysisController {
       })
     })
   }
+  getPost1Detail (req, res) {
+    let responses = []
+    Analyses.getPostSurveyComment([6, 7], function (data) {
+      let comments = []
+      for (let i = 1; i <= 3; i++) {
+        comments.push(_.groupBy(_.filter(data, function (d) { return d.trial === i }), 'user_id'))
+      }
+      Analyses.getPostSurveyRating([6, 7], function (rates) {
+        let ratings = []
+        for (let i = 1; i <= 3; i++) {
+          ratings.push(_.groupBy(_.filter(rates, function (d) { return d.trial === i }), 'user_id'))
+        }
+        for (let i = 0; i < 3; i++) {
+          for (let rate in ratings[i]) {
+            let temp = {
+              userId: rate,
+              trial: ratings[i][rate][0]['trial']
+            }
+            for (let r of ratings[i][rate]) {
+              temp[r.description] = r.rating
+            }
+            for (let c of comments[i][rate]) {
+              temp[c.question] = c.answer
+            }
+            responses.push(temp)
+            console.log(temp)
+          }
+        }
+        res.send({data: responses})
+      })
+    })
+  }
   sortingProcess (req, res) {
     const userId = req.params.userId
     Analyses.getUserSortingProcess(userId, function (data) {
-      let procedures = _.groupBy(data.procedures, 'time_stamp')
-      for (let p in procedures) {
-        procedures[p] = procedures[p].sort(function (a, b) { return a.ordering - b.ordering })
-        let arr = []
-        for (let item of procedures[p]) {
-          if (arr.length > 0 && item.ordering === arr[arr.length - 1]['ordering']) continue
-          arr.push(item)
+      let trials = _.groupBy(data.procedures, 'record_number')
+      let procedures = {}
+      for (let tr in trials) {
+        let procedure = _.groupBy(trials[tr], 'time_stamp')
+        for (let p in procedure) {
+          procedure[p] = procedure[p].sort(function (a, b) { return a.ordering - b.ordering })
+          let arr = []
+          for (let item of procedure[p]) {
+            if (arr.length > 0 && item.ordering === arr[arr.length - 1]['ordering']) continue
+            arr.push(item)
+          }
+          procedure[p] = arr
         }
-        procedures[p] = arr
+        procedures[tr] = procedure
       }
       let len = data.results.length
       let results = []
@@ -186,6 +223,7 @@ class AnalysisController {
           temp = [data.results[i]]
         }
       }
+      results.push(temp)
       res.render('sortingProcess', {procedures: procedures, results: results})
     })
   }
