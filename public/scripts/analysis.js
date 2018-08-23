@@ -535,3 +535,69 @@ function drawSmallAgreementPie (data, title, destination, legend) {
   }
   Plotly.newPlot(destination, trace, layout)
 }
+function drawDualY (data, destination) {
+  // let len = data.pareto.data.length
+  let len = 10
+  let arr =  Array.from({length: len}, (v, k) => k + 1)
+  let trace1 = { // pareto
+    mode: 'lines+markers',
+    type: 'scatter',
+    name: 'taste',
+    x: arr,
+    y: data.map(function (x) {return x.new_taste}),
+    line:{ opacity:0.5},
+    marker: {
+     color: 'red',
+    }
+  }
+  let trace2 = { // pareto
+    mode: 'lines+markers',
+    type: 'scatter',
+    name: 'health',
+    x: arr,
+    y: data.map(function (x) {return x.new_health}),
+    yaxis: 'y2',
+    line:{opacity:0.5},
+    marker: {
+     color: 'green',
+    }
+  }
+  let layout = {
+    title: 'User Sorting',
+    xaxis: {
+      autotick: false,
+      tick0: 1,
+      dtick: 1,
+    },
+    yaxis: {
+      title: 'taste',
+      titlefont: {color: 'red'},
+      tickfont: {color: 'red'},
+    },
+    yaxis2: {
+      title: 'health',
+      titlefont: {color: 'green'},
+      tickfont: {color: 'green'},
+      overlaying: 'y',
+      side: 'right'
+    },
+    width: 450,
+    height: 400,
+    autosize: false,
+    margin: {
+      l: 50,
+      r: 30,
+      b: 30,
+      t: 30,
+      pad: 4
+    },
+    showlegend: true,
+    legend: {
+      "orientation": "h",
+      // x: 1.1,
+      y: -0.2
+    },
+  }
+  let traces = [trace1, trace2]
+  Plotly.newPlot(destination, traces, layout)
+}

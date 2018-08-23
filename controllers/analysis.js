@@ -197,15 +197,20 @@ class AnalysisController {
   sortingProcess (req, res) {
     const userId = req.params.userId
     Analyses.getUserSortingProcess(userId, function (data) {
-      let procedures = _.groupBy(data.procedures, 'time_stamp')
-      for (let p in procedures) {
-        procedures[p] = procedures[p].sort(function (a, b) { return a.ordering - b.ordering })
-        let arr = []
-        for (let item of procedures[p]) {
-          if (arr.length > 0 && item.ordering === arr[arr.length - 1]['ordering']) continue
-          arr.push(item)
+      let trials = _.groupBy(data.procedures, 'record_number')
+      let procedures = {}
+      for (let tr in trials) {
+        let procedure = _.groupBy(trials[tr], 'time_stamp')
+        for (let p in procedure) {
+          procedure[p] = procedure[p].sort(function (a, b) { return a.ordering - b.ordering })
+          let arr = []
+          for (let item of procedure[p]) {
+            if (arr.length > 0 && item.ordering === arr[arr.length - 1]['ordering']) continue
+            arr.push(item)
+          }
+          procedure[p] = arr
         }
-        procedures[p] = arr
+        procedures[tr] = procedure
       }
       let len = data.results.length
       let results = []
@@ -218,6 +223,7 @@ class AnalysisController {
           temp = [data.results[i]]
         }
       }
+      results.push(temp)
       res.render('sortingProcess', {procedures: procedures, results: results})
     })
   }
