@@ -75,3 +75,15 @@ DELETE FROM user_rating;
 DELETE FROM survey_questions WHERE qn_set=1 AND display_num=3;
 UPDATE survey_questions SET description='The taste score is accurate.' WHERE qn_set=1 AND display_num=2;
 
+UPDATE survey_questions SET description='I primarily sorted by taste.' WHERE qn_set=6 AND display_num=4;
+UPDATE survey_questions SET description='I primarily sorted by health.' WHERE qn_set=6 AND display_num=5;
+INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
+VALUES
+(6, 8, 'Health score is more important than taste score.', '5_scale'),
+(6, 9, 'Taste score is more important than health score.', '5_scale');
+UPDATE survey_questions SET description='I feel that the items were primarily sorted by taste.' WHERE qn_set=8 AND display_num=6;
+UPDATE survey_questions SET description='I feel that the items were primarily sorted by health.' WHERE qn_set=8 AND display_num=7;
+INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
+VALUES
+(8, 10, 'Health score is more important than taste score.', '5_scale'),
+(8, 11, 'Taste score is more important than health score.', '5_scale');
