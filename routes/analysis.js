@@ -8,5 +8,6 @@ router.get('/dietAvg', analysis.getDietarySummary)
 router.get('/postSurvey1', analysis.getPost1Summary)
 router.get('/sortProcess/:userId', analysis.sortingProcess)
 router.get('/postSurvey1/data', analysis.getPost1Detail)
+router.get('/sortings/data/:trial', analysis.getAllSortings)
 
 module.exports = router

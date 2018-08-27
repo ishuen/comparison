@@ -81,5 +81,11 @@ class Analyses {
       })
     })
   }
+  getAllSortings (trial, callback) {
+    pool.query('SELECT * FROM user_sorting INNER JOIN sorting_experiment ON (user_sorting.food_id = sorting_experiment.food_id AND user_sorting.user_id = sorting_experiment.user_id) INNER JOIN hpbdata ON (user_sorting.food_id = hpbdata.id) WHERE sorting_experiment.trial_num = $1', [trial], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 module.exports = new Analyses()
