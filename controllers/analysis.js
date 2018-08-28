@@ -93,6 +93,65 @@ class AnalysisController {
       res.render('userSortings', {userId: userId, sortings: results})
     })
   }
+  getAllSortings (req, res) {
+    let trial = req.params.trial // does not support practice trials
+    Analyses.getAllSortings(trial, function (data) {
+      let itemCount = _.countBy(data, 'id')
+      let allSortings = []
+      if (Number(trial) === 4) {
+        let sortings = _.groupBy(data, 'user_id')
+        let users = Object.keys(sortings)
+        for (let u of users) {
+          let temp = {
+            userId: u,
+            trial: trial
+          }
+          if (sortings[u].length > 10) {
+            for (let i = 20; i < 30; i++) {
+              if (i < sortings[u].length) {
+                temp[Number(i + 1 - 20) + 'T'] = sortings[u][i]['new_taste']
+                temp[Number(i + 1 - 20) + 'H'] = sortings[u][i]['new_health']
+              } else {
+                temp[Number(i + 1 - 20) + 'T'] = ''
+                temp[Number(i + 1 - 20) + 'H'] = ''
+              }
+            }
+          } else {
+            for (let i = 0; i < 10; i++) {
+              if (i < sortings[u].length) {
+                temp[sortings[u][i]['ordering'] + 'T'] = sortings[u][i]['new_taste']
+                temp[sortings[u][i]['ordering'] + 'H'] = sortings[u][i]['new_health']
+              } else {
+                temp[Number(i + 1) + 'T'] = ''
+                temp[Number(i + 1) + 'H'] = ''
+              }
+            }
+          }
+          allSortings.push(temp)
+        }
+      } else {
+        let sortings = _.groupBy(data, 'user_id')
+        let users = Object.keys(sortings)
+        for (let u of users) {
+          let temp = {
+            userId: u,
+            trial: trial
+          }
+          for (let i = 0; i < 10; i++) {
+            if (i < sortings[u].length) {
+              temp[sortings[u][i]['ordering'] + 'T'] = sortings[u][i]['new_taste']
+              temp[sortings[u][i]['ordering'] + 'H'] = sortings[u][i]['new_health']
+            } else {
+              temp[Number(i + 1) + 'T'] = ''
+              temp[Number(i + 1) + 'H'] = ''
+            }
+          }
+          allSortings.push(temp)
+        }
+      }
+      res.send({sortings: allSortings, itemCount: itemCount})
+    })
+  }
   getDietarySummary (req, res) {
     Analyses.getDietData(function (data) {
       let maxQn = _.max(_.map(data, function (i) { return i.display_num }))

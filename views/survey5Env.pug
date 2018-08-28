@@ -38,8 +38,7 @@ html
             th Neither agree nor disagree
             th Agree
             th Strongly agree
-          - var firstSet = data.filter(d => d.qn_set == 8).sort(function (a, b) {return a.qn_id > b.qn_id })
-          - firstSet = firstSet.slice(1)
+          - var firstSet = data.filter(d => d.qn_set == 8 && d.display_num > 0)
           - var i = 0
           while i < firstSet.length
             tr

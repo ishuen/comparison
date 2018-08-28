@@ -672,7 +672,8 @@ class Survey1Controller {
     const setNum = [8, 9]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
-      res.render('survey5', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId})
+      let orderedSet = _.sortBy(qnSet, ['qn_set', 'display_num'])
+      res.render('survey5', {data: orderedSet, trial: trial, startingTime: now.getTime(), userId: userId})
     })
   }
 
@@ -683,7 +684,8 @@ class Survey1Controller {
     const setNum = [8, 9]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
-      res.render('survey5Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
+      let orderedSet = _.sortBy(qnSet, ['qn_set', 'display_num'])
+      res.render('survey5Env', {data: orderedSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
     })
   }
 
