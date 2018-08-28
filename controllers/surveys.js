@@ -92,7 +92,7 @@ class Survey1Controller {
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
     let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    if (env === 'sf') {
+    if (env === 'sf' || env === 'ins') {
       tr = tr + 6
     }
     res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
@@ -463,11 +463,11 @@ class Survey1Controller {
     let scores = getAllScores(req.body)
     Experiments.addAllUserDefinedScores(scores, function (done) { console.log(done) })
     trial = trial - 3
-    if (env === 'se' && trial === 1) {
+    if ((env === 'se' || env === 'int') && trial === 1) {
       res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
-    } else if (env === 'se' && trial !== 1) {
+    } else if ((env === 'se' || env === 'int') && trial !== 1) {
       res.redirect('/experiment1/for/' + env + '/' + trial + '/' + userId)
-    } else if (env === 'sf') {
+    } else if (env === 'sf' || env === 'ins') {
       Survey1.getUserGroup(userId, function (expGroup) {
         trial = trial + 3
         let category = Number(expGroup)
@@ -517,9 +517,12 @@ class Survey1Controller {
     let countryArr = Object.values(country)
     const text = fs.readFileSync('public/txt/ethnicity.txt').toString('utf-8')
     let ethnicity = text.split('\n')
+    let env = req.url
+    env = env.slice(1)
+    env = env.slice(0, 3)
     // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
     // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
-    res.render('survey3MTurk', {userId: userId, country: countryArr, ethnicity: ethnicity})
+    res.render('survey3MTurk', {userId: userId, country: countryArr, ethnicity: ethnicity, env: env})
   }
 
   showQnPost1 (req, res) {
@@ -876,7 +879,7 @@ class Survey1Controller {
     const userId = req.params.userId
     const env = req.params.env
     let surveyCode = ''
-    if (env === 'sf') {
+    if (env === 'sf' || env === 'ins') {
       surveyCode = getRandomCode(5, userId, 2)
     } else {
       surveyCode = getRandomCode(5, userId, 1)

@@ -22,8 +22,14 @@ class UsersController {
     }
   }
   getNewUserMTurk (req, res, next) {
+    let env = req.url
+    env = env.slice(1)
+    if (env.includes('/')) {
+      let len = env.length - 1
+      env = env.slice(0, len)
+    }
     Users.getNewId(function (newId) {
-      res.render('indexMturk', { userId: newId })
+      res.render('indexMturk', { userId: newId, env: env })
     })
   }
   registrationIVLE (req, res, next) {

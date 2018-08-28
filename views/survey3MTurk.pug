@@ -30,7 +30,7 @@ html
             //-   label If you are an MTurk worker, this is the survey code:
             //-   label #{surveyCode}
             //-   label If you are willing to do the next experiment, you will have another new code after you finish that.
-            a(class='nextExpButton', href= '/survey0/int/' + userId)
+            a(class='nextExpButton', href= '/survey0/' + env + '/' + userId)
                 button(class='btn btn-primary btn-lg', type='button') Next
             //- if (userId % 8 == 0)
           

@@ -8,7 +8,8 @@ router.get('/', usersController.getNewUser)
 router.get('/sg/', usersController.registrationIVLE) // register point
 router.get('/sf/', usersController.getNewUserIVLE) // exp 2 entry
 router.get('/se/', usersController.getNewUserIVLE) // exp 1 entry
-router.get('/int/', usersController.getNewUserMTurk)
+router.get('/int/', usersController.getNewUserMTurk) // exp1 mturk
+router.get('/ins/', usersController.getNewUserMTurk) // exp2 mturk
 router.get('/end/:userId', surveys.endOfExp)
 router.get('/end/:env/:userId', surveys.endOfExp)
 
