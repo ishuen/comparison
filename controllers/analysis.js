@@ -96,6 +96,7 @@ class AnalysisController {
   getAllSortings (req, res) {
     let trial = req.params.trial // does not support practice trials
     Analyses.getAllSortings(trial, function (data) {
+      let itemCount = _.countBy(data, 'id')
       let allSortings = []
       if (Number(trial) === 4) {
         let sortings = _.groupBy(data, 'user_id')
@@ -148,7 +149,7 @@ class AnalysisController {
           allSortings.push(temp)
         }
       }
-      res.send(allSortings)
+      res.send({sortings: allSortings, itemCount: itemCount})
     })
   }
   getDietarySummary (req, res) {
