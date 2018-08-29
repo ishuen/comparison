@@ -11,5 +11,6 @@ router.get('/postSurvey1/data', analysis.getPost1Detail)
 router.get('/sortings/data/:trial', analysis.getAllSortings)
 router.get('/postSurvey2', analysis.getPost2Summary)
 router.get('/postSurvey2/data', analysis.getPost2Detail)
+router.get('/userChoice/data/:trial', analysis.getUserChoiceData)
 
 module.exports = router

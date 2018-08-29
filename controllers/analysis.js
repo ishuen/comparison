@@ -343,5 +343,38 @@ class AnalysisController {
       })
     })
   }
+  getUserChoiceData (req, res) {
+    let trial = req.params.trial
+    Analyses.getChoiceAndSatisfaction(trial, function (data) {
+      let resData = []
+      let users = _.map(data.responses, function (d) { return d['user_id'] })
+      users = [...new Set(users)]
+      for (let u of users) {
+        let arr = _.filter(data.responses, function (d) { return d['user_id'] === u })
+        let index = _.findIndex(data['time'], function (d) { return d['user_id'] === u })
+        let timeConsumption = msecToMinutesAndSeconds(data['time'][index]['time_used'])
+        let temp = {
+          condition: arr[0]['exp_group'],
+          userId: arr[0]['user_id'],
+          trial: arr[0]['trial_num'],
+          timeConsumption: timeConsumption
+        }
+        for (let a of arr) {
+          temp[a.state + ':T'] = a.new_taste
+          temp[a.state + ':H'] = a.new_health
+          temp[a.state + ':satisfaction'] = a.satisfaction
+          temp[a.state + ':confidence'] = a.confidence
+        }
+        resData.push(temp)
+      }
+      res.send(resData)
+    })
+  }
 }
 module.exports = new AnalysisController()
+
+function msecToMinutesAndSeconds (msec) {
+  var minutes = Math.floor(Number(msec) / 60000)
+  var seconds = ((Number(msec) % 60000) / 1000).toFixed(0)
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds
+}
