@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title= 'analysis - experiment 2'
+    meta(name='viewport' content='width=device-width, initial-scale=1')
+    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  body
+    script(src='http://d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
+    script(src='/scripts/analysis.js', type='text/javascript')
+    script(src="https://cdn.plot.ly/plotly-latest.min.js", charset='utf-8')
+    script.
+      let data = !{JSON.stringify(data)}
+      let scatterArr = !{JSON.stringify(scatterArr)}
+    - var attr1 = ['taste', 'health', 'scatterPlot', 'spreadsheet']
+    - var attr2 = ['heuristic', 'pareto', 'genetic']
+    div(class='container-fluid')
+      div(class='row')
+        div(class='col-sm-5')
+          h1 Experiment 2 user choice
+      div(class='row')
+        each i in [0, 1, 2, 3]
+          div(class='col-sm-3', id=attr1[i])
+      div(class='row')
+        each j in [0, 1, 2]
+          div(class='col-sm-4', id=attr2[j])
+    script.
+      let attr1 = ['taste', 'health', 'scatterPlot', 'spreadsheet']
+      let attr2 = ['heuristic', 'pareto', 'genetic']
+      draw3ColoredScatterPlots(scatterArr, attr1)
+      draw4ColoredScatterPlots(scatterArr, attr2)

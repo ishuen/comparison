@@ -87,5 +87,28 @@ class Analyses {
       callback(res.rows)
     })
   }
+  getChoiceAndSatisfaction (trial, callback) {
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      let checked = false
+      client.query('SELECT * FROM user_satisfaction INNER JOIN user_data ON (user_satisfaction.user_id = user_data.user_id) INNER JOIN sorting_experiment ON (user_satisfaction.trial_num = sorting_experiment.trial_num AND user_satisfaction.food_id = sorting_experiment.food_id AND user_satisfaction.user_id = sorting_experiment.user_id)WHERE user_satisfaction.trial_num = $1', [trial], (err, res) => {
+        if (checked === false) {
+          done()
+          checked = true
+        }
+        if (err) {
+          throw err
+        } else {
+          let responses = res.rows
+          client.query('SELECT * FROM user_choice WHERE trial_num = $1', [trial], (err, res) => {
+            if (err) throw err
+            let time = res.rows
+            let obj = {responses: responses, time: time}
+            callback(obj)
+          })
+        }
+      })
+    })
+  }
 }
 module.exports = new Analyses()

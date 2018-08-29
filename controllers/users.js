@@ -29,7 +29,7 @@ class UsersController {
       env = env.slice(0, len)
     }
     Users.getNewId(function (newId) {
-      res.render('indexMturk', { userId: newId, env: env })
+      res.render('indexMTurk', { userId: newId, env: env })
     })
   }
   registrationIVLE (req, res, next) {

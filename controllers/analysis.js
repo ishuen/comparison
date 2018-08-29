@@ -286,5 +286,118 @@ class AnalysisController {
       res.render('sortingProcess', {procedures: procedures, results: results})
     })
   }
+  getPost2Summary (req, res) {
+    Analyses.getPostSurveyComment([8, 9], function (data) {
+      let userComments = []
+      let num = _.countBy(data, 'question')
+      for (let qn in num) {
+        let temp = _.filter(data, function (o) { return o.question === qn && o.answer !== '' })
+        temp = _.map(temp, function (o) { return o.answer })
+        userComments.push({qn: qn, comments: temp})
+      }
+      Analyses.getPostSurveyRating([8, 9], function (rates) {
+        let userRatings = []
+        let num2 = _.countBy(rates, 'description')
+        for (let qn in num2) {
+          let temp2 = _.filter(rates, function (o) { return o.description === qn })
+          let ans = _.countBy(temp2, 'rating')
+          let rate = [0, 0, 0, 0, 0]
+          for (let a in ans) {
+            rate[a - 1] = ans[a]
+          }
+          userRatings.push({qn: qn, rates: rate})
+        }
+        res.render('postSurvey1', {data: userComments, rates: userRatings})
+      })
+    })
+  }
+  getPost2Detail (req, res) {
+    let responses = []
+    Analyses.getPostSurveyComment([8, 9], function (data) {
+      let comments = []
+      for (let i = 10; i <= 12; i++) {
+        comments.push(_.groupBy(_.filter(data, function (d) { return d.trial === i }), 'user_id'))
+      }
+      Analyses.getPostSurveyRating([8, 9], function (rates) {
+        let ratings = []
+        for (let i = 10; i <= 12; i++) {
+          ratings.push(_.groupBy(_.filter(rates, function (d) { return d.trial === i }), 'user_id'))
+        }
+        for (let i = 0; i < 3; i++) {
+          for (let rate in ratings[i]) {
+            let temp = {
+              userId: rate,
+              trial: ratings[i][rate][0]['trial']
+            }
+            for (let r of ratings[i][rate]) {
+              temp[r.description] = r.rating
+            }
+            for (let c of comments[i][rate]) {
+              temp[c.question] = c.answer
+            }
+            responses.push(temp)
+            console.log(temp)
+          }
+        }
+        res.send({data: responses})
+      })
+    })
+  }
+  getUserChoiceData (req, res) {
+    let trial = req.params.trial
+    Analyses.getChoiceAndSatisfaction(trial, function (data) {
+      let resData = []
+      let users = _.map(data.responses, function (d) { return d['user_id'] })
+      users = [...new Set(users)]
+      for (let u of users) {
+        let arr = _.filter(data.responses, function (d) { return d['user_id'] === u })
+        let index = _.findIndex(data['time'], function (d) { return d['user_id'] === u })
+        let timeConsumption = msecToMinutesAndSeconds(data['time'][index]['time_used'])
+        let temp = {
+          condition: arr[0]['exp_group'],
+          userId: arr[0]['user_id'],
+          trial: arr[0]['trial_num'],
+          timeConsumption: timeConsumption
+        }
+        for (let a of arr) {
+          temp[a.state + ':T'] = a.new_taste
+          temp[a.state + ':H'] = a.new_health
+          temp[a.state + ':satisfaction'] = a.satisfaction
+          temp[a.state + ':confidence'] = a.confidence
+        }
+        resData.push(temp)
+      }
+      res.send(resData)
+    })
+  }
+  userChoices (req, res) {
+    let trial = req.params.trial
+    Analyses.getChoiceAndSatisfaction(trial, function (data) {
+      let groupedData = _.groupBy(data.responses, 'exp_group')
+      let groups = {}
+      let scatterArr = {}
+      let condition = Object.keys(groupedData)
+      for (let cond of condition) {
+        let states = _.groupBy(groupedData[cond], 'state')
+        groups[cond] = states
+        let stateKey = Object.keys(states)
+        let tempObj = {}
+        for (let s of stateKey) {
+          let arrT = _.map(states[s], function (d) { return d['new_taste'] })
+          let arrH = _.map(states[s], function (d) { return d['new_health'] })
+          tempObj[s + ':T'] = arrT
+          tempObj[s + ':H'] = arrH
+        }
+        scatterArr[cond] = tempObj
+      }
+      res.render('userChoice', {data: groups, scatterArr: scatterArr})
+    })
+  }
 }
 module.exports = new AnalysisController()
+
+function msecToMinutesAndSeconds (msec) {
+  var minutes = Math.floor(Number(msec) / 60000)
+  var seconds = ((Number(msec) % 60000) / 1000).toFixed(0)
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds
+}
