@@ -508,6 +508,12 @@ function drawSmallAgreementPie (data, title, destination, legend) {
   if (index != -1) {
     let str = title.slice(0, index + 2) + '<br>' + title.slice(index + 2)
     title = str
+  } else if (index == -1) {
+    index = title.indexOf('with')
+    if (index != -1) {
+      let str = title.slice(0, index) + '<br>' + title.slice(index)
+      title = str
+    }
   }
   let width = 300
   if (legend == true) width = 500
