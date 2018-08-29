@@ -370,6 +370,29 @@ class AnalysisController {
       res.send(resData)
     })
   }
+  userChoices (req, res) {
+    let trial = req.params.trial
+    Analyses.getChoiceAndSatisfaction(trial, function (data) {
+      let groupedData = _.groupBy(data.responses, 'exp_group')
+      let groups = {}
+      let scatterArr = {}
+      let condition = Object.keys(groupedData)
+      for (let cond of condition) {
+        let states = _.groupBy(groupedData[cond], 'state')
+        groups[cond] = states
+        let stateKey = Object.keys(states)
+        let tempObj = {}
+        for (let s of stateKey) {
+          let arrT = _.map(states[s], function (d) { return d['new_taste'] })
+          let arrH = _.map(states[s], function (d) { return d['new_health'] })
+          tempObj[s + ':T'] = arrT
+          tempObj[s + ':H'] = arrH
+        }
+        scatterArr[cond] = tempObj
+      }
+      res.render('userChoice', {data: groups, scatterArr: scatterArr})
+    })
+  }
 }
 module.exports = new AnalysisController()
 

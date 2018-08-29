@@ -607,3 +607,130 @@ function drawDualY (data, destination) {
   let traces = [trace1, trace2]
   Plotly.newPlot(destination, traces, layout)
 }
+function draw3ColoredScatterPlot (data, methodName) {
+  let textArr = Array.from(Array(data['tastiest/first:T'].length).keys())
+  textArr = textArr.map(d => 'F-' + d)
+  var trace1 = {
+    x: data['tastiest/first:T'],
+    y: data['tastiest/first:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Tastiest/First',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  textArr = Array.from(Array(data['healthiest/last:T'].length).keys())
+  textArr = textArr.map(d => 'L-' + d)
+  var trace2 = {
+    x: data['healthiest/last:T'],
+    y: data['healthiest/last:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Healthiest/Last',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  if (data['userChoice:T'] != undefined) {
+    textArr = Array.from(Array(data['userChoice:T'].length).keys())
+    textArr = textArr.map(d => 'U-' + d)
+  } else {
+    textArr = []
+  }
+  var trace3 = {
+    x: data['userChoice:T'],
+    y: data['userChoice:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'UserChoice',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  var traces = [ trace1, trace2, trace3]
+  var layout = {
+    xaxis: {
+      range: [1, 10]
+    },
+    yaxis: {
+      range: [1, 10]
+    },
+    title: methodName,
+    width: 400,
+    height: 350
+  }
+  Plotly.newPlot(methodName, traces, layout)
+}
+function draw4ColoredScatterPlot (data, methodName) {
+  let textArr = Array.from(Array(data['defaultPoint:T'].length).keys())
+  textArr = textArr.map(d => 'D-' + d)
+  var trace1 = {
+    x: data['defaultPoint:T'],
+    y: data['defaultPoint:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Default Selection',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  textArr = Array.from(Array(data['tastiest/first:T'].length).keys())
+  textArr = textArr.map(d => 'F-' + d)
+  var trace2 = {
+    x: data['tastiest/first:T'],
+    y: data['tastiest/first:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Tastiest/First',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  textArr = Array.from(Array(data['healthiest/last:T'].length).keys())
+  textArr = textArr.map(d => 'L-' + d)
+  var trace3 = {
+    x: data['healthiest/last:T'],
+    y: data['healthiest/last:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'Healthiest/Last',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  textArr = Array.from(Array(data['userChoice:T'].length).keys())
+  textArr = textArr.map(d => 'U-' + d)
+  var trace4 = {
+    x: data['userChoice:T'],
+    y: data['userChoice:H'],
+    mode: 'markers',
+    type: 'scatter',
+    name: 'UserChoice',
+    text: textArr,
+    marker: { size: 12 }
+  }
+  var traces = [ trace1, trace2, trace3, trace4]
+  var layout = {
+    xaxis: {
+      range: [1, 10]
+    },
+    yaxis: {
+      range: [1, 10]
+    },
+    title: methodName,
+    width: 450,
+    height: 400
+  }
+  Plotly.newPlot(methodName, traces, layout)
+}
+groups = ['heuristic', 'pareto', 'taste', 'health', 'scatterPlot', 'spreadsheet', 'genetic']
+function draw3ColoredScatterPlots (data, methodNames) {
+  for (let name of methodNames) {
+    let index = groups.indexOf(name)
+    console.log(index, data[index])
+    if (data[index] != undefined)
+      draw3ColoredScatterPlot(data[index], name)
+  }
+}
+function draw4ColoredScatterPlots (data, methodNames) {
+   for (let name of methodNames) {
+    let index = groups.indexOf(name)
+    if (data[index] != undefined)
+      draw4ColoredScatterPlot(data[index], name)
+  }
+}
