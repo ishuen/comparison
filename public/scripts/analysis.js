@@ -611,8 +611,8 @@ function draw3ColoredScatterPlot (data, methodName) {
   let textArr = Array.from(Array(data['tastiest/first:T'].length).keys())
   textArr = textArr.map(d => 'F-' + d)
   var trace1 = {
-    x: data['tastiest/first:T'],
-    y: data['tastiest/first:H'],
+    x: data['tastiest/first:H'],
+    y: data['tastiest/first:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'Tastiest/First',
@@ -622,8 +622,8 @@ function draw3ColoredScatterPlot (data, methodName) {
   textArr = Array.from(Array(data['healthiest/last:T'].length).keys())
   textArr = textArr.map(d => 'L-' + d)
   var trace2 = {
-    x: data['healthiest/last:T'],
-    y: data['healthiest/last:H'],
+    x: data['healthiest/last:H'],
+    y: data['healthiest/last:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'Healthiest/Last',
@@ -637,8 +637,8 @@ function draw3ColoredScatterPlot (data, methodName) {
     textArr = []
   }
   var trace3 = {
-    x: data['userChoice:T'],
-    y: data['userChoice:H'],
+    x: data['userChoice:H'],
+    y: data['userChoice:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'UserChoice',
@@ -648,10 +648,12 @@ function draw3ColoredScatterPlot (data, methodName) {
   var traces = [ trace1, trace2, trace3]
   var layout = {
     xaxis: {
-      range: [1, 10]
+      range: [1, 10],
+      title: 'health'
     },
     yaxis: {
-      range: [1, 10]
+      range: [1, 10],
+      title: 'taste'
     },
     title: methodName,
     width: 400,
@@ -663,8 +665,8 @@ function draw4ColoredScatterPlot (data, methodName) {
   let textArr = Array.from(Array(data['defaultPoint:T'].length).keys())
   textArr = textArr.map(d => 'D-' + d)
   var trace1 = {
-    x: data['defaultPoint:T'],
-    y: data['defaultPoint:H'],
+    x: data['defaultPoint:H'],
+    y: data['defaultPoint:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'Default Selection',
@@ -674,8 +676,8 @@ function draw4ColoredScatterPlot (data, methodName) {
   textArr = Array.from(Array(data['tastiest/first:T'].length).keys())
   textArr = textArr.map(d => 'F-' + d)
   var trace2 = {
-    x: data['tastiest/first:T'],
-    y: data['tastiest/first:H'],
+    x: data['tastiest/first:H'],
+    y: data['tastiest/first:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'Tastiest/First',
@@ -685,8 +687,8 @@ function draw4ColoredScatterPlot (data, methodName) {
   textArr = Array.from(Array(data['healthiest/last:T'].length).keys())
   textArr = textArr.map(d => 'L-' + d)
   var trace3 = {
-    x: data['healthiest/last:T'],
-    y: data['healthiest/last:H'],
+    x: data['healthiest/last:H'],
+    y: data['healthiest/last:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'Healthiest/Last',
@@ -696,8 +698,8 @@ function draw4ColoredScatterPlot (data, methodName) {
   textArr = Array.from(Array(data['userChoice:T'].length).keys())
   textArr = textArr.map(d => 'U-' + d)
   var trace4 = {
-    x: data['userChoice:T'],
-    y: data['userChoice:H'],
+    x: data['userChoice:H'],
+    y: data['userChoice:T'],
     mode: 'markers',
     type: 'scatter',
     name: 'UserChoice',
@@ -707,10 +709,12 @@ function draw4ColoredScatterPlot (data, methodName) {
   var traces = [ trace1, trace2, trace3, trace4]
   var layout = {
     xaxis: {
-      range: [1, 10]
+      range: [1, 10],
+      title: 'health'
     },
     yaxis: {
-      range: [1, 10]
+      range: [1, 10],
+      title: 'taste'
     },
     title: methodName,
     width: 450,
