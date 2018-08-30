@@ -22,10 +22,18 @@ html
         each i in [0, 1, 2, 3]
           div(class='col-sm-3', id=attr1[i])
       div(class='row')
+        each i in [0, 1, 2, 3]
+          div(class='col-sm-3', id='bar' + attr1[i])
+      div(class='row')
         each j in [0, 1, 2]
           div(class='col-sm-4', id=attr2[j])
+      div(class='row')
+        each j in [0, 1, 2]
+          div(class='col-sm-4', id='bar' + attr2[j])
     script.
       let attr1 = ['taste', 'health', 'scatterPlot', 'spreadsheet']
       let attr2 = ['heuristic', 'pareto', 'genetic']
       draw3ColoredScatterPlots(scatterArr, attr1)
       draw4ColoredScatterPlots(scatterArr, attr2)
+      satisfaction3barCharts(data, attr1)
+      satisfaction4barCharts(data, attr2)

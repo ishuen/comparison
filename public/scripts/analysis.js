@@ -726,7 +726,6 @@ groups = ['heuristic', 'pareto', 'taste', 'health', 'scatterPlot', 'spreadsheet'
 function draw3ColoredScatterPlots (data, methodNames) {
   for (let name of methodNames) {
     let index = groups.indexOf(name)
-    console.log(index, data[index])
     if (data[index] != undefined)
       draw3ColoredScatterPlot(data[index], name)
   }
@@ -736,5 +735,71 @@ function draw4ColoredScatterPlots (data, methodNames) {
     let index = groups.indexOf(name)
     if (data[index] != undefined)
       draw4ColoredScatterPlot(data[index], name)
+  }
+}
+function satisfaction3barChart (data, destination) {
+  var trace1 = {
+    x: ['userChoice', 'Tastiest/First', 'Healthiest/Last'],
+    y: data['satisfaction'],
+    name: 'satisfaction',
+    type: 'bar'
+  }
+
+  var trace2 = {
+    x: ['userChoice', 'Tastiest/First', 'Healthiest/Last'],
+    y: data['confidence'],
+    name: 'confidence',
+    type: 'bar'
+  }
+
+  var traces = [trace1, trace2]
+
+  var layout = {
+    barmode: 'group',
+    title: destination.slice(3),
+    width: 400,
+    height: 350
+  }
+
+  Plotly.newPlot(destination, traces, layout)
+}
+function satisfaction3barCharts (data, methodNames) {
+  for (let name of methodNames) {
+    let index = groups.indexOf(name)
+    if (data[index] != undefined)
+      satisfaction3barChart(data[index], 'bar' + name)
+  }
+}
+function satisfaction4barChart (data, destination) {
+  var trace1 = {
+    x: ['userChoice', 'Tastiest/First', 'Healthiest/Last', 'defaultPoint'],
+    y: data['satisfaction'],
+    name: 'satisfaction',
+    type: 'bar'
+  }
+
+  var trace2 = {
+    x: ['userChoice', 'Tastiest/First', 'Healthiest/Last', 'defaultPoint'],
+    y: data['confidence'],
+    name: 'confidence',
+    type: 'bar'
+  }
+
+  var traces = [trace1, trace2]
+
+  var layout = {
+    barmode: 'group',
+    title: destination.slice(3),
+    width: 450,
+    height: 400
+  }
+
+  Plotly.newPlot(destination, traces, layout)
+}
+function satisfaction4barCharts (data, methodNames) {
+  for (let name of methodNames) {
+    let index = groups.indexOf(name)
+    if (data[index] != undefined)
+      satisfaction4barChart(data[index], 'bar' + name)
   }
 }

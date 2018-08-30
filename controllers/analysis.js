@@ -374,14 +374,16 @@ class AnalysisController {
     let trial = req.params.trial
     Analyses.getChoiceAndSatisfaction(trial, function (data) {
       let groupedData = _.groupBy(data.responses, 'exp_group')
-      let groups = {}
+      let groups = {} // grouped original data
       let scatterArr = {}
+      let barChartArr = {}
       let condition = Object.keys(groupedData)
       for (let cond of condition) {
         let states = _.groupBy(groupedData[cond], 'state')
         groups[cond] = states
         let stateKey = Object.keys(states)
         let tempObj = {}
+        let tempArr = avgSatisConf(cond, groups[cond])
         for (let s of stateKey) {
           let arrT = _.map(states[s], function (d) { return d['new_taste'] })
           let arrH = _.map(states[s], function (d) { return d['new_health'] })
@@ -389,8 +391,9 @@ class AnalysisController {
           tempObj[s + ':H'] = arrH
         }
         scatterArr[cond] = tempObj
+        barChartArr[cond] = tempArr
       }
-      res.render('userChoice', {data: groups, scatterArr: scatterArr})
+      res.render('userChoice', {data: barChartArr, scatterArr: scatterArr})
     })
   }
 }
@@ -400,4 +403,41 @@ function msecToMinutesAndSeconds (msec) {
   var minutes = Math.floor(Number(msec) / 60000)
   var seconds = ((Number(msec) % 60000) / 1000).toFixed(0)
   return minutes + ':' + (seconds < 10 ? '0' : '') + seconds
+}
+
+function avgSatisConf (methodName, data) {
+  let temp = {
+    satisfaction: [0, 0, 0],
+    confidence: [0, 0, 0]
+  }
+  if (data['userChoice'] === undefined) {
+    return temp
+  }
+  let length = 0
+  if (data['defaultPoint'] !== undefined) {
+    length = data['defaultPoint'].length
+    let s = _.reduce(data['defaultPoint'], function (result, d) {
+      return result + d['satisfaction']
+    }, 0)
+    temp['satisfaction'].push(s)
+    let c = _.reduce(data['defaultPoint'], function (result, d) {
+      return result + d['confidence']
+    }, 0)
+    temp['confidence'].push(c)
+    temp['satisfaction'][3] = temp['satisfaction'][3] / length
+    temp['confidence'][3] = temp['confidence'][3] / length
+  }
+  let points = ['userChoice', 'tastiest/first', 'healthiest/last']
+  for (let p in points) {
+    temp['satisfaction'][p] = _.reduce(data[points[p]], function (result, d) {
+      return result + d['satisfaction']
+    }, 0)
+    temp['confidence'][p] = _.reduce(data[points[p]], function (result, d) {
+      return result + d['confidence']
+    }, 0)
+    length = data[points[p]].length
+    temp['satisfaction'][p] = temp['satisfaction'][p] / length
+    temp['confidence'][p] = temp['confidence'][p] / length
+  }
+  return temp
 }
