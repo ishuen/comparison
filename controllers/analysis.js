@@ -397,6 +397,11 @@ class AnalysisController {
       res.render('userChoice', {data: barChartArr, scatterArr: scatterArr})
     })
   }
+  getTimeConsumption (req, res) {
+    Analyses.getTimeRecords(function (data) {
+      res.send(data)
+    })
+  }
 }
 module.exports = new AnalysisController()
 

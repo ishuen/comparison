@@ -110,5 +110,11 @@ class Analyses {
       })
     })
   }
+  getTimeRecords (callback) {
+    pool.query('SELECT user_data.user_id, user_data.exp_group, survey_time.* FROM survey_time INNER JOIN user_data ON (user_data.user_id = survey_time.user_id) ORDER BY survey_time.user_id, starting_time', [], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 module.exports = new Analyses()
