@@ -327,6 +327,7 @@ class AnalysisController {
           for (let rate in ratings[i]) {
             let temp = {
               userId: rate,
+              expGroup: ratings[i][rate][0]['exp_group'],
               trial: ratings[i][rate][0]['trial']
             }
             for (let r of ratings[i][rate]) {
@@ -357,7 +358,9 @@ class AnalysisController {
           condition: arr[0]['exp_group'],
           userId: arr[0]['user_id'],
           trial: arr[0]['trial_num'],
-          timeConsumption: timeConsumption
+          timeToChoose: timeConsumption,
+          startingTime: data['time'][index]['starting_time'],
+          endTime: data['time'][index]['end_time']
         }
         for (let a of arr) {
           temp[a.state + ':T'] = a.new_taste
@@ -394,6 +397,16 @@ class AnalysisController {
         barChartArr[cond] = tempArr
       }
       res.render('userChoice', {data: barChartArr, scatterArr: scatterArr})
+    })
+  }
+  getTimeConsumption (req, res) {
+    Analyses.getTimeRecords(function (data) {
+      res.send(data)
+    })
+  }
+  getChoosingProcess (req, res) {
+    Analyses.getChoosingProcess(function (data) {
+      res.send(data)
     })
   }
 }

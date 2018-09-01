@@ -13,5 +13,7 @@ router.get('/postSurvey2', analysis.getPost2Summary)
 router.get('/postSurvey2/data', analysis.getPost2Detail)
 router.get('/userChoice/data/:trial', analysis.getUserChoiceData)
 router.get('/userChoice/:trial', analysis.userChoices)
+router.get('/time/data', analysis.getTimeConsumption)
+router.get('/choosingProcess/data', analysis.getChoosingProcess)
 
 module.exports = router
