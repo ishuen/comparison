@@ -327,6 +327,7 @@ class AnalysisController {
           for (let rate in ratings[i]) {
             let temp = {
               userId: rate,
+              expGroup: ratings[i][rate][0]['exp_group'],
               trial: ratings[i][rate][0]['trial']
             }
             for (let r of ratings[i][rate]) {
