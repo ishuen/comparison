@@ -358,7 +358,9 @@ class AnalysisController {
           condition: arr[0]['exp_group'],
           userId: arr[0]['user_id'],
           trial: arr[0]['trial_num'],
-          timeConsumption: timeConsumption
+          timeToChoose: timeConsumption,
+          startingTime: data['time'][index]['starting_time'],
+          endTime: data['time'][index]['end_time']
         }
         for (let a of arr) {
           temp[a.state + ':T'] = a.new_taste
