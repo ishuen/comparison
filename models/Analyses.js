@@ -116,5 +116,11 @@ class Analyses {
       callback(res.rows)
     })
   }
+  getChoosingProcess (callback) {
+    pool.query('SELECT user_data.user_id, user_data.exp_group, user_choosing_process.* FROM user_choosing_process INNER JOIN user_data ON (user_data.user_id = user_choosing_process.user_id) ORDER BY user_choosing_process.user_id, time_stamp', [], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 module.exports = new Analyses()

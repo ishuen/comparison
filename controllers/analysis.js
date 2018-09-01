@@ -404,6 +404,11 @@ class AnalysisController {
       res.send(data)
     })
   }
+  getChoosingProcess (req, res) {
+    Analyses.getChoosingProcess(function (data) {
+      res.send(data)
+    })
+  }
 }
 module.exports = new AnalysisController()
 
