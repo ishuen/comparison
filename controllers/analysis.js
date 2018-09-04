@@ -337,7 +337,6 @@ class AnalysisController {
               temp[c.question] = c.answer
             }
             responses.push(temp)
-            console.log(temp)
           }
         }
         res.send({data: responses})
