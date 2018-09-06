@@ -87,3 +87,9 @@ INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
 VALUES
 (8, 10, 'Health score is more important than taste score.', '5_scale'),
 (8, 11, 'Taste score is more important than health score.', '5_scale');
+
+INSERT INTO survey_questions (qn_set, display_num, description, ans_type)
+VALUES
+(10, 1, 'We want to test your attention, so please click on the answer "Agree".', '5_scale'),
+(10, 2, 'We want to test your attention, so please click on the answer "Strongly disagree".', '5_scale'),
+(10, 3, 'We want to test your attention, so please click on the answer "Strongly Agree".', '5_scale');

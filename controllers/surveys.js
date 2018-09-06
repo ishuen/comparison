@@ -539,7 +539,7 @@ class Survey1Controller {
     const userId = req.params.userId
     const trial = req.params.trial
     const env = req.params.env
-    const setNum = [6, 7]
+    const setNum = [6, 7, 10]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
       res.render('survey4Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
@@ -684,7 +684,7 @@ class Survey1Controller {
     const env = req.params.env
     const userId = req.params.userId
     const trial = req.params.trial
-    const setNum = [8, 9]
+    const setNum = [8, 9, 10]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
       let orderedSet = _.sortBy(qnSet, ['qn_set', 'display_num'])

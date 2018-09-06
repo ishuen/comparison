@@ -40,7 +40,16 @@ html
             th Strongly agree
           - var firstSet = data.filter(d => d.qn_set == 8 && d.display_num > 0)
           - var i = 0
+          - var extra = data.filter(d => d.qn_set == 10).sort(function (a, b) { return a.qn_id > b.qn_id })
           while i < firstSet.length
+            if i == 5
+                  tr
+                    td #{extra[trial % 3].description}
+                    each val in [1, 2, 3, 4, 5]
+                      td
+                        div(class='radio')
+                          label
+                            input(name='qn' + extra[trial % 3].qn_id, type='radio', value= val)
             tr
               td #{firstSet[i].description}
               if firstSet[i].ans_type == '5_scale'

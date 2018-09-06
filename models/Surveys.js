@@ -12,7 +12,7 @@ class Survey1 {
     })
   }
   getQnSets (setNum, callback) {
-    pool.query('SELECT * FROM survey_questions WHERE qn_set = $1 or qn_set = $2', [setNum[0], setNum[1]], (err, res) => {
+    pool.query('SELECT * FROM survey_questions WHERE qn_set = any($1)', [setNum], (err, res) => {
       if (err) throw err
       callback(res.rows)
     })
