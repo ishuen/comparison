@@ -755,7 +755,7 @@ class Survey1Controller {
       let algorithm = groups[category]
       // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
       // HpbData.getTrialSet(Number(maskTrial), function (items) {
-      HpbData.getTrialSet(Number(trial), function (items) {
+      Experiments.getCustomSet(userId, Number(trial), function (items) {
         let obj = experiments.sortByAssignedAlgo(items, algorithm)
         items = obj.data
         let defaultPoint = obj.defaultPoint
@@ -782,7 +782,7 @@ class Survey1Controller {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
       if (algorithm === 'genetic') {
-        HpbData.getCandidateSet(Number(trial), userId, function (items) {
+        Experiments.getCustomSet(userId, Number(trial), function (items) {
           let defaultPoint = items[0]
           let left = items[1]
           let right = items[2]
@@ -793,7 +793,7 @@ class Survey1Controller {
           })
         })
       } else {
-        HpbData.getTrialSet(Number(trial), function (items) {
+        Experiments.getCustomSet(userId, Number(trial), function (items) {
           let obj = experiments.sortByAssignedAlgo(items, algorithm)
           items = obj.data
           let defaultPoint = obj.defaultPoint
