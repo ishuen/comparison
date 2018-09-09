@@ -112,7 +112,7 @@ class GeneticSortController {
     // let tempMatrix = []
     for (let j = 0; j < population.length; j++) {
       let tempArr = []
-      tempArr.push(calculateFitnessUser(population[j], data, defaultIndex))
+      tempArr.push(calculateFitnessUserDis(population[j], data, defaultIndex))
       for (let k = 0; k < population[j].length; k++) {
         let num = population[j][k]
         tempArr.push([data[num].new_taste, data[num].new_health])
@@ -135,7 +135,7 @@ class GeneticSortController {
       // let tempMatrix = []
       for (let j = 0; j < currentArr.length; j++) {
         let tempArr = []
-        tempArr.push(calculateFitnessUser(population[j], data, defaultIndex))
+        tempArr.push(calculateFitnessUserDis(population[j], data, defaultIndex))
         for (let k = 0; k < currentArr[j].length; k++) {
           let num = currentArr[j][k]
           tempArr.push([data[num].new_taste, data[num].new_health])
@@ -169,9 +169,9 @@ function initPopulation (length) {
 function getDefaultIndex (length) {
   let changePoint = 0 // grouping strategy: 5-5, 5-6
   if (length % 2 === 0) {
-    changePoint = length / 2 + 1
+    changePoint = length / 2
   } else {
-    changePoint = (length - 1) / 2 + 1
+    changePoint = (length - 1) / 2
   }
   return changePoint
 }
@@ -179,19 +179,19 @@ function calculateFitness (arr, data, defaultIndex) {
   let len = arr.length
   let changePoint = defaultIndex
   let fitness = 0
-  for (let i = 0; i < changePoint - 1; i++) {
+  for (let i = 0; i < changePoint; i++) {
     if (data[arr[i]].taste >= data[arr[i + 1]].taste) {
       fitness = fitness + 6
     }
-    if (data[arr[i]].health >= data[arr[i + 1]].health) {
+    if (data[arr[i]].health <= data[arr[i + 1]].health) {
       fitness = fitness + 4
     }
   }
-  for (let i = changePoint - 1; i < len - 1; i++) {
+  for (let i = changePoint; i < len - 1; i++) {
     if (data[arr[i]].taste >= data[arr[i + 1]].taste) {
       fitness = fitness + 4
     }
-    if (data[arr[i]].health >= data[arr[i + 1]].health) {
+    if (data[arr[i]].health <= data[arr[i + 1]].health) {
       fitness = fitness + 6
     }
   }
@@ -324,21 +324,66 @@ function calculateFitnessUser (arr, data, defaultIndex) {
   let len = arr.length
   let changePoint = defaultIndex
   let fitness = 0
-  for (let i = 0; i < changePoint - 1; i++) {
+  for (let i = 0; i < changePoint; i++) {
     if (data[arr[i]].new_taste >= data[arr[i + 1]].new_taste) {
       fitness = fitness + 6
     }
-    if (data[arr[i]].new_health >= data[arr[i + 1]].new_health) {
+    if (data[arr[i]].new_health <= data[arr[i + 1]].new_health) {
       fitness = fitness + 4
     }
   }
-  for (let i = changePoint - 1; i < len - 1; i++) {
+  for (let i = changePoint; i < len - 1; i++) {
     if (data[arr[i]].new_taste >= data[arr[i + 1]].new_taste) {
       fitness = fitness + 4
     }
-    if (data[arr[i]].new_health >= data[arr[i + 1]].new_health) {
+    if (data[arr[i]].new_health <= data[arr[i + 1]].new_health) {
       fitness = fitness + 6
     }
+  }
+  return fitness
+}
+function calculateFitnessUserDis (arr, data, defaultIndex) {
+  let len = arr.length
+  let changePoint = defaultIndex
+  let fitness = 0
+  if (data[arr[0]].new_taste >= data[arr[1]].new_taste) {
+    fitness = fitness + 6
+  }
+  if (data[arr[0]].new_health <= data[arr[1]].new_health) {
+    fitness = fitness + 4
+  }
+  for (let i = 1; i < len - 2; i++) {
+    if (i < changePoint) {
+      if (data[arr[i]].new_taste >= data[arr[i + 1]].new_taste) {
+        fitness = fitness + 5
+      }
+      if (data[arr[i]].new_health <= data[arr[i + 1]].new_health) {
+        fitness = fitness + 3
+      }
+    } else {
+      if (data[arr[i]].new_taste >= data[arr[i + 1]].new_taste) {
+        fitness = fitness + 3
+      }
+      if (data[arr[i]].new_health <= data[arr[i + 1]].new_health) {
+        fitness = fitness + 5
+      }
+    }
+  }
+  for (let i = 1; i < len - 1; i++) {
+    let gap = Math.abs(data[arr[i - 1]].new_taste - data[arr[i + 1]].new_taste) / 2
+    if (Math.abs(data[arr[i + 1]].new_taste - data[arr[i]].new_taste) <= gap || Math.abs(data[arr[i - 1]].new_taste - data[arr[i]].new_taste) <= gap) {
+      fitness = fitness + 1
+    }
+    let gapH = Math.abs(data[arr[i - 1]].new_health - data[arr[i + 1]].new_health) / 2
+    if (Math.abs(data[arr[i + 1]].new_health - data[arr[i]].new_health) <= gapH || Math.abs(data[arr[i - 1]].new_health - data[arr[i]].new_health) <= gapH) {
+      fitness = fitness + 1
+    }
+  }
+  if (data[arr[len - 2]].new_taste >= data[arr[len - 1]].new_taste) {
+    fitness = fitness + 4
+  }
+  if (data[arr[len - 2]].new_health <= data[arr[len - 1]].new_health) {
+    fitness = fitness + 6
   }
   return fitness
 }
