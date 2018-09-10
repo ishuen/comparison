@@ -93,6 +93,62 @@ class AnalysisController {
       res.render('userSortings', {userId: userId, sortings: results})
     })
   }
+  showSortings (req, res) {
+    let allSortings = []
+    Analyses.getAllUserSortings(function (sortings) {
+      let userSorts = _.groupBy(sortings, 'user_id')
+      let userList = Object.keys(userSorts)
+      for (let userId of userList) {
+        let trials = _.groupBy(userSorts[userId], 'trial_num')
+        if (_.has(trials, '4')) {
+          let firstTrial = []
+          let tempArr = []
+          for (let j = 0; j < trials['4'].length; j++) {
+            if (j % 10 === 0) {
+              tempArr = [trials['4'][j]]
+            } else {
+              tempArr.push(trials['4'][j])
+              if (j % 10 === 9) {
+                firstTrial.push(tempArr)
+              }
+            }
+          }
+          firstTrial.push(tempArr)
+          for (let k = 0; k < firstTrial.length; k++) {
+            let tempSort = {
+              userId: userId,
+              trial: 'practice',
+              type: 'userSort'
+            }
+            if (k === firstTrial.length - 1) {
+              tempSort.trial = '4'
+            }
+            for (let item of firstTrial[k]) {
+              tempSort[item.ordering + 'T'] = item['new_taste']
+              tempSort[item.ordering + 'H'] = item['new_health']
+            }
+            allSortings.push(tempSort)
+            getAllOtherSorts(userId, tempSort.trial, firstTrial[k], allSortings)
+          }
+        }
+        for (let i = 5; i < 7; i++) {
+          if (!_.has(trials, i)) continue
+          let tempSort = {
+            userId: userId,
+            trial: i,
+            type: 'userSort'
+          }
+          for (let item of trials[i]) {
+            tempSort[item.ordering + 'T'] = item['new_taste']
+            tempSort[item.ordering + 'H'] = item['new_health']
+          }
+          allSortings.push(tempSort)
+          getAllOtherSorts(userId, i, trials[i], allSortings)
+        }
+      }
+      res.send(allSortings)
+    })
+  }
   getAllSortings (req, res) {
     let trial = req.params.trial // does not support practice trials
     Analyses.getAllSortings(trial, function (data) {
@@ -452,4 +508,40 @@ function avgSatisConf (methodName, data) {
     temp['confidence'][p] = temp['confidence'][p] / length
   }
   return temp
+}
+
+function getAllOtherSorts (userId, trial, data, target) {
+  let paretoSort = pareto.relaxedPathGivenUserSet(data)
+  let tempSortP = {
+    userId: userId,
+    trial: trial,
+    type: 'pareto'
+  }
+  for (let j = 0; j < paretoSort.data.length; j++) {
+    tempSortP[Number(j + 1) + 'T'] = paretoSort['data'][j]['new_taste']
+    tempSortP[Number(j + 1) + 'H'] = paretoSort['data'][j]['new_health']
+  }
+  target.push(tempSortP)
+  let heuristicSort = heuristic.pathGivenUserSet(data)
+  let tempSortH = {
+    userId: userId,
+    trial: trial,
+    type: 'heuristic'
+  }
+  for (let j = 0; j < heuristicSort.data.length; j++) {
+    tempSortH[Number(j + 1) + 'T'] = heuristicSort['data'][j]['new_taste']
+    tempSortH[Number(j + 1) + 'H'] = heuristicSort['data'][j]['new_health']
+  }
+  target.push(tempSortH)
+  let geneticSort = genetic.showPathUserSet(data)
+  let tempSortG = {
+    userId: userId,
+    trial: trial,
+    type: 'genetic'
+  }
+  for (let j = 0; j < geneticSort.data.length; j++) {
+    tempSortG[Number(j + 1) + 'T'] = geneticSort['data'][j]['new_taste']
+    tempSortG[Number(j + 1) + 'H'] = geneticSort['data'][j]['new_health']
+  }
+  target.push(tempSortG)
 }
