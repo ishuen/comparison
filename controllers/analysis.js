@@ -123,9 +123,14 @@ class AnalysisController {
             if (k === firstTrial.length - 1) {
               tempSort.trial = '4'
             }
-            for (let item of firstTrial[k]) {
-              tempSort[item.ordering + 'T'] = item['new_taste']
-              tempSort[item.ordering + 'H'] = item['new_health']
+            for (let index = 0; index < 10; index++) {
+              if (index < firstTrial[k].length) {
+                tempSort[firstTrial[k][index]['ordering'] + 'T'] = firstTrial[k][index]['new_taste']
+                tempSort[firstTrial[k][index]['ordering'] + 'H'] = firstTrial[k][index]['new_health']
+              } else {
+                tempSort[Number(index + 1) + 'T'] = ''
+                tempSort[Number(index + 1) + 'H'] = ''
+              }
             }
             allSortings.push(tempSort)
             getAllOtherSorts(userId, tempSort.trial, firstTrial[k], allSortings)
@@ -138,9 +143,14 @@ class AnalysisController {
             trial: i,
             type: 'userSort'
           }
-          for (let item of trials[i]) {
-            tempSort[item.ordering + 'T'] = item['new_taste']
-            tempSort[item.ordering + 'H'] = item['new_health']
+          for (let index = 0; index < 10; index++) {
+            if (index < trials[i].length) {
+              tempSort[trials[i][index]['ordering'] + 'T'] = trials[i][index]['new_taste']
+              tempSort[trials[i][index]['ordering'] + 'H'] = trials[i][index]['new_health']
+            } else {
+              tempSort[Number(index + 1) + 'T'] = ''
+              tempSort[Number(index + 1) + 'H'] = ''
+            }
           }
           allSortings.push(tempSort)
           getAllOtherSorts(userId, i, trials[i], allSortings)
@@ -517,9 +527,14 @@ function getAllOtherSorts (userId, trial, data, target) {
     trial: trial,
     type: 'pareto'
   }
-  for (let j = 0; j < paretoSort.data.length; j++) {
-    tempSortP[Number(j + 1) + 'T'] = paretoSort['data'][j]['new_taste']
-    tempSortP[Number(j + 1) + 'H'] = paretoSort['data'][j]['new_health']
+  for (let j = 0; j < 10; j++) {
+    if (j < paretoSort.data.length) {
+      tempSortP[Number(j + 1) + 'T'] = paretoSort['data'][j]['new_taste']
+      tempSortP[Number(j + 1) + 'H'] = paretoSort['data'][j]['new_health']
+    } else {
+      tempSortP[Number(j + 1) + 'T'] = ''
+      tempSortP[Number(j + 1) + 'H'] = ''
+    }
   }
   target.push(tempSortP)
   let heuristicSort = heuristic.pathGivenUserSet(data)
@@ -528,9 +543,14 @@ function getAllOtherSorts (userId, trial, data, target) {
     trial: trial,
     type: 'heuristic'
   }
-  for (let j = 0; j < heuristicSort.data.length; j++) {
-    tempSortH[Number(j + 1) + 'T'] = heuristicSort['data'][j]['new_taste']
-    tempSortH[Number(j + 1) + 'H'] = heuristicSort['data'][j]['new_health']
+  for (let j = 0; j < 10; j++) {
+    if (j < heuristicSort.data.length) {
+      tempSortH[Number(j + 1) + 'T'] = heuristicSort['data'][j]['new_taste']
+      tempSortH[Number(j + 1) + 'H'] = heuristicSort['data'][j]['new_health']
+    } else {
+      tempSortH[Number(j + 1) + 'T'] = ''
+      tempSortH[Number(j + 1) + 'H'] = ''
+    }
   }
   target.push(tempSortH)
   let geneticSort = genetic.showPathUserSet(data)
@@ -539,9 +559,14 @@ function getAllOtherSorts (userId, trial, data, target) {
     trial: trial,
     type: 'genetic'
   }
-  for (let j = 0; j < geneticSort.data.length; j++) {
-    tempSortG[Number(j + 1) + 'T'] = geneticSort['data'][j]['new_taste']
-    tempSortG[Number(j + 1) + 'H'] = geneticSort['data'][j]['new_health']
+  for (let j = 0; j < 10; j++) {
+    if (j < geneticSort.data.length) {
+      tempSortG[Number(j + 1) + 'T'] = geneticSort['data'][j]['new_taste']
+      tempSortG[Number(j + 1) + 'H'] = geneticSort['data'][j]['new_health']
+    } else {
+      tempSortG[Number(j + 1) + 'T'] = ''
+      tempSortG[Number(j + 1) + 'H'] = ''
+    }
   }
   target.push(tempSortG)
 }
