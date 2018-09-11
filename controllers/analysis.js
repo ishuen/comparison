@@ -103,17 +103,16 @@ class AnalysisController {
         if (_.has(trials, '4')) {
           let firstTrial = []
           let tempArr = []
-          for (let j = 0; j < trials['4'].length; j++) {
-            if (j % 10 === 0) {
-              tempArr = [trials['4'][j]]
+          let len = trials['4'].length
+          let num = Math.ceil(len / 10)
+          for (let j = 0; j < num; j++) {
+            if (j !== num - 1) {
+              tempArr = trials['4'].slice(j * 10, j * 10 + 10)
             } else {
-              tempArr.push(trials['4'][j])
-              if (j % 10 === 9) {
-                firstTrial.push(tempArr)
-              }
+              tempArr = trials['4'].slice(j * 10)
             }
+            firstTrial.push(tempArr)
           }
-          firstTrial.push(tempArr)
           for (let k = 0; k < firstTrial.length; k++) {
             let tempSort = {
               userId: userId,
