@@ -8,7 +8,7 @@ class Analyses {
     })
   }
   getAllCustomFoods (callback) {
-    pool.query('SELECT sorting_experiment.*, hpbdata.taste, hpbdata.health FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id)', [], (err, res) => {
+    pool.query('SELECT sorting_experiment.*, hpbdata.taste, hpbdata.health, hpbdata.foodname FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id)', [], (err, res) => {
       if (err) throw err
       callback(res.rows)
     })
