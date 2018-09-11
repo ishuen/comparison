@@ -16,5 +16,6 @@ router.get('/userChoice/data/:trial', analysis.getUserChoiceData)
 router.get('/userChoice/:trial', analysis.userChoices)
 router.get('/time/data', analysis.getTimeConsumption)
 router.get('/choosingProcess/data', analysis.getChoosingProcess)
+router.get('/foodScore/data', analysis.getAllFoodScores)
 
 module.exports = router

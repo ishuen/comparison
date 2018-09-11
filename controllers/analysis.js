@@ -473,6 +473,11 @@ class AnalysisController {
       res.send(data)
     })
   }
+  getAllFoodScores (req, res) {
+    Analyses.getAllCustomFoods(function (data) {
+      res.send(data)
+    })
+  }
 }
 module.exports = new AnalysisController()
 
