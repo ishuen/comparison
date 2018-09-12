@@ -134,5 +134,11 @@ class Analyses {
       callback(res.rows)
     })
   }
+  getAllFoodOpinion (callback) {
+    pool.query('SELECT * FROM user_rating INNER JOIN survey_questions ON (survey_questions.qn_id = user_rating.qn_id) WHERE food_id IS NOT NULL ', [], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 module.exports = new Analyses()
