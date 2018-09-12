@@ -478,6 +478,16 @@ class AnalysisController {
       res.send(data)
     })
   }
+  getDietaryData (req, res) {
+    Analyses.getDietData(function (data) {
+      res.send(data)
+    })
+  }
+  getFoodOpinion (req, res) {
+    Analyses.getAllFoodOpinion(function (data) {
+      res.send(data)
+    })
+  }
 }
 module.exports = new AnalysisController()
 
