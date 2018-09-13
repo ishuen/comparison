@@ -72,6 +72,29 @@ class GeneticSortController {
     let defaultPoint = resData[defaultIndex]
     return {data: resData, defaultPoint: defaultPoint}
   }
+  showUserSetDeletion (data) {
+    let generation = 200
+    let len = data.length
+    let population = initPopulationDummy(len)
+    let n = 0
+    let currentArr = []
+    while (n < generation) {
+      let fittestTwo = get2FittestUserDummy(population, data)
+      currentArr = fittestTwo
+      currentArr[1] = mutation(currentArr[1])
+      for (let i = 0; i < population.length - 2; i++) {
+        let temp = crossover(population[i], population[i + 1])
+        currentArr.push(mutation(temp))
+      }
+      population = currentArr
+      n++
+    }
+    let fittest = getFittestUserDummy(population, data)
+    let resData = orderToObjDummy(fittest, data)
+    let defaultIndex = getDefaultIndex(resData.length)
+    let defaultPoint = resData[defaultIndex]
+    return {data: resData, defaultPoint: defaultPoint}
+  }
   showProcedure (req, res) {
     let data = [
       { new_health: 7,
@@ -161,6 +184,20 @@ function initPopulation (length) {
   let population = []
   for (let i = 0; i < individualNum; i++) {
     let arr = Array.from(Array(length).keys())
+    arr.sort(function (a, b) { return 0.5 - Math.random() })
+    population.push(arr)
+  }
+  return population
+}
+function initPopulationDummy (length) {
+  let individualNum = 10
+  let dummyNum = length - 2
+  let population = []
+  for (let i = 0; i < individualNum; i++) {
+    let arr = Array.from(Array(length).keys())
+    for (let j = 1; j <= dummyNum; j++) {
+      arr.push(-(j))
+    }
     arr.sort(function (a, b) { return 0.5 - Math.random() })
     population.push(arr)
   }
@@ -256,6 +293,15 @@ function orderToObj (arr, data) {
   }
   return resData
 }
+function orderToObjDummy (arr, data) {
+  let resData = []
+  for (let i = 0; i < data.length; i++) {
+    if (arr[i] >= 0) {
+      resData.push(data[arr[i]])
+    }
+  }
+  return resData
+}
 function getFittest (population, data, defaultIndex) {
   let fitnessArr = []
   for (let i = 0; i < population.length; i++) {
@@ -320,6 +366,39 @@ function get2FittestUser (population, data, defaultIndex) {
   }
   return [population[max1], population[max2]]
 }
+function getFittestUserDummy (population, data) {
+  let fitnessArr = []
+  for (let i = 0; i < population.length; i++) {
+    let fitness = calculateFitnessDummy(population[i], data)
+    fitnessArr.push(fitness)
+  }
+  let fittest = _.maxBy(fitnessArr)
+  let index = _.findIndex(fitnessArr, function (o) { return _.isEqual(o, fittest) })
+  return population[index]
+}
+function get2FittestUserDummy (population, data) {
+  let fitnessArr = []
+  for (let i = 0; i < population.length; i++) {
+    let fitness = calculateFitnessDummy(population[i], data)
+    fitnessArr.push(fitness)
+  }
+  let max1 = 0
+  let max2 = 1
+  if (fitnessArr[0] < fitnessArr[1]) {
+    max1 = 1
+    max2 = 0
+  }
+  for (let i = 2; i < fitnessArr.length; i++) {
+    if (fitnessArr[i] > fitnessArr[max1]) {
+      max2 = max1
+      max1 = i
+    } else if (fitnessArr[i] > fitnessArr[max2]) {
+      max2 = i
+    }
+  }
+  return [population[max1], population[max2]]
+}
+
 function calculateFitnessUser (arr, data, defaultIndex) {
   let len = arr.length
   let changePoint = defaultIndex
@@ -338,6 +417,45 @@ function calculateFitnessUser (arr, data, defaultIndex) {
     }
     if (data[arr[i]].new_health <= data[arr[i + 1]].new_health) {
       fitness = fitness + 6
+    }
+  }
+  return fitness
+}
+function calculateFitnessDummy (arr, data) {
+  let tempArr = reordering(arr, data.length)
+  let numToSkip = _.reduce(tempArr, function (sum, o) {
+    if (o < 0) {
+      return sum + 1
+    } else {
+      return sum
+    }
+  }, 0)
+  let len = tempArr.length - numToSkip
+
+  let changePoint = getDefaultIndex(len)
+  let fitness = 0
+  for (let i = 0; i < changePoint; i++) {
+    if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
+      fitness = fitness + 6
+    } else {
+      fitness = fitness - 4
+    }
+    if (data[tempArr[i]].new_health <= data[tempArr[i + 1]].new_health) {
+      fitness = fitness + 4
+    } else {
+      fitness = fitness - 2
+    }
+  }
+  for (let i = changePoint; i < len - 1; i++) {
+    if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
+      fitness = fitness + 4
+    } else {
+      fitness = fitness - 2
+    }
+    if (data[tempArr[i]].new_health <= data[tempArr[i + 1]].new_health) {
+      fitness = fitness + 6
+    } else {
+      fitness = fitness - 4
     }
   }
   return fitness
@@ -386,4 +504,28 @@ function calculateFitnessUserDis (arr, data, defaultIndex) {
     fitness = fitness + 6
   }
   return fitness
+}
+function reordering (arr, maxLen) {
+  let temp = arr.slice(0, maxLen)
+  let numToSkip = _.reduce(temp, function (sum, o) {
+    if (o < 0) {
+      return sum + 1
+    } else {
+      return sum
+    }
+  }, 0)
+  for (let i = 0; i < maxLen - numToSkip; i++) {
+    if (temp[i] < 0) {
+      let cur = temp[i]
+      let tail = temp.slice(i + 1, maxLen)
+      if (i !== 0) {
+        let head = temp.slice(0, i)
+        temp = _.concat(head, tail, cur)
+      } else {
+        temp = _.concat(tail, cur)
+      }
+      i--
+    }
+  }
+  return temp
 }
