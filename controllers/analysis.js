@@ -610,7 +610,7 @@ function getAllOtherSorts (userId, trial, data, target) {
     }
   }
   target.push(tempSortH)
-  let geneticSort = genetic.showPathUserSet(data)
+  let geneticSort = genetic.showUserSetDeletion(data)
   let tempSortG = {
     userId: userId,
     trial: trial,
@@ -631,7 +631,7 @@ function getAllDistance (object, data, target) {
   let userSort = data.sort(function (a, b) { return a.ordering - b.ordering })
   let paretoSort = pareto.relaxedPathGivenUserSet(data)
   let heuristicSort = heuristic.pathGivenUserSet(data)
-  let geneticSort = genetic.showPathUserSet(data)
+  let geneticSort = genetic.showUserSetDeletion(data)
   let userArr = _.map(userSort, function (i) { return i.food_id })
   let paretoArr = _.map(paretoSort['data'], function (i) { return i.food_id })
   let heuristicArr = _.map(heuristicSort['data'], function (i) { return i.food_id })
