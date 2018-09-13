@@ -73,7 +73,7 @@ class GeneticSortController {
     return {data: resData, defaultPoint: defaultPoint}
   }
   showUserSetDeletion (data) {
-    let generation = 200
+    let generation = 250
     let len = data.length
     let population = initPopulationDummy(len)
     let n = 0

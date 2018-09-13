@@ -278,7 +278,8 @@ class ExperimentsController {
       obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
       obj.defaultPoint = obj.data[0]
     } else if (algorithm === 'genetic') {
-      obj = genetic.showPathNewExp2(items)
+      // obj = genetic.showPathNewExp2(items)
+      obj = genetic.showUserSetDeletion(items)
     } else { // scatterPlot, spreadsheet
       obj.data = items
       obj.defaultPoint = items[0]

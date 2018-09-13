@@ -782,13 +782,17 @@ class Survey1Controller {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
       if (algorithm === 'genetic') {
-        Experiments.getCustomSet(userId, Number(trial), function (items) {
-          let defaultPoint = items[0]
-          let left = items[1]
-          let right = items[2]
+        Experiments.getSortedEnds(userId, Number(trial), function (items) {
+          let temp = _.filter(items, function (o) { return o.state === 'defaultPoint' })
+          let defaultPoint = temp[0]
+          temp = _.filter(items, function (o) { return o.state === 'tastiest/first' })
+          let left = temp[0]
+          temp = _.filter(items, function (o) { return o.state === 'healthiest/last' })
+          let right = temp[0]
           Experiments.getUserChoice(userId, trial, function (userChoice) {
             userChoice.state = 'userChoice'
             let now = new Date()
+            console.log(defaultPoint, left, right)
             res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
           })
         })

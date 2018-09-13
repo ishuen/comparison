@@ -197,6 +197,30 @@ class Experiments {
     })
   }
 
+  getSortedEnds (userId, trial, callback) {
+    let maskTrial = trial
+    // if (trial >= 10) maskTrial = maskTrial - 6
+    let input = [userId, maskTrial]
+    pool.query('SELECT * FROM user_satisfaction INNER JOIN hpbdata ON (user_satisfaction.food_id = hpbdata.id) INNER JOIN sorting_experiment ON (user_satisfaction.user_id = sorting_experiment.user_id AND user_satisfaction.food_id = sorting_experiment.food_id) WHERE user_satisfaction.user_id = $1 AND user_satisfaction.trial_num = $2', input, (err, res) => {
+      if (err) throw err
+      let data = []
+      _.map(res.rows, function (i) {
+        i.path = i.image.toString('utf8')
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.new_health,
+          taste: i.new_taste,
+          path: i.path,
+          exp_id: i.exp_id,
+          state: i.state
+        }
+        data.push(temp)
+      })
+      callback(data)
+    })
+  }
+
   insertUserChoice (details, callback) {
     if (details.tracking.length > 0) {
       storeSliding(details.userId, details.trial, details.defaultIndex, details.tracking)
