@@ -158,6 +158,49 @@ class AnalysisController {
       res.send(allSortings)
     })
   }
+  showDistance (req, res) {
+    let allSortings = []
+    Analyses.getAllUserSortings(function (sortings) {
+      let userSorts = _.groupBy(sortings, 'user_id')
+      let userList = Object.keys(userSorts)
+      for (let userId of userList) {
+        let trials = _.groupBy(userSorts[userId], 'trial_num')
+        if (_.has(trials, '4')) {
+          let firstTrial = []
+          let tempArr = []
+          let len = trials['4'].length
+          let num = Math.ceil(len / 10)
+          for (let j = 0; j < num; j++) {
+            if (j !== num - 1) {
+              tempArr = trials['4'].slice(j * 10, j * 10 + 10)
+            } else {
+              tempArr = trials['4'].slice(j * 10)
+            }
+            firstTrial.push(tempArr)
+          }
+          for (let k = 0; k < firstTrial.length; k++) {
+            let tempSort = {
+              userId: userId,
+              trial: 'practice'
+            }
+            if (k === firstTrial.length - 1) {
+              tempSort.trial = '4'
+            }
+            getAllDistance(tempSort, firstTrial[k], allSortings)
+          }
+        }
+        for (let i = 5; i < 7; i++) {
+          if (!_.has(trials, i)) continue
+          let tempSort = {
+            userId: userId,
+            trial: i
+          }
+          getAllDistance(tempSort, trials[i], allSortings)
+        }
+      }
+      res.send(allSortings)
+    })
+  }
   getAllSortings (req, res) {
     let trial = req.params.trial // does not support practice trials
     Analyses.getAllSortings(trial, function (data) {
@@ -583,4 +626,18 @@ function getAllOtherSorts (userId, trial, data, target) {
     }
   }
   target.push(tempSortG)
+}
+function getAllDistance (object, data, target) {
+  let userSort = data.sort(function (a, b) { return a.ordering - b.ordering })
+  let paretoSort = pareto.relaxedPathGivenUserSet(data)
+  let heuristicSort = heuristic.pathGivenUserSet(data)
+  let geneticSort = genetic.showPathUserSet(data)
+  let userArr = _.map(userSort, function (i) { return i.food_id })
+  let paretoArr = _.map(paretoSort['data'], function (i) { return i.food_id })
+  let heuristicArr = _.map(heuristicSort['data'], function (i) { return i.food_id })
+  let geneticArr = _.map(geneticSort['data'], function (i) { return i.food_id })
+  object.pareto = minimumEditDistance.diff(userArr, paretoArr).distance
+  object.heuristic = minimumEditDistance.diff(userArr, heuristicArr).distance
+  object.genetic = minimumEditDistance.diff(userArr, geneticArr).distance
+  target.push(object)
 }
