@@ -73,7 +73,7 @@ class GeneticSortController {
     return {data: resData, defaultPoint: defaultPoint}
   }
   showUserSetDeletion (data) {
-    let generation = 250
+    let generation = 30
     let len = data.length
     let population = initPopulationDummy(len)
     let n = 0
@@ -438,24 +438,24 @@ function calculateFitnessDummy (arr, data) {
     if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
       fitness = fitness + 6
     } else {
-      fitness = fitness - 4
+      fitness = fitness - 1
     }
     if (data[tempArr[i]].new_health <= data[tempArr[i + 1]].new_health) {
       fitness = fitness + 4
     } else {
-      fitness = fitness - 2
+      fitness = fitness - 1
     }
   }
   for (let i = changePoint; i < len - 1; i++) {
     if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
       fitness = fitness + 4
     } else {
-      fitness = fitness - 2
+      fitness = fitness - 1
     }
     if (data[tempArr[i]].new_health <= data[tempArr[i + 1]].new_health) {
       fitness = fitness + 6
     } else {
-      fitness = fitness - 4
+      fitness = fitness - 1
     }
   }
   return fitness
