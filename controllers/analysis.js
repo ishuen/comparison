@@ -461,11 +461,13 @@ class AnalysisController {
         let arr = _.filter(data.responses, function (d) { return d['user_id'] === u })
         let index = _.findIndex(data['time'], function (d) { return d['user_id'] === u })
         let timeConsumption = msecToMinutesAndSeconds(data['time'][index]['time_used'])
+        let sec = msecToSeconds(data['time'][index]['time_used'])
         let temp = {
           condition: arr[0]['exp_group'],
           userId: arr[0]['user_id'],
           trial: arr[0]['trial_num'],
           timeToChoose: timeConsumption,
+          sec: sec,
           startingTime: data['time'][index]['starting_time'],
           endTime: data['time'][index]['end_time']
         }
@@ -538,6 +540,11 @@ function msecToMinutesAndSeconds (msec) {
   var minutes = Math.floor(Number(msec) / 60000)
   var seconds = ((Number(msec) % 60000) / 1000).toFixed(0)
   return minutes + ':' + (seconds < 10 ? '0' : '') + seconds
+}
+
+function msecToSeconds (msec) {
+  var seconds = (Number(msec) / 1000).toFixed(0)
+  return seconds
 }
 
 function avgSatisConf (methodName, data) {
