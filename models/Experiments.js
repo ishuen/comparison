@@ -188,6 +188,8 @@ class Experiments {
           foodname: i.foodname,
           health: i.new_health,
           taste: i.new_taste,
+          new_health: i.new_health,
+          new_taste: i.new_taste,
           path: i.path,
           exp_id: i.exp_id
         }
