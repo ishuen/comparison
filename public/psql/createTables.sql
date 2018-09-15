@@ -105,6 +105,8 @@ CREATE TABLE survey_time(
     end_time timestamp with time zone,
     survey_name VARCHAR(30),
     trial_num integer);
+ALTER TABLE user_satisfaction ADD COLUMN satis_id SERIAL PRIMARY KEY;
+ALTER TABLE user_sorting ADD COLUMN sort_id SERIAL PRIMARY KEY;
 
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,
