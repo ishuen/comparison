@@ -426,7 +426,7 @@ class AnalysisController {
       for (let i = 10; i <= 12; i++) {
         comments.push(_.groupBy(_.filter(data, function (d) { return d.trial === i }), 'user_id'))
       }
-      Analyses.getPostSurveyRating([8, 9], function (rates) {
+      Analyses.getPostSurveyRating([8, 9, 10], function (rates) {
         let ratings = []
         for (let i = 10; i <= 12; i++) {
           ratings.push(_.groupBy(_.filter(rates, function (d) { return d.trial === i }), 'user_id'))
@@ -441,8 +441,10 @@ class AnalysisController {
             for (let r of ratings[i][rate]) {
               temp[r.description] = r.rating
             }
-            for (let c of comments[i][rate]) {
-              temp[c.question] = c.answer
+            if (_.has(comments[i], rate)) {
+              for (let c of comments[i][rate]) {
+                temp[c.question] = c.answer
+              }
             }
             responses.push(temp)
           }
