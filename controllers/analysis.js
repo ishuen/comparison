@@ -460,6 +460,7 @@ class AnalysisController {
       for (let u of users) {
         let arr = _.filter(data.responses, function (d) { return d['user_id'] === u })
         let index = _.findIndex(data['time'], function (d) { return d['user_id'] === u })
+        if (index === -1) continue
         let timeConsumption = msecToMinutesAndSeconds(data['time'][index]['time_used'])
         let sec = msecToSeconds(data['time'][index]['time_used'])
         let temp = {
