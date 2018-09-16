@@ -122,6 +122,10 @@ class Survey1 {
               checked = true
             }
             if (err) throw err
+            let input2 = [trial, items[index]['state'], userId]
+            client.query('DELETE FROM user_satisfaction WHERE satisfaction IS NULL AND trial_num=$1 AND state=$2 AND user_id=$3', input2, (err, res) => {
+              if (err) throw err
+            })
             callback(res.rows)
           })
         }
