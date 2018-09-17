@@ -25,7 +25,8 @@ class Survey1 {
         if (err) {
           console.log(err.stack)
         } else {
-          let group = res.rows[0]['user_id'] % 7
+          // let group = res.rows[0]['user_id'] % 7
+          let group = res.rows[0]['user_id'] % 6
           // let group = 6 // test genetic
           client.query('UPDATE user_data SET exp_group = $1 where user_id = $2', [group, res.rows[0]['user_id']], (err, res) => {
             if (err) throw err
