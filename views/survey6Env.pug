@@ -23,7 +23,7 @@ html
     div(class='container-fluid')
       div(class='row')
         div(class='col-sm-6')
-          h1 Satisfaction of the Choice
+          h1 Reflection on the Food Choice
         div(class='col-sm-4' style='background-color: #f5f5f5')
           h4 progress
           div(class='progress')
@@ -48,6 +48,10 @@ html
                     td.taste #{i.taste}
                     td.health #{i.health}
             div(class='col-sm-10')
+              if (i.id == userChoice.id)
+                label You chose this item. Please rate your satisfaction to eat this food item.
+              else
+                label You viewed the following item. Please rate your satisfaction if you were to eat this food item.
               table(class='table table-striped likertTable')
                 col(width='30%')
                 tr
