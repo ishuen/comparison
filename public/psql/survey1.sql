@@ -93,3 +93,4 @@ VALUES
 (10, 1, 'We want to test your attention, so please click on the answer "Agree".', '5_scale'),
 (10, 2, 'We want to test your attention, so please click on the answer "Strongly disagree".', '5_scale'),
 (10, 3, 'We want to test your attention, so please click on the answer "Strongly Agree".', '5_scale');
+UPDATE survey_questions SET description='Please describe how you searched for the item.' WHERE qn_id=40; 
