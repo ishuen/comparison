@@ -641,7 +641,7 @@ function avgSatisConf (methodName, data) {
 //   target.push(tempSortH)
 // }
 function getSort (userId, trial, data, target, len) {
-  if (data[0]['exp_group'] === 0) {
+  if (Number(data[0]['exp_group']) === 0) {
     let heuristicSort = heuristic.pathGivenUserSet(data)
     let tempSortH = {
       userId: userId,
@@ -659,7 +659,7 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortH)
-  } else if (data[0]['exp_group'] === 1) {
+  } else if (Number(data[0]['exp_group']) === 1) {
     let paretoSort = pareto.relaxedPathGivenUserSet(data)
     let tempSortP = {
       userId: userId,
@@ -677,7 +677,7 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortP)
-  } else if (data[0]['exp_group'] === 2) {
+  } else if (Number(data[0]['exp_group']) === 2) {
     let tasteSort = _.sortBy(data, [function (o) { return -o.new_taste }])
     let tempSortT = {
       userId: userId,
@@ -695,7 +695,7 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortT)
-  } else if (data[0]['exp_group'] === 3) {
+  } else if (Number(data[0]['exp_group']) === 3) {
     let healthSort = _.sortBy(data, [function (o) { return -o.new_health }])
     let tempSortH = {
       userId: userId,
@@ -713,7 +713,7 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortH)
-  } else if (data[0]['exp_group'] === 6) {
+  } else if (Number(data[0]['exp_group']) === 6) {
     let geneticSort = genetic.showUserSetDeletion(data)
     let tempSortG = {
       userId: userId,
