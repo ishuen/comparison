@@ -132,7 +132,7 @@ class AnalysisController {
               }
             }
             allSortings.push(tempSort)
-            getAllOtherSorts(userId, tempSort.trial, firstTrial[k], allSortings)
+            getAllOtherSorts(userId, tempSort.trial, firstTrial[k], allSortings, 10)
           }
         }
         for (let i = 5; i < 7; i++) {
@@ -152,7 +152,7 @@ class AnalysisController {
             }
           }
           allSortings.push(tempSort)
-          getAllOtherSorts(userId, i, trials[i], allSortings)
+          getAllOtherSorts(userId, i, trials[i], allSortings, 10)
         }
       }
       res.send(allSortings)
@@ -258,6 +258,22 @@ class AnalysisController {
         }
       }
       res.send({sortings: allSortings, itemCount: itemCount})
+    })
+  }
+  recoverList (req, res) {
+    Analyses.getAllFoodsExp2(function (data) {
+      let lists = []
+      let users = _.groupBy(data, 'user_id')
+      let userIds = Object.keys(users)
+      for (let u of userIds) {
+        let trials = _.groupBy(users[u], 'trial_num')
+        let tr = Object.keys(trials)
+        for (let t of tr) {
+          getAllOtherSorts(u, t, trials[t], lists, 20)
+          getSimpleSorts(u, t, trials[t], lists, 20)
+        }
+      }
+      res.send(lists)
     })
   }
   getDietarySummary (req, res) {
@@ -587,14 +603,51 @@ function avgSatisConf (methodName, data) {
   return temp
 }
 
-function getAllOtherSorts (userId, trial, data, target) {
+function getSimpleSorts (userId, trial, data, target, len) {
+  let tasteSort = _.sortBy(data, [function (o) { return -o.new_taste }])
+  let tempSortT = {
+    userId: userId,
+    trial: trial,
+    type: 'taste',
+    length: tasteSort.length
+  }
+  for (let j = 0; j < len; j++) {
+    if (j < tasteSort.length) {
+      tempSortT[Number(j + 1) + 'T'] = tasteSort[j]['new_taste']
+      tempSortT[Number(j + 1) + 'H'] = tasteSort[j]['new_health']
+    } else {
+      tempSortT[Number(j + 1) + 'T'] = ''
+      tempSortT[Number(j + 1) + 'H'] = ''
+    }
+  }
+  target.push(tempSortT)
+  let healthSort = _.sortBy(data, [function (o) { return -o.new_health }])
+  let tempSortH = {
+    userId: userId,
+    trial: trial,
+    type: 'health',
+    length: healthSort.length
+  }
+  for (let j = 0; j < len; j++) {
+    if (j < healthSort.length) {
+      tempSortH[Number(j + 1) + 'T'] = healthSort[j]['new_taste']
+      tempSortH[Number(j + 1) + 'H'] = healthSort[j]['new_health']
+    } else {
+      tempSortH[Number(j + 1) + 'T'] = ''
+      tempSortH[Number(j + 1) + 'H'] = ''
+    }
+  }
+  target.push(tempSortH)
+}
+function getAllOtherSorts (userId, trial, data, target, len) {
   let paretoSort = pareto.relaxedPathGivenUserSet(data)
   let tempSortP = {
     userId: userId,
     trial: trial,
-    type: 'pareto'
+    type: 'pareto',
+    length: paretoSort.data.length
   }
-  for (let j = 0; j < 10; j++) {
+  for (let j = 0; j < len; j++) {
     if (j < paretoSort.data.length) {
       tempSortP[Number(j + 1) + 'T'] = paretoSort['data'][j]['new_taste']
       tempSortP[Number(j + 1) + 'H'] = paretoSort['data'][j]['new_health']
@@ -608,9 +661,10 @@ function getAllOtherSorts (userId, trial, data, target) {
   let tempSortH = {
     userId: userId,
     trial: trial,
-    type: 'heuristic'
+    type: 'heuristic',
+    length: heuristicSort.data.length
   }
-  for (let j = 0; j < 10; j++) {
+  for (let j = 0; j < len; j++) {
     if (j < heuristicSort.data.length) {
       tempSortH[Number(j + 1) + 'T'] = heuristicSort['data'][j]['new_taste']
       tempSortH[Number(j + 1) + 'H'] = heuristicSort['data'][j]['new_health']
@@ -624,9 +678,10 @@ function getAllOtherSorts (userId, trial, data, target) {
   let tempSortG = {
     userId: userId,
     trial: trial,
-    type: 'genetic'
+    type: 'genetic',
+    length: geneticSort.data.length
   }
-  for (let j = 0; j < 10; j++) {
+  for (let j = 0; j < len; j++) {
     if (j < geneticSort.data.length) {
       tempSortG[Number(j + 1) + 'T'] = geneticSort['data'][j]['new_taste']
       tempSortG[Number(j + 1) + 'H'] = geneticSort['data'][j]['new_health']
@@ -637,6 +692,7 @@ function getAllOtherSorts (userId, trial, data, target) {
   }
   target.push(tempSortG)
 }
+
 function getAllDistance (object, data, target) {
   let userSort = data.sort(function (a, b) { return a.ordering - b.ordering })
   let paretoSort = pareto.relaxedPathGivenUserSet(data)

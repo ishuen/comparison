@@ -140,5 +140,11 @@ class Analyses {
       callback(res.rows)
     })
   }
+  getAllFoodsExp2 (callback) {
+    pool.query('SELECT sorting_experiment.*, hpbdata.taste, hpbdata.health, hpbdata.foodname FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) WHERE trial_num = ANY($1::int[])', [[10, 11, 12]], (err, res) => {
+      if (err) throw err
+      callback(res.rows)
+    })
+  }
 }
 module.exports = new Analyses()
