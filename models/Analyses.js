@@ -141,8 +141,8 @@ class Analyses {
     })
   }
   getAllFoodsExp2 (trial, userCount, callback) {
-    let input = [trial, userCount, userCount + 500]
-    pool.query('SELECT user_data.exp_group, sorting_experiment.*, hpbdata.taste, hpbdata.health, hpbdata.foodname FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) INNER JOIN user_data ON (user_data.user_id = sorting_experiment.user_id) WHERE trial_num = $1 AND sorting_experiment.user_id > $2 AND sorting_experiment.user_id < $3', input, (err, res) => {
+    let input = [trial, userCount, userCount + 200]
+    pool.query('SELECT user_data.exp_group, sorting_experiment.*, hpbdata.taste, hpbdata.health, hpbdata.foodname FROM sorting_experiment INNER JOIN hpbdata ON (sorting_experiment.food_id = hpbdata.id) INNER JOIN user_data ON (user_data.user_id = sorting_experiment.user_id) WHERE trial_num = $1 AND sorting_experiment.user_id >= $2 AND sorting_experiment.user_id < $3', input, (err, res) => {
       if (err) throw err
       callback(res.rows)
     })
