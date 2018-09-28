@@ -262,7 +262,8 @@ class AnalysisController {
   }
   recoverList (req, res) {
     let trial = req.params.trial
-    Analyses.getAllFoodsExp2(trial, function (data) {
+    let userCount = req.params.userCount // lower bound
+    Analyses.getAllFoodsExp2(trial, userCount, function (data) {
       let lists = []
       let users = _.groupBy(data, 'user_id')
       let userIds = Object.keys(users)
