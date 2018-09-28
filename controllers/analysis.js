@@ -263,8 +263,8 @@ class AnalysisController {
   }
   recoverList (req, res) {
     let trial = req.params.trial
-    // let userCount = req.params.userCount // lower bound
-    Analyses.getAllFoodsExp2(trial, function (data) {
+    let userCount = req.params.userCount // lower bound
+    Analyses.getAllFoodsExp2(trial, userCount, function (data) {
       let lists = []
       let users = _.groupBy(data, 'user_id')
       let userIds = Object.keys(users)
@@ -279,7 +279,7 @@ class AnalysisController {
         getSort(u, trial, users[u], lists, 20)
       }
       let listData = JSON.stringify(lists)
-      fs.writeFileSync('output.json', listData)
+      fs.writeFileSync('output' + userCount + '.json', listData)
       // res.send(lists)
       res.send('done')
     })
