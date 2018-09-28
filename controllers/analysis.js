@@ -261,18 +261,20 @@ class AnalysisController {
     })
   }
   recoverList (req, res) {
-    Analyses.getAllFoodsExp2(function (data) {
+    let trial = req.params.trial
+    Analyses.getAllFoodsExp2(trial, function (data) {
       let lists = []
       let users = _.groupBy(data, 'user_id')
       let userIds = Object.keys(users)
       for (let u of userIds) {
-        let trials = _.groupBy(users[u], 'trial_num')
-        let tr = Object.keys(trials)
-        for (let t of tr) {
-          getSort(u, t, trials[t], lists, 20)
-          // getAllOtherSorts(u, t, trials[t], lists, 20)
-          // getSimpleSorts(u, t, trials[t], lists, 20)
-        }
+        // let trials = _.groupBy(users[u], 'trial_num')
+        // let tr = Object.keys(trials)
+        // for (let t of tr) {
+        //   getSort(u, t, trials[t], lists, 20)
+        //   // getAllOtherSorts(u, t, trials[t], lists, 20)
+        //   // getSimpleSorts(u, t, trials[t], lists, 20)
+        // }
+        getSort(u, trial, users[u], lists, 20)
       }
       res.send(lists)
     })
