@@ -6,6 +6,7 @@ const genetic = require('./geneticSort')
 const _ = require('lodash')
 const math = require('mathjs')
 const minimumEditDistance = require('minimum-edit-distance')
+const fs = require('fs')
 class AnalysisController {
   userDefinedScore (req, res) {
     const foodId = req.params.foodId
@@ -262,8 +263,8 @@ class AnalysisController {
   }
   recoverList (req, res) {
     let trial = req.params.trial
-    let userCount = req.params.userCount // lower bound
-    Analyses.getAllFoodsExp2(trial, userCount, function (data) {
+    // let userCount = req.params.userCount // lower bound
+    Analyses.getAllFoodsExp2(trial, function (data) {
       let lists = []
       let users = _.groupBy(data, 'user_id')
       let userIds = Object.keys(users)
@@ -277,7 +278,10 @@ class AnalysisController {
         // }
         getSort(u, trial, users[u], lists, 20)
       }
-      res.send(lists)
+      let listData = JSON.stringify(lists)
+      fs.writeFileSync('output.json', listData)
+      // res.send(lists)
+      res.send('done')
     })
   }
   getDietarySummary (req, res) {

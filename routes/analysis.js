@@ -20,6 +20,7 @@ router.get('/userChoice/:trial', analysis.userChoices)
 router.get('/time/data', analysis.getTimeConsumption)
 router.get('/choosingProcess/data', analysis.getChoosingProcess)
 router.get('/foodScore/data', analysis.getAllFoodScores)
-router.get('/recoverList/data/:trial/:userCount', analysis.recoverList)
+router.get('/recoverList/data/:trial', analysis.recoverList)
+// router.get('/recoverList/data/:trial/:userCount', analysis.recoverList)
 
 module.exports = router
