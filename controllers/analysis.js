@@ -261,7 +261,8 @@ class AnalysisController {
     })
   }
   recoverList (req, res) {
-    Analyses.getAllFoodsExp2(function (data) {
+    let trial = req.params.trial
+    Analyses.getAllFoodsExp2(trial, function (data) {
       let lists = []
       let users = _.groupBy(data, 'user_id')
       let userIds = Object.keys(users)
