@@ -6,7 +6,7 @@ const genetic = require('./geneticSort')
 const _ = require('lodash')
 const math = require('mathjs')
 const minimumEditDistance = require('minimum-edit-distance')
-const fs = require('fs')
+// const fs = require('fs')
 class AnalysisController {
   userDefinedScore (req, res) {
     const foodId = req.params.foodId
@@ -266,8 +266,9 @@ class AnalysisController {
     let userCount = req.params.userCount // lower bound
     Analyses.getAllFoodsExp2(trial, userCount, function (data) {
       let lists = []
-      let users = _.groupBy(data, 'user_id')
-      let userIds = Object.keys(users)
+      // let users = _.groupBy(data, 'user_id')
+      // let userIds = Object.keys(data)
+      let userIds = _.map(data, function (o) { return o.user_id })
       for (let u of userIds) {
         // let trials = _.groupBy(users[u], 'trial_num')
         // let tr = Object.keys(trials)
@@ -276,12 +277,13 @@ class AnalysisController {
         //   // getAllOtherSorts(u, t, trials[t], lists, 20)
         //   // getSimpleSorts(u, t, trials[t], lists, 20)
         // }
-        getSort(u, trial, users[u], lists, 20)
+        let foods = _.filter(data, function (o) { return Number(o.user_id) === Number(u) })
+        getSort(u, trial, foods, lists, 20)
       }
-      let listData = JSON.stringify(lists)
-      fs.writeFileSync('output' + userCount + '.json', listData)
-      // res.send(lists)
-      res.send('done')
+      // let listData = JSON.stringify(lists)
+      // fs.writeFileSync('output' + userCount + '.json', listData)
+      res.send(lists)
+      // res.send('done')
     })
   }
   getDietarySummary (req, res) {
