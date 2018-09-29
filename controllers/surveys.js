@@ -94,8 +94,18 @@ class Survey1Controller {
     let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
     if (env === 'sf' || env === 'ins') {
       tr = tr + 6
+      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
+    } else if (env === 'inu') {
+      tr = tr + 9
+      Survey1.getUserGroup(userId, function (expGroup) {
+        console.log('*****', expGroup)
+        let category = Number(expGroup)
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
+      })
+    } else {
+      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
     }
-    res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
   }
 
   /**

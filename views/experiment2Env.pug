@@ -63,8 +63,12 @@ html
         div(class='col-sm-4' style='background-color: #f5f5f5')
           h4 progress
           div(class='progress')
-            - var str = Number(25 + 30 * (trial - 10)) + '%'
-            div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(25 + 30 * (trial - 10)) + '%;' aria-valuenow= Number(25 + 30 * (trial - 10)) aria-valuemin='0' aria-valuemax='100') #{str}
+            if env == 'sf' || env == 'ins'
+              - var str = Number(25 + 30 * (trial - 10)) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(25 + 30 * (trial - 10)) + '%;' aria-valuenow= Number(25 + 30 * (trial - 10)) aria-valuemin='0' aria-valuemax='100') #{str}
+            else if env == 'inu'
+              - var str = Number(10 + 14 * (trial - 13)) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(10 + 14 * (trial - 13)) + '%;' aria-valuenow= Number(10 + 14 * (trial - 13)) aria-valuemin='0' aria-valuemax='100') #{str}
       div(class='row')
         div(class='col-sm-12')
           label Please find out something healthy which is also tasty enough. &nbsp;
