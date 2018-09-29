@@ -266,18 +266,9 @@ class AnalysisController {
     let userCount = req.params.userCount // lower bound
     Analyses.getAllFoodsExp2(trial, userCount, function (data) {
       let lists = []
-      // let users = _.groupBy(data, 'user_id')
-      // let userIds = Object.keys(data)
-      let userIds = _.map(data, function (o) { return o.user_id })
-      for (let u of userIds) {
-        // let trials = _.groupBy(users[u], 'trial_num')
-        // let tr = Object.keys(trials)
-        // for (let t of tr) {
-        //   getSort(u, t, trials[t], lists, 20)
-        //   // getAllOtherSorts(u, t, trials[t], lists, 20)
-        //   // getSimpleSorts(u, t, trials[t], lists, 20)
-        // }
-        let foods = _.filter(data, function (o) { return Number(o.user_id) === Number(u) })
+      for (let u of data.users) {
+        let foods = _.filter(data.items, function (o) { return Number(o.user_id) === Number(u.user_id) })
+        if (foods.length === 0) continue
         getSort(u, trial, foods, lists, 20)
       }
       // let listData = JSON.stringify(lists)
@@ -650,10 +641,10 @@ function avgSatisConf (methodName, data) {
 //   target.push(tempSortH)
 // }
 function getSort (userId, trial, data, target, len) {
-  if (Number(data[0]['exp_group']) === 0) {
+  if (Number(userId.exp_group) === 0) {
     let heuristicSort = heuristic.pathGivenUserSet(data)
     let tempSortH = {
-      userId: userId,
+      userId: userId.user_id,
       trial: trial,
       type: 'heuristic',
       length: heuristicSort.data.length
@@ -668,10 +659,10 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortH)
-  } else if (Number(data[0]['exp_group']) === 1) {
+  } else if (Number(userId.exp_group) === 1) {
     let paretoSort = pareto.relaxedPathGivenUserSet(data)
     let tempSortP = {
-      userId: userId,
+      userId: userId.user_id,
       trial: trial,
       type: 'pareto',
       length: paretoSort.data.length
@@ -686,10 +677,10 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortP)
-  } else if (Number(data[0]['exp_group']) === 2) {
+  } else if (Number(userId.exp_group) === 2) {
     let tasteSort = _.sortBy(data, [function (o) { return -o.new_taste }])
     let tempSortT = {
-      userId: userId,
+      userId: userId.user_id,
       trial: trial,
       type: 'taste',
       length: tasteSort.length
@@ -704,10 +695,10 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortT)
-  } else if (Number(data[0]['exp_group']) === 3) {
+  } else if (Number(userId.exp_group) === 3) {
     let healthSort = _.sortBy(data, [function (o) { return -o.new_health }])
     let tempSortH = {
-      userId: userId,
+      userId: userId.user_id,
       trial: trial,
       type: 'health',
       length: healthSort.length
@@ -722,10 +713,10 @@ function getSort (userId, trial, data, target, len) {
       }
     }
     target.push(tempSortH)
-  } else if (Number(data[0]['exp_group']) === 6) {
+  } else if (Number(userId.exp_group) === 6) {
     let geneticSort = genetic.showUserSetDeletion(data)
     let tempSortG = {
-      userId: userId,
+      userId: userId.user_id,
       trial: trial,
       type: 'genetic',
       length: geneticSort.data.length
