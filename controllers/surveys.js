@@ -900,6 +900,12 @@ class Survey1Controller {
     }
     res.render('end', {surveyCode: surveyCode, env: env})
   }
+  newExp2SurveyEnv (req, res) {
+    const env = req.params.env
+    const userId = req.params.userId
+    const trial = req.params.trial
+    res.render('survey7Env', {userId: userId, trial: trial, env: env})
+  }
 }
 module.exports = new Survey1Controller()
 
