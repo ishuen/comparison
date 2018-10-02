@@ -906,6 +906,11 @@ class Survey1Controller {
     const trial = req.params.trial
     res.render('survey7Env', {userId: userId, trial: trial, env: env})
   }
+  newSatisfactionEnv (req, res) {
+    const env = req.params.env
+    const userId = req.params.userId
+    res.render('survey8Env', {userId: userId, env: env})
+  }
 }
 module.exports = new Survey1Controller()
 
