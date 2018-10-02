@@ -904,12 +904,15 @@ class Survey1Controller {
     const env = req.params.env
     const userId = req.params.userId
     const trial = req.params.trial
-    res.render('survey7Env', {userId: userId, trial: trial, env: env})
+    const algorithm = req.params.algorithm
+    res.render('survey7Env', {userId: userId, trial: trial, env: env, algorithm: algorithm})
   }
   newSatisfactionEnv (req, res) {
     const env = req.params.env
     const userId = req.params.userId
-    res.render('survey8Env', {userId: userId, env: env})
+    HpbData.getItems([4010, 4000, 960, 1298], function (data) {
+      res.render('survey8Env', {userId: userId, env: env, data: data})
+    })
   }
 }
 module.exports = new Survey1Controller()

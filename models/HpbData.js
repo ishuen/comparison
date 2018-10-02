@@ -66,6 +66,29 @@ class HpbData {
     })
   }
 
+  getItems (itemIds, callback) {
+    pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemIds], (err, res) => {
+      if (err) throw err
+      let data = []
+      _.map(res.rows, function (i) {
+        if (i.image != null) {
+          i.path = i.image.toString('utf8')
+        } else {
+          i.path = '/images/abs_food.png'
+        }
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.health,
+          taste: i.taste,
+          path: i.path
+        }
+        data.push(temp)
+      })
+      callback(data)
+    })
+  }
+
   getTrialSet (trialNum, callback) {
     trialNum = Number(trialNum)
     let maskTrial = trialNum
