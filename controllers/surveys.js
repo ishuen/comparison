@@ -910,7 +910,7 @@ class Survey1Controller {
   newSatisfactionEnv (req, res) {
     const env = req.params.env
     const userId = req.params.userId
-    HpbData.getItems([4010, 4000, 960, 1298], function (data) {
+    HpbData.getItems([4011, 4000, 960, 1298], function (data) {
       res.render('survey8Env', {userId: userId, env: env, data: data})
     })
   }

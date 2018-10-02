@@ -174,7 +174,7 @@ class Experiments {
   }
 
   getItemSet (trial, callback) {
-    let input = [itemSetList[trial - 3]]
+    let input = [itemSetList[trial - 4]]
     pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', input, (err, res) => {
       if (err) throw err
       // console.log(res.rows)

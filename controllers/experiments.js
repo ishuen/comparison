@@ -1,3 +1,4 @@
+/* global defaultList */
 const Experiments = require('../models/Experiments')
 // const HpbData = require('../models/HpbData')
 const Surveys = require('../models/Surveys')
@@ -287,12 +288,12 @@ class ExperimentsController {
     return obj
   }
 
-  sortByAssignedAlgoLen (items, algorithm, length) {
+  sortByAssignedAlgoLen (items, algorithm, length, defaultId) {
     let obj = {}
     if (algorithm === 'heuristic') {
       obj = heuristic.pathGivenSet(items)
     } else if (algorithm === 'pareto') {
-      obj = pareto.relaxedPathGivenSet(items)
+      obj = pareto.relaxedPathGivenSetLen(items, length, defaultId)
     } else if (algorithm === 'health') {
       obj.data = _.sortBy(items, [function (o) { return -o['health'] }])
       obj.data = obj.data.slice(0, length)
@@ -302,11 +303,11 @@ class ExperimentsController {
       obj.data = obj.data.slice(0, length)
       obj.defaultPoint = obj.data[0]
     } else if (algorithm === 'genetic') {
-      // obj = genetic.showPathNewExp2(items)
-      obj = genetic.showUserSetDeletion(items)
+      obj = genetic.showUserSetDeletionLen(items, length, defaultId)
     } else { // scatterPlot, spreadsheet
-      obj.data = items
-      obj.defaultPoint = items[0]
+      let rand = _.sampleSize(items, length)
+      obj.data = rand
+      obj.defaultPoint = rand[0]
     }
     return obj
   }
@@ -348,7 +349,8 @@ class ExperimentsController {
     }
     // Experiments.getCustomSet(userId, Number(trial), function (items) {
     Experiments.getItemSet(Number(trial), function (items) {
-      let obj = module.exports.sortByAssignedAlgoLen(items, algorithm, len)
+      let defaultId = getDefaultId(trial)
+      let obj = module.exports.sortByAssignedAlgoLen(items, algorithm, len, defaultId)
       items = obj.data
       let defaultPoint = obj.defaultPoint
       let defaultIndex = _.findIndex(items, defaultPoint)
@@ -422,3 +424,7 @@ class ExperimentsController {
 }
 
 module.exports = new ExperimentsController()
+function getDefaultId (trial) {
+  let id = defaultList[trial - 13]
+  return id
+}

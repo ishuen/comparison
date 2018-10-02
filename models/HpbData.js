@@ -1,4 +1,5 @@
 /* global itemSetList */
+// /* global defaultList */
 const pool = require('../db')
 const _ = require('lodash')
 class HpbData {
@@ -62,7 +63,13 @@ class HpbData {
   getOneItem (itemId, callback) {
     pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
       if (err) throw err
-      callback(res.rows)
+      let obj = res.rows[0]
+      if (obj.image != null) {
+        obj.path = obj.image.toString('utf8')
+      } else {
+        obj.path = '/images/abs_food.png'
+      }
+      callback(obj)
     })
   }
 
@@ -177,5 +184,6 @@ global.itemSetList = [
 [127, 160, 176, 491, 501, 601, 714, 960, 1124, 1126, 1253, 1416, 1686, 2038, 2058, 2290, 2784, 2842, 2289, 4001],
 [1419, 2051, 2570, 2618, 2799, 4000, 2023, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010, 4012, 4013, 4014, 4016],
 [4011, 4015, 1241, 2384, 2301, 2789, 1658, 168, 2058, 2290, 2784, 714, 960, 1124, 4003, 4004, 4005, 2929, 1821, 2743]]
+global.defaultList = [524, 2573, 2791, 1416, 4014, 1821]
 
 module.exports = new HpbData()

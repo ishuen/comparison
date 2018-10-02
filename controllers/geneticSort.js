@@ -95,6 +95,34 @@ class GeneticSortController {
     let defaultPoint = resData[defaultIndex]
     return {data: resData, defaultPoint: defaultPoint}
   }
+  showUserSetDeletionLen (data, length, defaultId) {
+    let generation = 100
+    let len = data.length
+    let init = true
+    let fittest = []
+    while (init === true || calculateFitnessDummy2(fittest, data, defaultId) === -999) {
+      let population = initPopulationDummy(len)
+      let n = 0
+      let currentArr = []
+      while (n < generation) {
+        let fittestTwo = get2FittestUserDummy2(population, data, defaultId)
+        currentArr = fittestTwo
+        currentArr[1] = mutation(currentArr[1])
+        for (let i = 0; i < population.length - 2; i++) {
+          let temp = crossover(population[i], population[i + 1])
+          currentArr.push(mutation(temp))
+        }
+        population = currentArr
+        n++
+      }
+      fittest = getFittestUserDummy2(population, data, defaultId)
+      init = false
+    }
+    let resData = orderToObjDummy(fittest, data)
+    let defaultIndex = getDefaultIndex2(resData, resData.length, defaultId)
+    let defaultPoint = resData[defaultIndex]
+    return {data: resData, defaultPoint: defaultPoint}
+  }
   showProcedure (req, res) {
     let data = [
       { new_health: 7,
@@ -211,6 +239,11 @@ function getDefaultIndex (length) {
     changePoint = (length - 1) / 2
   }
   return changePoint
+}
+function getDefaultIndex2 (data, length, defaultId) {
+  let index = _.findIndex(data, function (o) { return Number(o.id) === Number(defaultId) })
+  if (index > length - 1) index = -1
+  return index
 }
 function calculateFitness (arr, data, defaultIndex) {
   let len = arr.length
@@ -376,6 +409,16 @@ function getFittestUserDummy (population, data) {
   let index = _.findIndex(fitnessArr, function (o) { return _.isEqual(o, fittest) })
   return population[index]
 }
+function getFittestUserDummy2 (population, data, defaultId) {
+  let fitnessArr = []
+  for (let i = 0; i < population.length; i++) {
+    let fitness = calculateFitnessDummy2(population[i], data, defaultId)
+    fitnessArr.push(fitness)
+  }
+  let fittest = _.maxBy(fitnessArr)
+  let index = _.findIndex(fitnessArr, function (o) { return _.isEqual(o, fittest) })
+  return population[index]
+}
 function get2FittestUserDummy (population, data) {
   let fitnessArr = []
   for (let i = 0; i < population.length; i++) {
@@ -398,7 +441,28 @@ function get2FittestUserDummy (population, data) {
   }
   return [population[max1], population[max2]]
 }
-
+function get2FittestUserDummy2 (population, data, defaultId) {
+  let fitnessArr = []
+  for (let i = 0; i < population.length; i++) {
+    let fitness = calculateFitnessDummy2(population[i], data, defaultId)
+    fitnessArr.push(fitness)
+  }
+  let max1 = 0
+  let max2 = 1
+  if (fitnessArr[0] < fitnessArr[1]) {
+    max1 = 1
+    max2 = 0
+  }
+  for (let i = 2; i < fitnessArr.length; i++) {
+    if (fitnessArr[i] > fitnessArr[max1]) {
+      max2 = max1
+      max1 = i
+    } else if (fitnessArr[i] > fitnessArr[max2]) {
+      max2 = i
+    }
+  }
+  return [population[max1], population[max2]]
+}
 function calculateFitnessUser (arr, data, defaultIndex) {
   let len = arr.length
   let changePoint = defaultIndex
@@ -432,6 +496,45 @@ function calculateFitnessDummy (arr, data) {
   }, 0)
   let len = tempArr.length - numToSkip
   let changePoint = getDefaultIndex(len)
+  let fitness = 0
+  for (let i = 0; i < changePoint; i++) {
+    if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
+      fitness = fitness + 6
+    } else {
+      fitness = fitness - 4
+    }
+    if (data[tempArr[i]].new_health <= data[tempArr[i + 1]].new_health) {
+      fitness = fitness + 4
+    } else {
+      fitness = fitness - 2
+    }
+  }
+  for (let i = changePoint; i < len - 1; i++) {
+    if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
+      fitness = fitness + 4
+    } else {
+      fitness = fitness - 2
+    }
+    if (data[tempArr[i]].new_health <= data[tempArr[i + 1]].new_health) {
+      fitness = fitness + 6
+    } else {
+      fitness = fitness - 4
+    }
+  }
+  return fitness
+}
+function calculateFitnessDummy2 (arr, data, defaultId) {
+  let tempArr = reordering(arr, data.length)
+  let numToSkip = _.reduce(tempArr, function (sum, o) {
+    if (o < 0) {
+      return sum + 1
+    } else {
+      return sum
+    }
+  }, 0)
+  let len = tempArr.length - numToSkip
+  let changePoint = getDefaultIndex2(orderToObjDummy(tempArr, data), len, defaultId)
+  if (changePoint === -1) return -999
   let fitness = 0
   for (let i = 0; i < changePoint; i++) {
     if (data[tempArr[i]].new_taste >= data[tempArr[i + 1]].new_taste) {
