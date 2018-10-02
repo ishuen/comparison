@@ -10,6 +10,7 @@ router.get('/sf/', usersController.getNewUserIVLE) // exp 2 entry
 router.get('/se/', usersController.getNewUserIVLE) // exp 1 entry
 router.get('/int/', usersController.getNewUserMTurk) // exp1 mturk
 router.get('/ins/', usersController.getNewUserMTurk) // exp2 mturk
+router.get('/inu/', usersController.getNewUserMTurk) // newExp2 mturk
 router.get('/end/:userId', surveys.endOfExp)
 router.get('/end/:env/:userId', surveys.endOfExp)
 
@@ -26,6 +27,8 @@ router.use('/survey3', require('./survey3'))
 router.use('/survey4', require('./survey4'))
 router.use('/survey5', require('./survey5'))
 router.use('/survey6', require('./survey6'))
+router.use('/survey7', require('./survey7'))
+router.use('/survey8', require('./survey8'))
 router.use('/experiment1', require('./experiment1'))
 router.use('/experiment2', require('./experiment2'))
 router.use('/analysis', require('./analysis'))

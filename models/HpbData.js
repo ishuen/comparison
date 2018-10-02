@@ -1,4 +1,5 @@
 /* global itemSetList */
+// /* global defaultList */
 const pool = require('../db')
 const _ = require('lodash')
 class HpbData {
@@ -62,7 +63,36 @@ class HpbData {
   getOneItem (itemId, callback) {
     pool.query('SELECT * FROM hpbdata WHERE id = $1', [itemId], (err, res) => {
       if (err) throw err
-      callback(res.rows)
+      let obj = res.rows[0]
+      if (obj.image != null) {
+        obj.path = obj.image.toString('utf8')
+      } else {
+        obj.path = '/images/abs_food.png'
+      }
+      callback(obj)
+    })
+  }
+
+  getItems (itemIds, callback) {
+    pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', [itemIds], (err, res) => {
+      if (err) throw err
+      let data = []
+      _.map(res.rows, function (i) {
+        if (i.image != null) {
+          i.path = i.image.toString('utf8')
+        } else {
+          i.path = '/images/abs_food.png'
+        }
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.health,
+          taste: i.taste,
+          path: i.path
+        }
+        data.push(temp)
+      })
+      callback(data)
     })
   }
 
@@ -147,6 +177,13 @@ global.itemSetList = [
 [2263, 615, 516, 758, 2150, 1241, 2384, 2301, 869, 212, 652, 2791, 632, 1040, 2784, 2452, 2512, 2929, 1821, 2863],
 [524, 424, 727, 2555, 253, 1589, 391, 370, 1884, 511],
 [2789, 1658, 168, 1281, 195, 634, 2094, 697, 2585, 1707],
-[2791, 632, 1040, 2784, 652, 2452, 2512, 2929, 1821, 2863]]
+[2791, 632, 1040, 2784, 652, 2452, 2512, 2929, 1821, 2863],
+[458, 395, 372, 426, 1885, 391, 374, 2222, 373, 2353, 524, 424, 727, 2555, 253, 4001, 370, 1884, 933, 511],
+[1906, 2131, 1538, 912, 1298, 2573, 2295, 1302, 2743, 2030, 2789, 1658, 168, 1281, 195, 634, 2094, 697, 2585, 1707],
+[2263, 615, 4004, 758, 2150, 1241, 2384, 2301, 869, 212, 652, 2791, 632, 1040, 2784, 2452, 2512, 2929, 1821, 2863],
+[127, 160, 176, 491, 501, 601, 714, 960, 1124, 1126, 1253, 1416, 1686, 2038, 2058, 2290, 2784, 2842, 2289, 4001],
+[1419, 2051, 2570, 2618, 2799, 4000, 2023, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010, 4012, 4013, 4014, 4016],
+[4011, 4015, 1241, 2384, 2301, 2789, 1658, 168, 2058, 2290, 2784, 714, 960, 1124, 4003, 4004, 4005, 2929, 1821, 2743]]
+global.defaultList = [524, 2573, 2791, 1416, 4014, 1821]
 
 module.exports = new HpbData()

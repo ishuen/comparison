@@ -94,8 +94,18 @@ class Survey1Controller {
     let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
     if (env === 'sf' || env === 'ins') {
       tr = tr + 6
+      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
+    } else if (env === 'inu') {
+      tr = tr + 9
+      Survey1.getUserGroup(userId, function (expGroup) {
+        console.log('*****', expGroup)
+        let category = Number(expGroup)
+        let algorithm = groups[category]
+        res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
+      })
+    } else {
+      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
     }
-    res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
   }
 
   /**
@@ -889,6 +899,20 @@ class Survey1Controller {
       surveyCode = getRandomCode(5, userId, 1)
     }
     res.render('end', {surveyCode: surveyCode, env: env})
+  }
+  newExp2SurveyEnv (req, res) {
+    const env = req.params.env
+    const userId = req.params.userId
+    const trial = req.params.trial
+    const algorithm = req.params.algorithm
+    res.render('survey7Env', {userId: userId, trial: trial, env: env, algorithm: algorithm})
+  }
+  newSatisfactionEnv (req, res) {
+    const env = req.params.env
+    const userId = req.params.userId
+    HpbData.getItems([4011, 4000, 960, 1298], function (data) {
+      res.render('survey8Env', {userId: userId, env: env, data: data})
+    })
   }
 }
 module.exports = new Survey1Controller()

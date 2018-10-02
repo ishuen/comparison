@@ -1,3 +1,4 @@
+/* global defaultList */
 const Experiments = require('../models/Experiments')
 // const HpbData = require('../models/HpbData')
 const Surveys = require('../models/Surveys')
@@ -287,6 +288,30 @@ class ExperimentsController {
     return obj
   }
 
+  sortByAssignedAlgoLen (items, algorithm, length, defaultId) {
+    let obj = {}
+    if (algorithm === 'heuristic') {
+      obj = heuristic.pathGivenSet(items)
+    } else if (algorithm === 'pareto') {
+      obj = pareto.relaxedPathGivenSetLen(items, length, defaultId)
+    } else if (algorithm === 'health') {
+      obj.data = _.sortBy(items, [function (o) { return -o['health'] }])
+      obj.data = obj.data.slice(0, length)
+      obj.defaultPoint = obj.data[0]
+    } else if (algorithm === 'taste') {
+      obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
+      obj.data = obj.data.slice(0, length)
+      obj.defaultPoint = obj.data[0]
+    } else if (algorithm === 'genetic') {
+      obj = genetic.showUserSetDeletionLen(items, length, defaultId)
+    } else { // scatterPlot, spreadsheet
+      let rand = _.sampleSize(items, length)
+      obj.data = rand
+      obj.defaultPoint = rand[0]
+    }
+    return obj
+  }
+
   showItemsExp2 (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
@@ -318,24 +343,30 @@ class ExperimentsController {
     const userId = req.params.userId
     const algorithm = req.params.alg
     const env = req.params.env
-    Experiments.getCustomSet(userId, Number(trial), function (items) {
-      let obj = module.exports.sortByAssignedAlgo(items, algorithm)
+    let len = 10
+    if (trial > 15) {
+      len = 15
+    }
+    // Experiments.getCustomSet(userId, Number(trial), function (items) {
+    Experiments.getItemSet(Number(trial), function (items) {
+      let defaultId = getDefaultId(trial)
+      let obj = module.exports.sortByAssignedAlgoLen(items, algorithm, len, defaultId)
       items = obj.data
       let defaultPoint = obj.defaultPoint
       let defaultIndex = _.findIndex(items, defaultPoint)
       console.log(items.length)
       let now = new Date()
       if (algorithm === 'taste' || algorithm === 'health') {
-        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
         if (algorithm === 'genetic') {
           Surveys.addCandidates(obj, userId, trial, function (done) { console.log(done) })
         }
-        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       } else if (algorithm === 'scatterPlot') {
-        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       } else if (algorithm === 'spreadsheet') {
-        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       }
     })
   }
@@ -371,6 +402,7 @@ class ExperimentsController {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    const algorithm = req.body.algorithm
     let now = new Date()
     let start = new Date(Number(req.body.startingTime))
     const timeUsed = now.getTime() - start // msec
@@ -386,8 +418,13 @@ class ExperimentsController {
       defaultIndex: req.body.defaultIndex
     }
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
-    res.redirect('/survey5/' + env + '/' + trial + '/' + userId) // go to post-survey
+    // res.redirect('/survey5/' + env + '/' + trial + '/' + userId) // go to post-survey
+    res.redirect('/survey7/' + env + '/' + trial + '/' + userId + '/' + algorithm)
   }
 }
 
 module.exports = new ExperimentsController()
+function getDefaultId (trial) {
+  let id = defaultList[trial - 13]
+  return id
+}
