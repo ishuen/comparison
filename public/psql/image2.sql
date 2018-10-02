@@ -20,7 +20,7 @@ UPDATE hpbdata SET image = 'https://www.dropbox.com/s/wpkql9l9hwos2nf/Salmon%20a
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/xqjdgv1nxtj1ez7/Stir%20fried%20celery%20with%20beef.jpg?raw=1', taste=4, health=5 WHERE id = '2570'; -- Stir fried celery with beef
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ekhsnzc7n6y3lvo/Sushi%20roll.jpg?raw=1', taste=4, health=3 WHERE id = '2618'; -- Sushi roll
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/ierzqtr592ej80o/https://www.dropbox.com/s/ovhgybfs7sowbid/Tuna%20salad%20with%20thousand%20island%20dressing%20canned.jpg?raw=1', taste=3, health=7 , foodname='Tuna salad with thousand island dressing' WHERE id = '2784';
-UPDATE hpbdata SET image = 'https://www.dropbox.com/s/hk87is0lgty8g9a/Unagi%20don.jpg?raw=1', taste=6, health=6 WHERE id = '2799'; -- Unagi don
+UPDATE hpbdata SET image = 'https://www.dropbox.com/s/hk87is0lgty8g9a/Unagi%20don.jpg?raw=1', taste=7, health=6 WHERE id = '2799'; -- Unagi don
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/1g0w2ng19474ah1/Vegetable%20briyani.jpg?raw=1', taste=5, health=6 WHERE id = '2842'; -- Vegetable briyani
 UPDATE hpbdata SET image = 'https://www.dropbox.com/s/chypuzdv1cylntl/Salami%20unspecified.jpg?raw=1', taste=5, health=3 WHERE id = '2289'; -- Salami unspecified
 INSERT INTO hpbdata (id, FoodName, Taste, Health, image) 
@@ -30,7 +30,7 @@ VALUES
 (4011, 'Chicago-style hot dog', 4, 2, 'https://www.dropbox.com/s/0qybu2r78g54h3v/Chicago-Style%20Hot%20Dog.jpg?raw=1'),
 (4012, 'Chicken salad panini sandwiches', 5, 5, 'https://www.dropbox.com/s/3ytr3ul903zf0aj/Chicken%20Salad%20Panini%20Sandwiches.jpg?raw=1'),
 (4007, 'Chicken tostadas', 4, 5, 'https://www.dropbox.com/s/cp0aib9asgf2lz0/Chicken%20Tostadas.jpg?raw=1'),
-(4015, 'Cioppino', 5, 6, 'https://www.dropbox.com/s/u4afctvz8pxvben/Cioppino.jpg?raw=1'),
+(4015, 'Cioppino', 7, 6, 'https://www.dropbox.com/s/u4afctvz8pxvben/Cioppino.jpg?raw=1'),
 (4002, 'Farfalle with turkey sausage, peas and mushrooms', 5, 7, 'https://www.dropbox.com/s/pufikveyznm1h4f/Farfalle%20with%20Turkey%20Sausage%2C%20Peas%20and%20Mushrooms.jpg?raw=1'),
 (4000, 'Italian four-cheese pasta', 4, 4, 'https://www.dropbox.com/s/geria1ejlrb0e67/italian%20four-cheese%20pasta.jpg?raw=1'),
 (4013, 'Lyonnaise salad', 3, 7, 'https://www.dropbox.com/s/h5lzrgcndw6gw5j/lyonnaise%20salad.jpg?raw=1'),
@@ -39,6 +39,6 @@ VALUES
 (4016, 'Native American toasted-pecan soup', 5, 4, 'https://www.dropbox.com/s/97vrjai72qc0lwu/Native%20American%20Toasted-Pecan%20Soup.jpg?raw=1'),
 (4010, 'New England clam chowder', 6, 4, 'https://www.dropbox.com/s/btr7zqgf8fcu64t/New%20England%20clam%20chowder.jpg?raw=1'),
 (4001, 'Penne carbonara', 5, 5, 'https://www.dropbox.com/s/ijv8725dwrf5yjb/penne%20carbonara.jpg?raw=1'),
-(4014, 'Shrimp paella', 6, 6, 'https://www.dropbox.com/s/smvu99datqw74mc/Shrimp%20Paella.jpg?raw=1'),
+(4014, 'Shrimp paella', 7, 6, 'https://www.dropbox.com/s/smvu99datqw74mc/Shrimp%20Paella.jpg?raw=1'),
 (4004, 'Thai crab salad with creamy coconut-lime dressing', 3, 8, 'https://www.dropbox.com/s/ierzqtr592ej80o/Thai%20Crab%20Salad%20with%20Creamy%20Coconut-Lime%20Dressing%20.jpg?raw=1'),
 (4008, 'Turkey tortilla soup', 5, 6, 'https://www.dropbox.com/s/vz64ilvmqohph3h/Turkey%20Tortilla%20Soup.jpg?raw=1');

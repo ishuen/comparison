@@ -173,6 +173,28 @@ class Experiments {
     })
   }
 
+  getItemSet (trial, callback) {
+    let input = [itemSetList[trial - 3]]
+    pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', input, (err, res) => {
+      if (err) throw err
+      // console.log(res.rows)
+      let data = []
+      _.map(res.rows, function (i) {
+        i.path = i.image.toString('utf8')
+        let temp = {
+          id: i.id,
+          foodname: i.foodname,
+          health: i.health,
+          taste: i.taste,
+          new_health: i.health,
+          new_taste: i.taste,
+          path: i.path
+        }
+        data.push(temp)
+      })
+      callback(data)
+    })
+  }
   getCustomSet (userId, trial, callback) {
     let maskTrial = trial
     if (trial >= 10) maskTrial = maskTrial - 6

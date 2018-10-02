@@ -287,6 +287,30 @@ class ExperimentsController {
     return obj
   }
 
+  sortByAssignedAlgoLen (items, algorithm, length) {
+    let obj = {}
+    if (algorithm === 'heuristic') {
+      obj = heuristic.pathGivenSet(items)
+    } else if (algorithm === 'pareto') {
+      obj = pareto.relaxedPathGivenSet(items)
+    } else if (algorithm === 'health') {
+      obj.data = _.sortBy(items, [function (o) { return -o['health'] }])
+      obj.data = obj.data.slice(0, length)
+      obj.defaultPoint = obj.data[0]
+    } else if (algorithm === 'taste') {
+      obj.data = _.sortBy(items, [function (o) { return -o['taste'] }])
+      obj.data = obj.data.slice(0, length)
+      obj.defaultPoint = obj.data[0]
+    } else if (algorithm === 'genetic') {
+      // obj = genetic.showPathNewExp2(items)
+      obj = genetic.showUserSetDeletion(items)
+    } else { // scatterPlot, spreadsheet
+      obj.data = items
+      obj.defaultPoint = items[0]
+    }
+    return obj
+  }
+
   showItemsExp2 (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
@@ -318,8 +342,13 @@ class ExperimentsController {
     const userId = req.params.userId
     const algorithm = req.params.alg
     const env = req.params.env
-    Experiments.getCustomSet(userId, Number(trial), function (items) {
-      let obj = module.exports.sortByAssignedAlgo(items, algorithm)
+    let len = 10
+    if (trial > 15) {
+      len = 15
+    }
+    // Experiments.getCustomSet(userId, Number(trial), function (items) {
+    Experiments.getItemSet(Number(trial), function (items) {
+      let obj = module.exports.sortByAssignedAlgoLen(items, algorithm, len)
       items = obj.data
       let defaultPoint = obj.defaultPoint
       let defaultIndex = _.findIndex(items, defaultPoint)
