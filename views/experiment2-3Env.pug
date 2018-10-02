@@ -54,6 +54,7 @@ html
                 th health
       form(id='pickingTask' action='/experiment2/'+ env + '/' + trial + '/' + userId, method='post')
         input(type='hidden', name='env', value=env)
+        input(type='hidden', name='algorithm', value=algorithm)
         input(type='hidden', name='trial', value=trial)
         input(type='hidden', name='userId', value=userId)
         input(type='hidden', name='startingTime', value=startingTime)

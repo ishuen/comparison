@@ -326,16 +326,16 @@ class ExperimentsController {
       console.log(items.length)
       let now = new Date()
       if (algorithm === 'taste' || algorithm === 'health') {
-        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
         if (algorithm === 'genetic') {
           Surveys.addCandidates(obj, userId, trial, function (done) { console.log(done) })
         }
-        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       } else if (algorithm === 'scatterPlot') {
-        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       } else if (algorithm === 'spreadsheet') {
-        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env})
+        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
       }
     })
   }
@@ -371,6 +371,7 @@ class ExperimentsController {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    const algorithm = req.body.algorithm
     let now = new Date()
     let start = new Date(Number(req.body.startingTime))
     const timeUsed = now.getTime() - start // msec
@@ -386,7 +387,8 @@ class ExperimentsController {
       defaultIndex: req.body.defaultIndex
     }
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
-    res.redirect('/survey5/' + env + '/' + trial + '/' + userId) // go to post-survey
+    // res.redirect('/survey5/' + env + '/' + trial + '/' + userId) // go to post-survey
+    res.redirect('/survey7/' + env + '/' + trial + '/' + userId + '/' + algorithm)
   }
 }
 
