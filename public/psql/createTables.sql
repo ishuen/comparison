@@ -108,6 +108,12 @@ CREATE TABLE survey_time(
 ALTER TABLE user_satisfaction ADD COLUMN satis_id SERIAL PRIMARY KEY;
 ALTER TABLE user_sorting ADD COLUMN sort_id SERIAL PRIMARY KEY;
 
+CREATE TABLE user_sorting2(
+    trial_num integer,
+    food_id varchar REFERENCES hpbdata(id),
+    ordering INT NOT NULL,
+    user_id serial REFERENCES user_data(user_id));
+
 -- CREATE TABLE criteria_algorithm(
 --     cri_id serial PRIMARY KEY,
 --     high_score INT NOT NULL,

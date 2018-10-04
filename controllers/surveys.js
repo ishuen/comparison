@@ -98,11 +98,12 @@ class Survey1Controller {
     } else if (env === 'inu') {
       tr = tr + 9
       Survey1.getUserGroup(userId, function (expGroup) {
-        console.log('*****', expGroup)
         let category = Number(expGroup)
         let algorithm = groups[category]
         res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
       })
+    } else if (env === 'inv') {
+      res.redirect('/experiment1/pre/' + env + '/1/' + userId)
     } else {
       res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
     }
@@ -642,12 +643,20 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-
-    if (trial < maxTrialEx1) {
-      trial = trial + 4
-      res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
+    if (env === 'inv') {
+      if (trial < 15) {
+        trial = trial + 1
+        res.redirect('/experiment1/for/' + env + '/' + trial + '/' + userId)
+      } else {
+        res.redirect('/end/' + env + '/' + userId) // end of experiment
+      }
     } else {
-      res.redirect('/end/' + env + '/' + userId) // end of experiment
+      if (trial < maxTrialEx1) {
+        trial = trial + 4
+        res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
+      } else {
+        res.redirect('/end/' + env + '/' + userId) // end of experiment
+      }
     }
 
     // trial = trial + 3

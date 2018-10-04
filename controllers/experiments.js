@@ -1,6 +1,7 @@
 /* global defaultList */
+/* global itemSetList */
 const Experiments = require('../models/Experiments')
-// const HpbData = require('../models/HpbData')
+const HpbData = require('../models/HpbData')
 const Surveys = require('../models/Surveys')
 const heuristic = require('./behavioralRank')
 const pareto = require('./paretoFrontier')
@@ -107,12 +108,22 @@ class ExperimentsController {
     // }
     const qnSet = [{section: 'Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
     {section: 'Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
-    let qn = qnSet[trial - 1]
-    Experiments.getCustomSet(userId, 1, function (items) {
-      console.log(items)
-      let now = new Date()
-      res.render('experiment1-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env})
-    })
+    if (env === 'inv') {
+      let qn = qnSet[trial - 1]
+      let itemIds = itemSetList[Number(trial) + 8]
+      HpbData.getItems(itemIds, function (items) {
+        console.log(items)
+        let now = new Date()
+        res.render('experiment1-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env})
+      })
+    } else {
+      let qn = qnSet[trial - 1]
+      Experiments.getCustomSet(userId, 1, function (items) {
+        console.log(items)
+        let now = new Date()
+        res.render('experiment1-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env})
+      })
+    }
   }
 
   submitSortingPre (req, res) {
@@ -166,12 +177,22 @@ class ExperimentsController {
       startingTime: req.body.startingTime,
       endTime: now
     }
-    Experiments.userSorting(details, function (out) { console.log(out) })
-    trial++
-    if (trial <= maxPreTrial) {
-      res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
+    if (env === 'inv') {
+      Experiments.userSorting2(details, function (out) { console.log(out) })
+      trial++
+      if (trial <= maxPreTrial) {
+        res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
+      } else {
+        res.redirect('/experiment1/for/' + env + '/13/' + userId)
+      }
     } else {
-      res.redirect('/experiment1/for/' + env + '/1/' + userId)
+      Experiments.userSorting(details, function (out) { console.log(out) })
+      trial++
+      if (trial <= maxPreTrial) {
+        res.redirect('/experiment1/pre/' + env + '/' + trial + '/' + userId)
+      } else {
+        res.redirect('/experiment1/for/' + env + '/1/' + userId)
+      }
     }
   }
   /**
@@ -207,12 +228,25 @@ class ExperimentsController {
       section: 'Trial - ' + (Number(trial) + maxPreTrial),
       description: 'Please use the cards above and sort the items to a list below by descending taste score and ascending health score, i.e. right side has smaller taste score and larger health score than the left.'
     }
-    Experiments.getCustomSet(userId, trial, function (items) {
-      console.log(items)
-      let now = new Date()
-      // res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
-      res.render('experiment1-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env})
-    })
+    if (env === 'inv') {
+      qn.section = 'Trial - ' + (Number(trial) - 12 + maxPreTrial)
+      qn.description = qn.description + 'You can discard at most 5 cards by simply leave it in the resource area. In addition, please include the item shown below in the list.'
+      let itemIds = itemSetList[trial - 4]
+      let defaultId = defaultList[trial - 13]
+      HpbData.getItems(itemIds, function (items) {
+        let defaultItem = _.find(items, function (o) { return Number(o.id) === Number(defaultId) })
+        let now = new Date()
+        console.log(defaultItem)
+        res.render('experiment1-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env, defaultItem: defaultItem})
+      })
+    } else {
+      Experiments.getCustomSet(userId, trial, function (items) {
+        // console.log(items)
+        let now = new Date()
+        // res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
+        res.render('experiment1-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env})
+      })
+    }
   }
   submitSorting (req, res) {
     let sorts = JSON.parse('[' + req.body.sorts + ']')
@@ -262,7 +296,11 @@ class ExperimentsController {
       startingTime: req.body.startingTime,
       endTime: now
     }
-    Experiments.userSorting(details, function (out) { console.log(out) })
+    if (env === 'inv') {
+      Experiments.userSorting2(details, function (out) { console.log(out) })
+    } else {
+      Experiments.userSorting(details, function (out) { console.log(out) })
+    }
     res.redirect('/survey4/' + env + '/' + trial + '/' + userId) // go to post-survey
   }
 
