@@ -137,14 +137,14 @@ html
         var ndivs = divs.length
         let source = document.getElementById('source')
         let cards = source.getElementsByClassName('card')
-        //- if (cards.length !== 0) {
-        //-   alert('Please have all cards sorted.')
-        //-   return false
-        //- }
-        if (ndivs <= 14) {
+        if (cards.length > 5) {
+          alert('Please have all cards sorted.')
+          return false
+        }
+        if (ndivs <= 1) {
           alert('Please have cards sorted.')
           return false
-        } else if (ndivs > 14) {
+        } else if (ndivs > 1) {
           if(!confirm('Are you sure you\'ve done?')) {
             return false
           }
