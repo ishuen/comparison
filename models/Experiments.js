@@ -173,6 +173,37 @@ class Experiments {
     })
   }
 
+  userSorting2 (details, callback) {
+    let userId = details.userId
+    let expData = []
+    if (details.trial < 0) {
+      expData = [Number(userId), 1, 4]
+    } else {
+      expData = [Number(userId), Number(details.trial), Number(details.trial) + 3]
+    }
+    console.log(expData)
+    let done = [0, 0, 0]
+    pool.connect((err, client, done) => {
+      if (err) throw err
+      for (let i = 0; i < details.ordering.length; i++) {
+        let input = [userId, details.ordering[i], i + 1, details.trial]
+        client.query('INSERT INTO user_sorting2 (user_id, food_id, ordering, trial_num) VALUES ($1, $2, $3, $4)', input, (err, res) => {
+          if (err) throw err
+        })
+      }
+    })
+    done[0] = 1
+    let start = new Date(Number(details.startingTime))
+    let input = [userId, start, details.endTime, details.timeUsed, details.trial]
+    pool.query('INSERT INTO user_sorting_record (user_id, starting_time, end_time, time_used, trial_num) VALUES ($1, $2, $3, $4, $5) RETURNING record_number', input, (err, res) => {
+      if (err) throw err
+      let recordNum = res.rows[0]['record_number']
+      done[1] = 1
+      done[2] = storeTracked(userId, recordNum, details.tracking[0])
+      callback(done)
+    })
+  }
+
   getItemSet (trial, callback) {
     let input = [itemSetList[trial - 4]]
     pool.query('SELECT * FROM hpbdata WHERE id = ANY($1::varchar[])', input, (err, res) => {

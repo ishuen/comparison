@@ -34,12 +34,16 @@ html
         div(class='col-sm-4' style='background-color: #f5f5f5')
           h4 progress
           div(class='progress')
-            if trial > 1
-              - var str = Number(30 * trial - 5) + '%'
-              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trial - 5) + '%;' aria-valuenow= Number(30 * trial - 5) aria-valuemin='0' aria-valuemax='100') #{str}
+            if (env === 'inv')
+              - var str = Number(20 * (trial - 11)) + '%'
+              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(20 * (trial - 11)) + '%;' aria-valuenow= Number(20 * (trial - 11)) aria-valuemin='0' aria-valuemax='100') #{str}
             else
-              - var str = Number(30 * trial) + '%'
-              div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trial) + '%;' aria-valuenow= Number(30 * trial) aria-valuemin='0' aria-valuemax='100') #{str}
+              if trial > 1
+                - var str = Number(30 * trial - 5) + '%'
+                div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trial - 5) + '%;' aria-valuenow= Number(30 * trial - 5) aria-valuemin='0' aria-valuemax='100') #{str}
+              else
+                - var str = Number(30 * trial) + '%'
+                div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(30 * trial) + '%;' aria-valuenow= Number(30 * trial) aria-valuemin='0' aria-valuemax='100') #{str}
       //- span(class='sliceSpace')
       //- label At most 5 cards are allowed to discard.
       //- span(class='sliceSpace')
@@ -64,21 +68,34 @@ html
                 td.health(name='health') #{item.health}
     hr
     div(class='container-fluid')
-      h3 #{qn.section}
-      label #{qn.description}
+      div(class='row')
+        div(class='col-xs-2')
+          h3 #{qn.section}
+        div(class='col-xs-10')
+          label #{qn.description}
       //- h3 Practice trial - 1
       //- label Please use the cards above and sort the items to a list below by ascending taste score, i.e. right side is larger than the left.
-      span(class='tabSpace')
+      //- span(class='tabSpace')
       div(class='row')
         div(class='col-xs-1 taste' style='text-align: right;')
           span(class="glyphicon glyphicon-triangle-left")
-        div(class='col-xs-3 taste')
+        div(class='col-xs-2 taste')
           label increasing taste score
-        div(class='col-xs-3 health' style='text-align: right')
+        div(class='col-xs-2' style='padding:"0";')
+          label #{defaultItem.foodname} (image is shown at right)
+          //- img(src= defaultItem.path, alt= defaultItem.foodname, style= 'width: 70%;')
+          //- table.scores
+          //-   tr
+          //-     th.taste Taste
+          //-     th.health Health
+          //-   tr
+          //-     td.taste(name='taste') #{defaultItem.taste}
+          //-     td.health(name='health') #{defaultItem.health}
+        div(class='col-xs-2 health' style='text-align: right')
           label increasing health score
         div(class='col-xs-1 health')
           span(class="glyphicon glyphicon-triangle-right")
-        div(class='col-xs-4')
+        div(class='col-xs-3')
           form(id='sortingResult', name='sortingResult', class='form-inline' action='/experiment1/for/'+ env + '/' + trial + '/' + userId, method='post', onsubmit="return div2form('sortingResult')")
             input(type='hidden', name='trial', value=trial)
             input(type='hidden', name='env', value=env)
@@ -88,6 +105,8 @@ html
             button(type='submit' class='btn btn-primary') I'm done!
           span(class='sliceSpace')
           button(id='reset', class='btn btn-warning', onclick='init1()') Reset Sort
+        div(class='col-xs-1')
+          img(src= defaultItem.path, alt= defaultItem.foodname, style= 'width: 100%;')
       div(class='row' id='sortingRow')
         div(class='col-sm-8 flex-row flex-nowrap' id='tasteSort')
         div(class='col-sm-2 order-last', id='tasteChart')
@@ -122,10 +141,10 @@ html
         //-   alert('Please have all cards sorted.')
         //-   return false
         //- }
-        if (ndivs <= 1) {
+        if (ndivs <= 14) {
           alert('Please have cards sorted.')
           return false
-        } else if (ndivs > 1) {
+        } else if (ndivs > 14) {
           if(!confirm('Are you sure you\'ve done?')) {
             return false
           }
