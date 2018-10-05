@@ -329,7 +329,7 @@ class ExperimentsController {
   sortByAssignedAlgoLen (items, algorithm, length, defaultId) {
     let obj = {}
     if (algorithm === 'heuristic') {
-      obj = heuristic.pathGivenSet(items)
+      obj = heuristic.pathGivenSetNDefault(items, defaultId)
     } else if (algorithm === 'pareto') {
       obj = pareto.relaxedPathGivenSetLen(items, length, defaultId)
     } else if (algorithm === 'health') {
@@ -385,28 +385,54 @@ class ExperimentsController {
     if (trial > 15) {
       len = 15
     }
-    // Experiments.getCustomSet(userId, Number(trial), function (items) {
-    Experiments.getItemSet(Number(trial), function (items) {
-      let defaultId = getDefaultId(trial)
-      let obj = module.exports.sortByAssignedAlgoLen(items, algorithm, len, defaultId)
-      items = obj.data
-      let defaultPoint = obj.defaultPoint
-      let defaultIndex = _.findIndex(items, defaultPoint)
-      console.log(items.length)
-      let now = new Date()
-      if (algorithm === 'taste' || algorithm === 'health') {
-        res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
-      } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
-        if (algorithm === 'genetic') {
-          Surveys.addCandidates(obj, userId, trial, function (done) { console.log(done) })
+    if (env === 'inu') {
+      let obj = module.exports.getPrecalculatedListByMethod(algorithm, trial)
+      HpbData.getItems(obj.data, function (items) {
+        let defaultPoint = _.find(items, function (o) { return Number(o['id']) === Number(obj.defaultPoint) })
+        // console.log(items, '***', defaultPoint)
+        items = module.exports.checkOrder(obj.data, items)
+        // let ret = genetic.showUserSetDeletionLen(items, 15, Number(defaultPoint.id)) //
+        obj.defaultPoint = defaultPoint
+        let defaultIndex = _.findIndex(items, defaultPoint)
+        console.log(items.length)
+        let now = new Date()
+        if (algorithm === 'taste' || algorithm === 'health') {
+          res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
+          // if (algorithm === 'genetic') {
+          //   Surveys.addCandidates(obj, userId, trial, function (done) { console.log(done) })
+          // }
+          res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        } else if (algorithm === 'scatterPlot') {
+          res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        } else if (algorithm === 'spreadsheet') {
+          res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
         }
-        res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
-      } else if (algorithm === 'scatterPlot') {
-        res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
-      } else if (algorithm === 'spreadsheet') {
-        res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
-      }
-    })
+      })
+    } else {
+      Experiments.getCustomSet(userId, Number(trial), function (items) {
+        let defaultId = getDefaultId(trial)
+        let obj = module.exports.sortByAssignedAlgoLen(items, algorithm, len, defaultId)
+        items = obj.data
+        let defaultPoint = obj.defaultPoint
+        // console.log(items, '***', defaultPoint)
+        let defaultIndex = _.findIndex(items, defaultPoint)
+        console.log(items.length)
+        let now = new Date()
+        if (algorithm === 'taste' || algorithm === 'health') {
+          res.render('experiment2-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
+          if (algorithm === 'genetic') {
+            Surveys.addCandidates(obj, userId, trial, function (done) { console.log(done) })
+          }
+          res.render('experiment2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        } else if (algorithm === 'scatterPlot') {
+          res.render('experiment2-2Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        } else if (algorithm === 'spreadsheet') {
+          res.render('experiment2-3Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex, env: env, algorithm: algorithm})
+        }
+      })
+    }
   }
   submitPicked (req, res) {
     console.log(req.body)
@@ -458,6 +484,74 @@ class ExperimentsController {
     Experiments.insertUserChoice(details, function (out) { console.log(out) })
     // res.redirect('/survey5/' + env + '/' + trial + '/' + userId) // go to post-survey
     res.redirect('/survey7/' + env + '/' + trial + '/' + userId + '/' + algorithm)
+  }
+  checkOrder (ids, data) {
+    let reordered = new Array(ids.length)
+    for (let i = 0; i < ids.length; i++) {
+      let temp = _.find(data, function (d) { return Number(d.id) === ids[i] })
+      reordered[i] = temp
+    }
+    return reordered
+  }
+  getPrecalculatedListByMethod (method, trial) {
+    let tr = trial - 13
+    let list = []
+    let defaultId = 0
+    if (method === 'taste') {
+      let lists = [[933, 2353, 524, 2555, 1884, 370, 727, 511, 395, 374],
+      [697, 1302, 168, 2094, 1658, 2131, 912, 1538, 2789, 2585],
+      [869, 212, 2452, 758, 1241, 2512, 2863, 2929, 615, 2301],
+      [601, 2290, 1124, 1416, 176, 2038, 2058, 127, 960, 2842, 1253, 4001, 1126, 1686, 2784],
+      [4014, 2799, 4010, 1419, 4002, 4008, 4009, 4012, 2023, 2051, 4006, 4016, 4005, 4003, 4013],
+      [168, 2290, 2384, 1821, 1241, 2058, 960, 2743, 4015, 2789, 2929, 4005, 4003, 2301, 714]]
+      let defaults = [933, 697, 869, 601, 4014, 168]
+      list = lists[tr]
+      defaultId = defaults[tr]
+    } else if (method === 'health') {
+      let lists = [[458, 511, 524, 2555, 395, 2222, 391, 372, 426, 727],
+      [2131, 2585, 2573, 2295, 1298, 1538, 2743, 195, 1707, 634],
+      [4004, 2263, 615, 2784, 2150, 212, 758, 1821, 2863, 2301],
+      [960, 160, 2784, 1416, 2842, 491, 176, 501, 1253, 714, 601, 2058, 1126, 1124, 127],
+      [4003, 4004, 4002, 4013, 4014, 4008, 4009, 4012, 4007, 4010, 1419, 4006, 4000, 4005, 2618],
+      [4004, 960, 2743, 2784, 1821, 4015, 2301, 1241, 2929, 714, 168, 1658, 2058, 2384, 4005]]
+      let defaults = [458, 2131, 4004, 960, 4003, 4004]
+      list = lists[tr]
+      defaultId = defaults[tr]
+    } else if (method === 'heuristic') {
+      let lists = [[933, 253, 2353, 370, 727, 524, 395, 2555, 511, 458],
+      [168, 1302, 2030, 195, 1707, 2573, 1538, 2295, 2131, 2585],
+      [869, 2384, 212, 1241, 758, 1821, 2791, 2263, 615, 4004],
+      [601, 2290, 1124, 176, 2058, 2038, 127, 1416, 491, 2842, 2784, 960, 160],
+      [2799, 4014, 4008, 4002, 4013, 4003, 4004],
+      [168, 2290, 4015, 2058, 1241, 4005, 2929, 2789, 2301, 1821, 2743, 2784, 960, 4003, 4004]]
+      let defaults = [524, 2573, 2791, 1416, 4014, 1821]
+      list = lists[tr]
+      defaultId = defaults[tr]
+    } else if (method === 'pareto') {
+      let lists = [[933, 2353, 253, 2555, 370, 1884, 524, 395, 2222, 458],
+      [1302, 697, 195, 2094, 2573, 2295, 1298, 2131, 2585],
+      [869, 2452, 212, 2791, 1821, 615, 2263, 4004, 2784, 2150],
+      [1124, 601, 2290, 2058, 2038, 176, 1253, 4001, 501, 1416, 2842, 491, 960, 160, 2784],
+      [1419, 4010, 2023, 4012, 4009, 2051, 4014, 2799, 4008, 4002, 4013, 4003, 4004],
+      [2384, 1124, 168, 1658, 2290, 1241, 4015, 1821, 2789, 2743, 960, 2784, 4003, 4004]]
+      let defaults = [524, 2573, 2791, 1416, 4014, 1821]
+      list = lists[tr]
+      defaultId = defaults[tr]
+    } else if (method === 'genetic') {
+      let lists = [[511, 1885, 395, 424, 524, 2555, 2222, 374, 426, 373],
+      [1658, 2131, 697, 2573, 1707, 195, 2295, 1281, 2789, 2743],
+      [2384, 2929, 632, 2791, 615, 2263, 1040, 2452, 212, 758],
+      [601, 2290, 127, 1416, 2058, 2038, 176, 1253, 2842, 491, 160, 2289, 1126, 501, 1686],
+      [4016, 4000, 4012, 2618, 2799, 4014, 4010, 1419, 4006, 4009, 2051, 2023, 4007, 2570, 4004],
+      [2384, 2301, 2784, 4004, 714, 1821, 4003, 4005, 168, 2058, 2789, 1658, 1124, 2290, 2743]]
+      let defaults = [524, 2573, 2791, 1416, 4014, 1821]
+      list = lists[tr]
+      defaultId = defaults[tr]
+    } else {
+      list = itemSetList[tr]
+      defaultId = defaultList[tr]
+    }
+    return {data: list, defaultPoint: defaultId}
   }
 }
 

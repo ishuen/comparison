@@ -4,6 +4,7 @@ html
     title= 'presurvey - Dietary restrictions'
     link(rel='stylesheet', href='/stylesheets/surveys.css')
     link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    script(src='https://www.google.com/recaptcha/api.js')
   body
     script(src='https://code.jquery.com/jquery-3.3.1.min.js', charset='utf-8')
     script(src='/scripts/questionSets.js', type='text/javascript')
@@ -71,6 +72,10 @@ html
             label #{secondSet[1].description}
             div(class='form-group')
               textarea(name='qn' + secondSet[1].qn_id, class='form-control', rows='5', style='width: 70%;')
+            //- local
+            div(class='g-recaptcha' data-sitekey='6LdeoHMUAAAAADu_6AoXimlp5s_AibMR_MdTrawC')
+            //- web server
+            //- div(class='g-recaptcha' data-sitekey='6Lccn3MUAAAAALUhFoaUvgJv1lnycJLux0YKXCZs')
             br
             button(class='btn btn-primary btn-lg', type='submit') Next
     script.
@@ -79,3 +84,34 @@ html
           $(':radio', this).trigger('click')
         }
       })
+      function validateForm() {
+        let form = document.getElementById('form')
+        let ans = form.getElementsByTagName('input')
+        let names = $('input').map(function(){ return $(this).attr('name') })
+        let comment = form.getElementsByTagName('textarea')
+        let distinctNames = $.unique(names)
+        distinctNames = distinctNames.filter(function(o) { return distinctNames[o] !== 'userId' && distinctNames[o] !== 'others' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env'})
+        for (let qn of distinctNames) {
+          let radioSet = document.getElementsByName(qn)
+          let selected = false
+          for (let radio of radioSet) {
+            if (radio.checked === true) { selected = true }
+          }
+          if (selected === false) {
+            console.log(qn)
+            alert('Please answer all questions.')
+            return false
+          }
+        }
+        if (document.getElementsByName('qn14')[5].checked === true && comment[0].value === '') {
+          alert('Please describe your dietary restriction.')
+          return false
+        }
+        var recaptcha = $('#g-recaptcha-response').val()
+        if(recaptcha === '') {
+          event.preventDefault()
+          alert('Please check recaptcha.')
+          return false
+        }
+        return true
+      }

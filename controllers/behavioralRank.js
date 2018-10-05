@@ -169,6 +169,19 @@ class BehavioralRankController {
     return {data: resData, defaultPoint: defaultPoint}
   }
 
+  pathGivenSetNDefault (data, defaultId) {
+    let defaultPoint = _.find(data, function (o) { return Number(o['id']) === Number(defaultId) })
+    let minTasteSet = _.filter(data, function (o) { return o['taste'] >= defaultPoint['taste'] || o['health'] >= defaultPoint['health'] })
+    const obj = groupData(minTasteSet, defaultPoint, data.length)
+    let tGroup = obj.tGroup
+    let hGroup = obj.hGroup
+    tGroup = _.sortBy(tGroup, [function (o) { return o['taste'] }])
+    tGroup = tGroup.reverse()
+    hGroup = _.sortBy(hGroup, [function (o) { return o['health'] }])
+    let resData = tGroup.concat(hGroup)
+    return {data: resData, defaultPoint: defaultPoint}
+  }
+
   pathGivenUserSet (data) {
     let minTaste = _.minBy(data, function (o) { return o['new_taste'] })
     let minTasteSet = _.filter(data, function (o) { return o['new_taste'] === minTaste['new_taste'] })

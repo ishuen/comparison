@@ -4,6 +4,7 @@ const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
 const experiments = require('./experiments')
 const _ = require('lodash')
+const request = require('request')
 const maxTrialEx1 = 3
 const maxTrialEx2 = 3
 const maxItemEx1 = 10
@@ -72,41 +73,52 @@ class Survey1Controller {
   }
   dietSubmitEnv (req, res) {
     console.log(req.body)
-    const userId = req.body.userId
-    const env = req.body.env
-    let combinedForm = JSON.parse(JSON.stringify(req.body))
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    const timeDetail = {
-      userId: userId,
-      trial: 0,
-      startingTime: req.body.startingTime,
-      timeUsed: timeUsed,
-      endTime: now,
-      surveyName: 'diet'
-    }
-    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    if (combinedForm.hasOwnProperty('others')) {
-      combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
-    }
-    let qn = getQnAns(combinedForm)
-    Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    if (env === 'sf' || env === 'ins') {
-      tr = tr + 6
-      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
-    } else if (env === 'inu') {
-      tr = tr + 9
-      Survey1.getUserGroup(userId, function (expGroup) {
-        let category = Number(expGroup)
-        let algorithm = groups[category]
-        res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
-      })
-    } else if (env === 'inv') {
-      res.redirect('/experiment1/pre/' + env + '/1/' + userId)
-    } else {
-      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
-    }
+    let secretKey = '6LdeoHMUAAAAAKzBnzqsemfNtPVX7ONCVx98SYpJ' // local
+    // let secretKey = '6Lccn3MUAAAAANo5k1Bmx70bjTLLgmy2lPgAgjmD' // web server
+    let verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' + secretKey + '&response=' + req.body['g-recaptcha-response'] + '&remoteip=' + req.connection.remoteAddress
+    request(verificationUrl, function (error, response, body) {
+      if (error) throw error
+      body = JSON.parse(body)
+      // Success will be true or false depending upon captcha validation.
+      if (body.success !== undefined && !body.success) {
+        return res.json({'responseCode': 1, 'responseDesc': 'Failed captcha verification'})
+      }
+      const userId = req.body.userId
+      const env = req.body.env
+      let combinedForm = JSON.parse(JSON.stringify(req.body))
+      let now = new Date()
+      const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+      const timeDetail = {
+        userId: userId,
+        trial: 0,
+        startingTime: req.body.startingTime,
+        timeUsed: timeUsed,
+        endTime: now,
+        surveyName: 'diet'
+      }
+      Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
+      if (combinedForm.hasOwnProperty('others')) {
+        combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
+      }
+      let qn = getQnAns(combinedForm)
+      Experiments.insertQnAns(qn, function (done) { console.log(done) })
+      let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
+      if (env === 'sf' || env === 'ins') {
+        tr = tr + 6
+        res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
+      } else if (env === 'inu') {
+        tr = tr + 9
+        Survey1.getUserGroup(userId, function (expGroup) {
+          let category = Number(expGroup)
+          let algorithm = groups[category]
+          res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
+        })
+      } else if (env === 'inv') {
+        res.redirect('/experiment1/pre/' + env + '/1/' + userId)
+      } else {
+        res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
+      }
+    })
   }
 
   /**
@@ -800,37 +812,60 @@ class Survey1Controller {
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
-      if (algorithm === 'genetic') {
-        Experiments.getSortedEnds(userId, Number(trial), function (items) {
-          let temp = _.filter(items, function (o) { return o.state === 'defaultPoint' })
-          let defaultPoint = temp[0]
-          temp = _.filter(items, function (o) { return o.state === 'tastiest/first' })
-          let left = temp[0]
-          temp = _.filter(items, function (o) { return o.state === 'healthiest/last' })
-          let right = temp[0]
-          Experiments.getUserChoice(userId, trial, function (userChoice) {
-            userChoice.state = 'userChoice'
-            let now = new Date()
-            console.log(defaultPoint, left, right)
-            res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
-          })
-        })
-      } else {
-        Experiments.getCustomSet(userId, Number(trial), function (items) {
-          let obj = experiments.sortByAssignedAlgo(items, algorithm)
-          items = obj.data
-          let defaultPoint = obj.defaultPoint
-          let left = items[0] // tastiest
-          let right = items[items.length - 1] // healthiest
+      if (env === 'inu') {
+        let obj = experiments.getPrecalculatedListByMethod(algorithm, trial)
+        let length = obj.data.length
+        let threeItems = [obj['data'][0], obj['data'][length - 1], obj['defaultPoint']]
+        console.log(threeItems)
+        HpbData.getItems(threeItems, function (items) {
+          items = experiments.checkOrder(threeItems, items)
+          console.log(items)
+          let left = items[0]
+          let right = items[1]
+          let defaultPoint = items[2]
           defaultPoint.state = 'defaultPoint'
           left.state = 'tastiest/first'
           right.state = 'healthiest/last'
           Experiments.getUserChoice(userId, trial, function (userChoice) {
             userChoice.state = 'userChoice'
             let now = new Date()
-            res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+            console.log(defaultPoint, left, right)
+            res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env, algorithm: algorithm})
           })
         })
+      } else {
+        if (algorithm === 'genetic') {
+          Experiments.getSortedEnds(userId, Number(trial), function (items) {
+            let temp = _.filter(items, function (o) { return o.state === 'defaultPoint' })
+            let defaultPoint = temp[0]
+            temp = _.filter(items, function (o) { return o.state === 'tastiest/first' })
+            let left = temp[0]
+            temp = _.filter(items, function (o) { return o.state === 'healthiest/last' })
+            let right = temp[0]
+            Experiments.getUserChoice(userId, trial, function (userChoice) {
+              userChoice.state = 'userChoice'
+              let now = new Date()
+              console.log(defaultPoint, left, right)
+              res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+            })
+          })
+        } else {
+          Experiments.getCustomSet(userId, Number(trial), function (items) {
+            let obj = experiments.sortByAssignedAlgo(items, algorithm)
+            items = obj.data
+            let defaultPoint = obj.defaultPoint
+            let left = items[0] // tastiest
+            let right = items[items.length - 1] // healthiest
+            defaultPoint.state = 'defaultPoint'
+            left.state = 'tastiest/first'
+            right.state = 'healthiest/last'
+            Experiments.getUserChoice(userId, trial, function (userChoice) {
+              userChoice.state = 'userChoice'
+              let now = new Date()
+              res.render('survey6Env', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial, env: env})
+            })
+          })
+        }
       }
     })
   }
@@ -878,6 +913,7 @@ class Survey1Controller {
     console.log(req.body)
     let userId = req.body.userId
     let trial = req.body.trial
+    const algorithm = req.body.algorithm
     const env = req.body.env
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
@@ -891,11 +927,20 @@ class Survey1Controller {
     }
     Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
     Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    if (trial < maxTrialEx1 + maxTrialEx2 + 6) {
-      trial++
-      res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
+    if (env === 'inu') {
+      if (trial < 18) {
+        trial++
+        res.redirect('/experiment2/' + env + '/' + trial + '/' + userId + '/' + algorithm)
+      } else {
+        res.redirect('/survey8/' + env + '/' + userId)
+      }
     } else {
-      res.redirect('/end/' + env + '/' + userId)
+      if (trial < maxTrialEx1 + maxTrialEx2 + 6) {
+        trial++
+        res.redirect('/survey1/' + env + '/' + trial + '/' + userId)
+      } else {
+        res.redirect('/end/' + env + '/' + userId)
+      }
     }
   }
   endOfExp (req, res) {
