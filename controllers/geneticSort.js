@@ -96,16 +96,16 @@ class GeneticSortController {
     return {data: resData, defaultPoint: defaultPoint}
   }
   showUserSetDeletionLen (data, length, defaultId) {
-    let generation = 100
+    let generation = 500
     let len = data.length
     let init = true
     let fittest = []
-    while (init === true || calculateFitnessDummy2(fittest, data, defaultId) === -999) {
+    while (init === true || calculateFitnessDummy2(fittest, data, defaultId, length) === -999) {
       let population = initPopulationDummy(len)
       let n = 0
       let currentArr = []
       while (n < generation) {
-        let fittestTwo = get2FittestUserDummy2(population, data, defaultId)
+        let fittestTwo = get2FittestUserDummy2(population, data, defaultId, length)
         currentArr = fittestTwo
         currentArr[1] = mutation(currentArr[1])
         for (let i = 0; i < population.length - 2; i++) {
@@ -115,7 +115,7 @@ class GeneticSortController {
         population = currentArr
         n++
       }
-      fittest = getFittestUserDummy2(population, data, defaultId)
+      fittest = getFittestUserDummy2(population, data, defaultId, length)
       init = false
     }
     let resData = orderToObjDummy(fittest, data)
@@ -409,10 +409,10 @@ function getFittestUserDummy (population, data) {
   let index = _.findIndex(fitnessArr, function (o) { return _.isEqual(o, fittest) })
   return population[index]
 }
-function getFittestUserDummy2 (population, data, defaultId) {
+function getFittestUserDummy2 (population, data, defaultId, length) {
   let fitnessArr = []
   for (let i = 0; i < population.length; i++) {
-    let fitness = calculateFitnessDummy2(population[i], data, defaultId)
+    let fitness = calculateFitnessDummy2(population[i], data, defaultId, length)
     fitnessArr.push(fitness)
   }
   let fittest = _.maxBy(fitnessArr)
@@ -441,10 +441,10 @@ function get2FittestUserDummy (population, data) {
   }
   return [population[max1], population[max2]]
 }
-function get2FittestUserDummy2 (population, data, defaultId) {
+function get2FittestUserDummy2 (population, data, defaultId, length) {
   let fitnessArr = []
   for (let i = 0; i < population.length; i++) {
-    let fitness = calculateFitnessDummy2(population[i], data, defaultId)
+    let fitness = calculateFitnessDummy2(population[i], data, defaultId, length)
     fitnessArr.push(fitness)
   }
   let max1 = 0
@@ -523,7 +523,7 @@ function calculateFitnessDummy (arr, data) {
   }
   return fitness
 }
-function calculateFitnessDummy2 (arr, data, defaultId) {
+function calculateFitnessDummy2 (arr, data, defaultId, length) {
   let tempArr = reordering(arr, data.length)
   let numToSkip = _.reduce(tempArr, function (sum, o) {
     if (o < 0) {
@@ -533,6 +533,7 @@ function calculateFitnessDummy2 (arr, data, defaultId) {
     }
   }, 0)
   let len = tempArr.length - numToSkip
+  if (len !== length) return -999
   let changePoint = getDefaultIndex2(orderToObjDummy(tempArr, data), len, defaultId)
   if (changePoint === -1) return -999
   let fitness = 0

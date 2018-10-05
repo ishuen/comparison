@@ -130,7 +130,7 @@ function validateFormSurvey6() {
   let ans = form.getElementsByTagName('input')
   let names = $('input').map(function(){ return $(this).attr('name') })
   let distinctNames = $.unique(names)
-  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env')})
+  distinctNames = distinctNames.filter(function(o) { return (distinctNames[o] !== 'userId' && distinctNames[o] !== 'trial' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env' && distinctNames[o] !== 'algorithm')})
   for (let qn of distinctNames) {
     let radioSet = document.getElementsByName(qn)
     let selected = false
