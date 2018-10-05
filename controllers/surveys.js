@@ -4,6 +4,7 @@ const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
 const experiments = require('./experiments')
 const _ = require('lodash')
+const request = require('request')
 const maxTrialEx1 = 3
 const maxTrialEx2 = 3
 const maxItemEx1 = 10
@@ -72,41 +73,51 @@ class Survey1Controller {
   }
   dietSubmitEnv (req, res) {
     console.log(req.body)
-    const userId = req.body.userId
-    const env = req.body.env
-    let combinedForm = JSON.parse(JSON.stringify(req.body))
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    const timeDetail = {
-      userId: userId,
-      trial: 0,
-      startingTime: req.body.startingTime,
-      timeUsed: timeUsed,
-      endTime: now,
-      surveyName: 'diet'
-    }
-    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    if (combinedForm.hasOwnProperty('others')) {
-      combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
-    }
-    let qn = getQnAns(combinedForm)
-    Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    if (env === 'sf' || env === 'ins') {
-      tr = tr + 6
-      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
-    } else if (env === 'inu') {
-      tr = tr + 9
-      Survey1.getUserGroup(userId, function (expGroup) {
-        let category = Number(expGroup)
-        let algorithm = groups[category]
-        res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
-      })
-    } else if (env === 'inv') {
-      res.redirect('/experiment1/pre/' + env + '/1/' + userId)
-    } else {
-      res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
-    }
+    let secretKey = '6LdeoHMUAAAAAKzBnzqsemfNtPVX7ONCVx98SYpJ'
+    let verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' + secretKey + '&response=' + req.body['g-recaptcha-response'] + '&remoteip=' + req.connection.remoteAddress
+    request(verificationUrl, function (error, response, body) {
+      if (error) throw error
+      body = JSON.parse(body)
+      // Success will be true or false depending upon captcha validation.
+      if (body.success !== undefined && !body.success) {
+        return res.json({'responseCode': 1, 'responseDesc': 'Failed captcha verification'})
+      }
+      const userId = req.body.userId
+      const env = req.body.env
+      let combinedForm = JSON.parse(JSON.stringify(req.body))
+      let now = new Date()
+      const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
+      const timeDetail = {
+        userId: userId,
+        trial: 0,
+        startingTime: req.body.startingTime,
+        timeUsed: timeUsed,
+        endTime: now,
+        surveyName: 'diet'
+      }
+      Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
+      if (combinedForm.hasOwnProperty('others')) {
+        combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
+      }
+      let qn = getQnAns(combinedForm)
+      Experiments.insertQnAns(qn, function (done) { console.log(done) })
+      let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
+      if (env === 'sf' || env === 'ins') {
+        tr = tr + 6
+        res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
+      } else if (env === 'inu') {
+        tr = tr + 9
+        Survey1.getUserGroup(userId, function (expGroup) {
+          let category = Number(expGroup)
+          let algorithm = groups[category]
+          res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
+        })
+      } else if (env === 'inv') {
+        res.redirect('/experiment1/pre/' + env + '/1/' + userId)
+      } else {
+        res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
+      }
+    })
   }
 
   /**

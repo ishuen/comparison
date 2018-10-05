@@ -36,31 +36,31 @@ function likertTable (data) {
   }
 }
 
-function validateForm() {
-  let form = document.getElementById('form')
-  let ans = form.getElementsByTagName('input')
-  let names = $('input').map(function(){ return $(this).attr('name') })
-  let comment = form.getElementsByTagName('textarea')
-  let distinctNames = $.unique(names)
-  distinctNames = distinctNames.filter(function(o) { return distinctNames[o] !== 'userId' && distinctNames[o] !== 'others' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env'})
-  for (let qn of distinctNames) {
-    let radioSet = document.getElementsByName(qn)
-    let selected = false
-    for (let radio of radioSet) {
-      if (radio.checked === true) { selected = true }
-    }
-    if (selected === false) {
-      console.log(qn)
-      alert('Please answer all questions.')
-      return false
-    }
-  }
-  if (document.getElementsByName('qn14')[5].checked === true && comment[0].value === '') {
-    alert('Please describe your dietary restriction.')
-    return false
-  }
-  return true
-}
+// function validateForm() {
+//   let form = document.getElementById('form')
+//   let ans = form.getElementsByTagName('input')
+//   let names = $('input').map(function(){ return $(this).attr('name') })
+//   let comment = form.getElementsByTagName('textarea')
+//   let distinctNames = $.unique(names)
+//   distinctNames = distinctNames.filter(function(o) { return distinctNames[o] !== 'userId' && distinctNames[o] !== 'others' && distinctNames[o] !== 'startingTime' && distinctNames[o] !== 'env'})
+//   for (let qn of distinctNames) {
+//     let radioSet = document.getElementsByName(qn)
+//     let selected = false
+//     for (let radio of radioSet) {
+//       if (radio.checked === true) { selected = true }
+//     }
+//     if (selected === false) {
+//       console.log(qn)
+//       alert('Please answer all questions.')
+//       return false
+//     }
+//   }
+//   if (document.getElementsByName('qn14')[5].checked === true && comment[0].value === '') {
+//     alert('Please describe your dietary restriction.')
+//     return false
+//   }
+//   return true
+// }
 
 function validateFormSurvey2() {
   let form = document.getElementById('form')
