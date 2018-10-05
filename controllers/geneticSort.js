@@ -1,5 +1,6 @@
 const GeneticSort = require('../models/GeneticSort')
 const _ = require('lodash')
+const math = require('mathjs')
 class GeneticSortController {
   showData (req, res) {
     const data = GeneticSort.showData()
@@ -124,37 +125,9 @@ class GeneticSortController {
     return {data: resData, defaultPoint: defaultPoint}
   }
   showProcedure (req, res) {
-    let data = [
-      { new_health: 7,
-        new_taste: 3,
-        id: '2150'},
-      { new_health: 3,
-        new_taste: 7,
-        id: '2384'},
-      { new_health: 5,
-        new_taste: 8,
-        id: '869'},
-      { new_health: 6,
-        new_taste: 4,
-        id: '2301'},
-      { new_health: 5,
-        new_taste: 6,
-        id: '516'},
-      { new_health: 7,
-        new_taste: 4,
-        id: '2263'},
-      { new_health: 6,
-        new_taste: 6,
-        id: '758'},
-      { new_health: 5,
-        new_taste: 6,
-        id: '1241'},
-      { new_health: 7,
-        new_taste: 4,
-        id: '615'},
-      { new_health: 6,
-        new_taste: 7,
-        id: '212'} ]
+    let data = [ {new_health: 7, new_taste: 3, id: '2150'}, {new_health: 3, new_taste: 7, id: '2384'}, {new_health: 5, new_taste: 8, id: '869'}, {new_health: 6, new_taste: 4, id: '2301'}, {new_health: 5, new_taste: 6, id: '516'}, {new_health: 7, new_taste: 4, id: '2263'}, {new_health: 6, new_taste: 6, id: '758'}, {new_health: 5, new_taste: 6, id: '1241'}, {new_health: 5, new_taste: 5, id: '2023'}, {new_health: 7, new_taste: 4, id: '615'}, {new_health: 6, new_taste: 7, id: '212'} ]
+    // let defaultId = 1241
+    // let length = 8
     let process = []
     let generation = 200
     let len = data.length
@@ -197,11 +170,39 @@ class GeneticSortController {
       // process.push(tempMatrix)
       n++
     }
-    // let fittest = getFittestUser(population, data, defaultIndex)
-    // let resData = orderToObj(fittest, data)
+    let fittest = getFittestUser(population, data, defaultIndex)
+    let resData = orderToObj(fittest, data)
+    let defaultPoint = resData[defaultIndex]
+
+    // let generation = 200
+    // let len = data.length
+    // let init = true
+    // let fittest = []
+    // while (init === true || calculateFitnessDummy2(fittest, data, defaultId, length) === -999) {
+    //   let population = initPopulationDummy(len)
+    //   let n = 0
+    //   let currentArr = []
+    //   while (n < generation) {
+    //     let fittestTwo = get2FittestUserDummy2(population, data, defaultId, length)
+    //     currentArr = fittestTwo
+    //     currentArr[1] = mutation(currentArr[1])
+    //     for (let i = 0; i < population.length - 2; i++) {
+    //       let temp = crossover(population[i], population[i + 1])
+    //       currentArr.push(mutation(temp))
+    //     }
+    //     population = currentArr
+    //     n++
+    //   }
+    //   fittest = getFittestUserDummy2(population, data, defaultId, length)
+    //   init = false
+    // }
+    // let resData = orderToObjDummy(fittest, data)
+    // let defaultIndex = getDefaultIndex2(resData, resData.length, defaultId)
     // let defaultPoint = resData[defaultIndex]
+    // return {data: resData, defaultPoint: defaultPoint}
+    res.send({data: resData, defaultPoint: defaultPoint})
     // res.send({data: resData, defaultPoint: defaultPoint, process: process})
-    res.send({process: process})
+    // res.send({process: process})
   }
 }
 
@@ -561,6 +562,10 @@ function calculateFitnessDummy2 (arr, data, defaultId, length) {
       fitness = fitness - 4
     }
   }
+  let testData = orderToObjDummy(tempArr, data)
+  let sMatrix = smoothness(testData)
+  fitness = fitness + 8 * sMatrix.smoothMT + 8 * sMatrix.smoothMH
+  // console.log('***', fitness, tempArr)
   return fitness
 }
 function calculateFitnessUserDis (arr, data, defaultIndex) {
@@ -631,4 +636,34 @@ function reordering (arr, maxLen) {
     }
   }
   return temp
+}
+function secondDerivative (first, second, third, base) {
+  let baseAttr = ['new_taste', 'new_health'] // x axis -> taste, y axis -> health, take dx
+  if (base === 1) {
+    baseAttr = ['new_health', 'new_taste']
+  }
+  let matrix = [[Math.pow(first[baseAttr[0]], 2), first[baseAttr[0]], 1], [Math.pow(second[baseAttr[0]], 2), second[baseAttr[0]], 1], [Math.pow(third[baseAttr[0]], 2), third[baseAttr[0]], 1]]
+  let coefficients = math.det(matrix) === 0 ? 0 : math.inv(matrix)
+  let constants = [first[baseAttr[1]], second[baseAttr[1]], third[baseAttr[1]]]
+  let sol = math.multiply(coefficients, constants)
+  return {second: 2 * sol[0], first: 2 * sol[0] * second[baseAttr[0]] + sol[1]}
+}
+function getCurvature (derivatives) {
+  let chi = Math.abs(derivatives.second) / Math.pow(1 + Math.pow(derivatives.first, 2), 3 / 2)
+  return chi
+}
+function smoothness (array) {
+  let len = array.length
+  let sumT = 0
+  let sumH = 0
+  for (let i = 1; i < len - 1; i++) {
+    let derivativesT = secondDerivative(array[i - 1], array[i], array[i + 1], 0)
+    let derivativesH = secondDerivative(array[i - 1], array[i], array[i + 1], 1)
+    sumT = sumT + getCurvature(derivativesT)
+    sumH = sumH + getCurvature(derivativesH)
+  }
+  let smoothMT = Math.exp(-sumT)
+  let smoothMH = Math.exp(-sumH)
+  // console.log(smoothMT, smoothMH)
+  return {smoothMT: smoothMT, smoothMH: smoothMH}
 }
