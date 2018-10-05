@@ -73,7 +73,8 @@ class Survey1Controller {
   }
   dietSubmitEnv (req, res) {
     console.log(req.body)
-    let secretKey = '6LdeoHMUAAAAAKzBnzqsemfNtPVX7ONCVx98SYpJ'
+    let secretKey = '6LdeoHMUAAAAAKzBnzqsemfNtPVX7ONCVx98SYpJ' // local
+    // let secretKey = '6Lccn3MUAAAAANo5k1Bmx70bjTLLgmy2lPgAgjmD' // web server
     let verificationUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' + secretKey + '&response=' + req.body['g-recaptcha-response'] + '&remoteip=' + req.connection.remoteAddress
     request(verificationUrl, function (error, response, body) {
       if (error) throw error
