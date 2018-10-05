@@ -88,6 +88,8 @@ class HpbData {
           foodname: i.foodname,
           health: i.health,
           taste: i.taste,
+          new_health: i.health,
+          new_taste: i.taste,
           path: i.path
         }
         data.push(temp)

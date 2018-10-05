@@ -97,16 +97,18 @@ class GeneticSortController {
     return {data: resData, defaultPoint: defaultPoint}
   }
   showUserSetDeletionLen (data, length, defaultId) {
-    let generation = 500
+    let generation = 1000
     let len = data.length
     let init = true
     let fittest = []
-    while (init === true || calculateFitnessDummy2(fittest, data, defaultId, length) === -999) {
+    let fittestTwo = []
+    while (init === true || calculateFitnessDummy2(fittestTwo[1], data, defaultId, length) === -999) {
       let population = initPopulationDummy(len)
       let n = 0
       let currentArr = []
       while (n < generation) {
-        let fittestTwo = get2FittestUserDummy2(population, data, defaultId, length)
+        // console.log('n', n)
+        fittestTwo = get2FittestUserDummy2(population, data, defaultId, length)
         currentArr = fittestTwo
         currentArr[1] = mutation(currentArr[1])
         for (let i = 0; i < population.length - 2; i++) {
@@ -534,7 +536,7 @@ function calculateFitnessDummy2 (arr, data, defaultId, length) {
     }
   }, 0)
   let len = tempArr.length - numToSkip
-  if (len !== length) return -999
+  // if (len !== length) return -999
   let changePoint = getDefaultIndex2(orderToObjDummy(tempArr, data), len, defaultId)
   if (changePoint === -1) return -999
   let fitness = 0
@@ -565,7 +567,7 @@ function calculateFitnessDummy2 (arr, data, defaultId, length) {
   let testData = orderToObjDummy(tempArr, data)
   let sMatrix = smoothness(testData)
   fitness = fitness + 8 * sMatrix.smoothMT + 8 * sMatrix.smoothMH
-  // console.log('***', fitness, tempArr)
+  // console.log('***', fitness, tempArr, sMatrix)
   return fitness
 }
 function calculateFitnessUserDis (arr, data, defaultIndex) {

@@ -388,10 +388,10 @@ class ExperimentsController {
     if (env === 'inu') {
       let obj = module.exports.getPrecalculatedListByMethod(algorithm, trial)
       HpbData.getItems(obj.data, function (items) {
-        // console.log(items)
         let defaultPoint = _.find(items, function (o) { return Number(o['id']) === Number(obj.defaultPoint) })
         // console.log(items, '***', defaultPoint)
         items = module.exports.checkOrder(obj.data, items)
+        // let ret = genetic.showUserSetDeletionLen(items, 15, Number(defaultPoint.id)) //
         obj.defaultPoint = defaultPoint
         let defaultIndex = _.findIndex(items, defaultPoint)
         console.log(items.length)
@@ -538,9 +538,9 @@ class ExperimentsController {
       list = lists[tr]
       defaultId = defaults[tr]
     } else if (method === 'genetic') {
-      let lists = [[424, 426, 373, 1885, 374, 2555, 524, 395, 2222, 511],
-      [1281, 697, 1707, 2573, 2295, 2131, 1658, 195, 2789, 2743],
-      [2384, 2452, 212, 2791, 758, 2929, 632, 1040, 615, 2263],
+      let lists = [[511, 1885, 395, 424, 524, 2555, 2222, 374, 426, 373],
+      [1658, 2131, 697, 2573, 1707, 195, 2295, 1281, 2789, 2743],
+      [2384, 2929, 632, 2791, 615, 2263, 1040, 2452, 212, 758],
       [601, 2290, 127, 1416, 2058, 2038, 176, 1253, 2842, 491, 160, 2289, 1126, 501, 1686],
       [4016, 4000, 4012, 2618, 2799, 4014, 4010, 1419, 4006, 4009, 2051, 2023, 4007, 2570, 4004],
       [2384, 2301, 2784, 4004, 714, 1821, 4003, 4005, 168, 2058, 2789, 1658, 1124, 2290, 2743]]
