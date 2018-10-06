@@ -34,7 +34,7 @@ html
         div(class='col-sm-4' style='background-color: #f5f5f5')
           h4 progress
           div(class='progress')
-            if (env === 'inv')
+            if (env === 'inw')
               - var str = Number(10 + 10 * trial) + '%'
               div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(10 + 10 * trial) + '%;' aria-valuenow= Number(10 + 10 * trial) aria-valuemin='0' aria-valuemax='100') #{str}
             else

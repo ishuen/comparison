@@ -108,7 +108,7 @@ class ExperimentsController {
     // }
     const qnSet = [{section: 'Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
     {section: 'Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
-    if (env === 'inv') {
+    if (env === 'inw') {
       let qn = qnSet[trial - 1]
       let itemIds = itemSetList[Number(trial) + 8]
       HpbData.getItems(itemIds, function (items) {
@@ -177,7 +177,7 @@ class ExperimentsController {
       startingTime: req.body.startingTime,
       endTime: now
     }
-    if (env === 'inv') {
+    if (env === 'inw') {
       Experiments.userSorting2(details, function (out) { console.log(out) })
       trial++
       if (trial <= maxPreTrial) {
@@ -228,7 +228,7 @@ class ExperimentsController {
       section: 'Trial - ' + (Number(trial) + maxPreTrial),
       description: 'Please use the cards above and sort the items to a list below by descending taste score and ascending health score, i.e. right side has smaller taste score and larger health score than the left.'
     }
-    if (env === 'inv') {
+    if (env === 'inw') {
       qn.section = 'Trial - ' + (Number(trial) - 12 + maxPreTrial)
       qn.description = qn.description + 'You can discard at most 5 cards by simply leave it in the resource area. In addition, please include the item shown below in the list.'
       let itemIds = itemSetList[trial - 4]
@@ -296,7 +296,7 @@ class ExperimentsController {
       startingTime: req.body.startingTime,
       endTime: now
     }
-    if (env === 'inv') {
+    if (env === 'inw') {
       Experiments.userSorting2(details, function (out) { console.log(out) })
     } else {
       Experiments.userSorting(details, function (out) { console.log(out) })

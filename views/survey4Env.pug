@@ -20,7 +20,7 @@ html
         div(class='col-sm-4' style='background-color: #f5f5f5')
           h4 progress
           div(class='progress')
-            if (env === 'inv')
+            if (env === 'inw')
               - var str = Number(10 + 20 * (trial - 11)) + '%'
               div(class='progress-bar progress-bar-success' role='progressbar' style='width:' + Number(10 + 20 * (trial - 11)) + '%;' aria-valuenow= Number(10 + 20 * (trial - 11)) aria-valuemin='0' aria-valuemax='100') #{str}
             else

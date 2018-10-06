@@ -11,7 +11,7 @@ router.get('/se/', usersController.getNewUserIVLE) // exp 1 entry
 router.get('/int/', usersController.getNewUserMTurk) // exp1 mturk
 router.get('/ins/', usersController.getNewUserMTurk) // exp2 mturk
 router.get('/inu/', usersController.getNewUserMTurk) // newExp2 mturk
-router.get('/inv/', usersController.getNewUserMTurk) // newExp1 mturk
+router.get('/inw/', usersController.getNewUserMTurk) // newExp1 mturk
 router.get('/end/:userId', surveys.endOfExp)
 router.get('/end/:env/:userId', surveys.endOfExp)
 
