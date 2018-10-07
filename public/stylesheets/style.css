@@ -14,13 +14,15 @@ a {
   border: black 3px solid;
   text-align: left;
   padding: 2%;
+  padding-left:5%;
+  padding-right:5%;
   background-color: white;
   margin: 0px;
   display: inline-block;
 }
 
 .card img {
-  width: 96%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -51,13 +53,18 @@ a {
 }
 
 .taste {
-  color: red;
+  /*color: red;*/
+  color: #CB3232;
   text-align: center;
 }
 
 .health {
-  color: green;
+  /*color: green;*/
+  color: #266A12;
   text-align: center;
+}
+.num {
+  font-size: 40pt;
 }
 /*.smallCard {
 }
