@@ -103,6 +103,7 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const env = req.params.env
+    if (env !== 'inw' && env !== 'se') res.end()
     // if (Number(trial) === 1) {
     //   Surveys.checkGroup(userId, 1, function (done) { console.log(done) })
     // }
@@ -159,6 +160,7 @@ class ExperimentsController {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    if (env !== 'inw' && env !== 'se') res.end()
     let sorts = JSON.parse('[' + req.body.sorts + ']')
     let ordering = []
     for (let item of sorts) {
@@ -224,6 +226,7 @@ class ExperimentsController {
     const trial = req.params.trial
     const userId = req.params.userId
     const env = req.params.env
+    if (env !== 'inw' && env !== 'se') res.end()
     const qn = {
       section: 'Trial - ' + (Number(trial) + maxPreTrial),
       description: 'Please use the cards above and sort the items to a list below by descending taste score and ascending health score, i.e. right side has smaller taste score and larger health score than the left.'
@@ -284,6 +287,7 @@ class ExperimentsController {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    if (env !== 'inw' && env !== 'se') res.end()
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     console.log('timeUsed', timeUsed)
@@ -329,7 +333,7 @@ class ExperimentsController {
   sortByAssignedAlgoLen (items, algorithm, length, defaultId) {
     let obj = {}
     if (algorithm === 'heuristic') {
-      obj = heuristic.pathGivenSetNDefault(items, defaultId)
+      obj = heuristic.pathGivenSetNDefault(items, defaultId, length)
     } else if (algorithm === 'pareto') {
       obj = pareto.relaxedPathGivenSetLen(items, length, defaultId)
     } else if (algorithm === 'health') {
@@ -381,6 +385,7 @@ class ExperimentsController {
     const userId = req.params.userId
     const algorithm = req.params.alg
     const env = req.params.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     let len = 10
     if (trial > 15) {
       len = 15
@@ -389,9 +394,8 @@ class ExperimentsController {
       let obj = module.exports.getPrecalculatedListByMethod(algorithm, trial)
       HpbData.getItems(obj.data, function (items) {
         let defaultPoint = _.find(items, function (o) { return Number(o['id']) === Number(obj.defaultPoint) })
-        // console.log(items, '***', defaultPoint)
         items = module.exports.checkOrder(obj.data, items)
-        // let ret = genetic.showUserSetDeletionLen(items, 15, Number(defaultPoint.id)) //
+        // console.log(items, '***', defaultPoint)
         obj.defaultPoint = defaultPoint
         let defaultIndex = _.findIndex(items, defaultPoint)
         console.log(items.length)
@@ -466,6 +470,7 @@ class ExperimentsController {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     const algorithm = req.body.algorithm
     let now = new Date()
     let start = new Date(Number(req.body.startingTime))

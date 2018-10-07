@@ -33,6 +33,7 @@ class Survey1Controller {
   }
   showDietaryConstraintEnv (req, res) {
     const env = req.params.env // sg or int
+    if (env !== 'inu' && env !== 'sf' && env !== 'se' && env !== 'sf') res.end()
     const userId = req.params.userId
     const setNum = [4, 5]
     Survey1.getQnSets(setNum, function (qnSet) {
@@ -85,6 +86,7 @@ class Survey1Controller {
       }
       const userId = req.body.userId
       const env = req.body.env
+      if (env !== 'inu' && env !== 'sf' && env !== 'se' && env !== 'sf') res.end()
       let combinedForm = JSON.parse(JSON.stringify(req.body))
       let now = new Date()
       const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
@@ -113,7 +115,7 @@ class Survey1Controller {
           let algorithm = groups[category]
           res.redirect('/experiment2/' + env + '/' + tr + '/' + userId + '/' + algorithm)
         })
-      } else if (env === 'inv') {
+      } else if (env === 'inw') {
         res.redirect('/experiment1/pre/' + env + '/1/' + userId)
       } else {
         res.redirect('/survey1/' + env + '/' + tr + '/' + userId)
@@ -410,13 +412,14 @@ class Survey1Controller {
   }
 
   showAllQuestionsModValueEnv (req, res) {
+    let env = req.params.env
+    if (env !== 'inu' && env !== 'sf' && env !== 'se' && env !== 'sf') res.end()
     let trial = req.params.trial
     let trialMask = trial
     if (trial >= 10) {
       trialMask = trial - 6
     }
     let userId = req.params.userId
-    let env = req.params.env
     const setNum = [1, 2]
     Survey1.getQnSets(setNum, function (qnSet) {
       HpbData.getTrialSet(Number(trialMask), function (items) {
@@ -469,6 +472,7 @@ class Survey1Controller {
     console.log(req.body)
     let trial = Number(req.body.trial)
     const env = req.body.env
+    if (env !== 'inu' && env !== 'sf' && env !== 'se' && env !== 'sf') res.end()
     const userId = req.body.userId
     let qn = getAllQnAns(req.body)
     let now = new Date()
@@ -520,6 +524,7 @@ class Survey1Controller {
     let env = req.url
     env = env.slice(1)
     env = env.slice(0, 2)
+    if (env !== 'sf' && env !== 'se') res.end()
     let userId = req.params.userId || ''
     if (env === 'sf') {
       Survey1.getNewId(function (newId) {
@@ -543,6 +548,7 @@ class Survey1Controller {
     let env = req.url
     env = env.slice(1)
     env = env.slice(0, 3)
+    if (env !== 'inw' && env !== 'inu') res.end()
     // const surveyCode = getRandomCode(5, userId, 1) // finish one experiment has code start from UN
     // res.render('survey3', {userId: userId, country: countryArr, ethnicity: ethnicity, exp2Trial: maxTrialEx1 + maxTrialEx2 + 1, surveyCode: surveyCode})
     res.render('survey3MTurk', {userId: userId, country: countryArr, ethnicity: ethnicity, env: env})
@@ -562,6 +568,7 @@ class Survey1Controller {
     const userId = req.params.userId
     const trial = req.params.trial
     const env = req.params.env
+    if (env !== 'inw' && env !== 'se') res.end()
     const setNum = [6, 7, 10]
     Survey1.getQnSets(setNum, function (qnSet) {
       let now = new Date()
@@ -635,6 +642,7 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    if (env !== 'inw' && env !== 'se') res.end()
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
@@ -655,7 +663,7 @@ class Survey1Controller {
     console.log(combinedForm)
     let qn = getQnAns(combinedForm)
     Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    if (env === 'inv') {
+    if (env === 'inw') {
       if (trial < 15) {
         trial = trial + 1
         res.redirect('/experiment1/for/' + env + '/' + trial + '/' + userId)
@@ -713,6 +721,7 @@ class Survey1Controller {
 
   showQnPost2Env (req, res) {
     const env = req.params.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     const userId = req.params.userId
     const trial = req.params.trial
     const setNum = [8, 9, 10]
@@ -755,6 +764,7 @@ class Survey1Controller {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
     const env = req.body.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
@@ -809,6 +819,7 @@ class Survey1Controller {
     const trial = req.params.trial
     const userId = req.params.userId
     const env = req.params.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     Survey1.getUserGroup(userId, function (expGroup) {
       let category = expGroup.slice(-1)
       let algorithm = groups[category]
@@ -915,6 +926,7 @@ class Survey1Controller {
     let trial = req.body.trial
     const algorithm = req.body.algorithm
     const env = req.body.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     let now = new Date()
     const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
     const timeDetail = {
@@ -946,6 +958,7 @@ class Survey1Controller {
   endOfExp (req, res) {
     const userId = req.params.userId
     const env = req.params.env
+    if (env !== 'inu' && env !== 'sf' && env !== 'se' && env !== 'sf') res.end()
     let surveyCode = ''
     if (env === 'sf' || env === 'ins') {
       surveyCode = getRandomCode(5, userId, 2)
@@ -956,6 +969,7 @@ class Survey1Controller {
   }
   newExp2SurveyEnv (req, res) {
     const env = req.params.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     const userId = req.params.userId
     const trial = req.params.trial
     const algorithm = req.params.algorithm
@@ -963,6 +977,7 @@ class Survey1Controller {
   }
   newSatisfactionEnv (req, res) {
     const env = req.params.env
+    if (env !== 'inu' && env !== 'sf') res.end()
     const userId = req.params.userId
     HpbData.getItems([4011, 4000, 960, 1298], function (data) {
       res.render('survey8Env', {userId: userId, env: env, data: data})

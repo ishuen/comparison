@@ -169,7 +169,7 @@ class BehavioralRankController {
     return {data: resData, defaultPoint: defaultPoint}
   }
 
-  pathGivenSetNDefault (data, defaultId) {
+  pathGivenSetNDefault (data, defaultId, length) {
     let defaultPoint = _.find(data, function (o) { return Number(o['id']) === Number(defaultId) })
     let minTasteSet = _.filter(data, function (o) { return o['taste'] >= defaultPoint['taste'] || o['health'] >= defaultPoint['health'] })
     const obj = groupData(minTasteSet, defaultPoint, data.length)
@@ -179,7 +179,11 @@ class BehavioralRankController {
     tGroup = tGroup.reverse()
     hGroup = _.sortBy(hGroup, [function (o) { return o['health'] }])
     let resData = tGroup.concat(hGroup)
-    return {data: resData, defaultPoint: defaultPoint}
+    let tempData = _.sampleSize(resData, length)
+    while (_.indexOf(tempData, defaultPoint) === -1) {
+      tempData = _.sampleSize(resData, length)
+    }
+    return {data: tempData, defaultPoint: defaultPoint}
   }
 
   pathGivenUserSet (data) {
