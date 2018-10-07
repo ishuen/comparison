@@ -1,4 +1,5 @@
 /* global groups */
+/* global defaultList */
 const Survey1 = require('../models/Surveys')
 const HpbData = require('../models/HpbData')
 const Experiments = require('../models/Experiments')
@@ -826,7 +827,7 @@ class Survey1Controller {
       if (env === 'inu') {
         let obj = experiments.getPrecalculatedListByMethod(algorithm, trial)
         let length = obj.data.length
-        let threeItems = [obj['data'][0], obj['data'][length - 1], obj['defaultPoint']]
+        let threeItems = [obj['data'][0], obj['data'][length - 1], defaultList[trial - 13]]
         console.log(threeItems)
         HpbData.getItems(threeItems, function (items) {
           items = experiments.checkOrder(threeItems, items)
