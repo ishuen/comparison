@@ -8,6 +8,5 @@ router.get('/int/:userId', surveys.showDemographicsMTurk) // exp 1
 router.get('/ins/:userId', surveys.showDemographicsMTurk) // exp 2
 router.get('/inu/:userId', surveys.showDemographicsMTurk) // newExp 2
 router.get('/inw/:userId', surveys.showDemographicsMTurk) // newExp 1
-router.get('/:userId', surveys.showDemographics)
 
 module.exports = router

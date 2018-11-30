@@ -24,6 +24,19 @@ npm run prod
 # linux/ unix
 npm run prod-u
 ```
+For ubicomp web server: local branch reverseProxy, dev environment
+
+## web
+
+Each experiment has 2 environment, one for MTurk worker and the other for IVLE students.
+
+* se: exp 1 for IVLE
+* sf: exp 2 for IVLE
+* int: exp 1 for MTurk
+* ins: exp 2 for MTurk
+* inu: newer exp 2 for MTurk (not yet released)
+* inw: newer exp 1 for MTurk
+
 
 ## genetic sort
 
@@ -54,7 +67,3 @@ npm run prod-u
 * threUpper: The path will connect the point(health_value, taste_value) on both sides(connect it twice) if a*health_value + b*teaste_value > threUpper
 * For now, a = 0.5, b = 0.5, they represent the importance of taste and health.
 * Usually, threLower can be 1 to 1.5, and threUpper can be 6 to 7. It depends on the distribution of input data.
-
-## TODO
-
-* Remove the old view pages, the codes marked as comment which were remained to prevent from sudden changes
