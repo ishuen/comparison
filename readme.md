@@ -1,7 +1,8 @@
  readme
 ====
 
-Compare the ranking results coming from different methods.
+1. Compare the ranking results coming from different methods.
+2. User study sites.
 
 ## usage
 

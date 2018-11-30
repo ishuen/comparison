@@ -170,16 +170,6 @@ class Survey1Controller {
     res.render('survey3MTurk', {userId: userId, country: countryArr, ethnicity: ethnicity, env: env})
   }
 
-  showQnPost1 (req, res) {
-    const userId = req.params.userId
-    const trial = req.params.trial
-    const setNum = [6, 7]
-    Survey1.getQnSets(setNum, function (qnSet) {
-      let now = new Date()
-      res.render('survey4', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId})
-    })
-  }
-
   showQnPost1Env (req, res) {
     const userId = req.params.userId
     const trial = req.params.trial
@@ -190,67 +180,6 @@ class Survey1Controller {
       let now = new Date()
       res.render('survey4Env', {data: qnSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
     })
-  }
-
-  post1Submit (req, res) {
-    console.log(req.body)
-    let trial = Number(req.body.trial)
-    const userId = req.body.userId
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    const timeDetail = {
-      userId: userId,
-      trial: trial,
-      startingTime: req.body.startingTime,
-      timeUsed: timeUsed,
-      endTime: now,
-      surveyName: 'postSurveyExp1'
-    }
-    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    let combinedForm = JSON.parse(JSON.stringify(req.body))
-    if (!combinedForm.hasOwnProperty('qn34') && combinedForm.others) {
-      combinedForm['qn34'] = 4 + '-' + combinedForm.others
-    } else {
-      combinedForm['qn34'] = combinedForm['qn34'] + '-' + combinedForm.others
-    }
-    console.log(combinedForm)
-    let qn = getQnAns(combinedForm)
-    Experiments.insertQnAns(qn, function (done) { console.log(done) })
-
-    if (trial < maxTrialEx1) {
-      trial = trial + 4
-      res.redirect('/survey1/' + trial + '/' + userId)
-    } else {
-      res.redirect('/end/' + userId) // end of experiment
-    }
-
-    // trial = trial + 3
-    // Survey1.getUserGroup(userId, function (expGroup) {
-    //   let category = Number(expGroup)
-    //   let algorithm = groups[category]
-    //   console.log('****', category, algorithm)
-    //   res.redirect('/experiment2/' + trial + '/' + userId + '/' + algorithm)
-    // })
-
-    // trial++
-    // if (trial <= maxTrialEx1) {
-    //   Survey1.getUserGroup(userId, function (expGroup) {
-    //     if (expGroup.slice(0, 4) !== 'both') {
-    //       res.redirect('/survey1/' + trial + '/' + userId)
-    //     } else {
-    //       res.redirect('/experiment1/' + trial + '/' + userId) // start experiment
-    //     }
-    //   })
-    //   // res.redirect('/survey1/' + trial + '/' + userId)
-    // } else {
-    //   Survey1.getUserGroup(userId, function (expGroup) {
-    //     if (expGroup.slice(0, 4) !== 'both') {
-    //       res.redirect('/survey3/' + userId) // go to demographic
-    //     } else {
-    //       res.redirect('/end/' + userId) // end of experiment
-    //     }
-    //   })
-    // }
   }
 
   post1SubmitEnv (req, res) {
@@ -324,17 +253,6 @@ class Survey1Controller {
     // }
   }
 
-  showQnPost2 (req, res) {
-    const userId = req.params.userId
-    const trial = req.params.trial
-    const setNum = [8, 9]
-    Survey1.getQnSets(setNum, function (qnSet) {
-      let now = new Date()
-      let orderedSet = _.sortBy(qnSet, ['qn_set', 'display_num'])
-      res.render('survey5', {data: orderedSet, trial: trial, startingTime: now.getTime(), userId: userId})
-    })
-  }
-
   showQnPost2Env (req, res) {
     const env = req.params.env
     if (env !== 'inu' && env !== 'sf') res.end()
@@ -346,33 +264,6 @@ class Survey1Controller {
       let orderedSet = _.sortBy(qnSet, ['qn_set', 'display_num'])
       res.render('survey5Env', {data: orderedSet, trial: trial, startingTime: now.getTime(), userId: userId, env: env})
     })
-  }
-
-  post2Submit (req, res) {
-    console.log(req.body)
-    let trial = Number(req.body.trial)
-    const userId = req.body.userId
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    const timeDetail = {
-      userId: userId,
-      trial: trial,
-      startingTime: req.body.startingTime,
-      timeUsed: timeUsed,
-      endTime: now,
-      surveyName: 'postSurveyExp2'
-    }
-    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    let combinedForm = JSON.parse(JSON.stringify(req.body))
-    if (!combinedForm.hasOwnProperty('qn45') && combinedForm.others) {
-      combinedForm['qn45'] = 4 + '-' + combinedForm.others
-    } else {
-      combinedForm['qn45'] = combinedForm['qn45'] + '-' + combinedForm.others
-    }
-    console.log(combinedForm)
-    let qn = getQnAns(combinedForm)
-    Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    res.redirect('/survey6/' + trial + '/' + userId)
   }
 
   post2SubmitEnv (req, res) {
