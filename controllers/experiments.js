@@ -84,29 +84,11 @@ class ExperimentsController {
   *   ]
   * }
   */
-  showItemsPre (req, res) {
-    const trial = req.params.trial
-    const userId = req.params.userId
-    // if (Number(trial) === 1) {
-    //   Surveys.checkGroup(userId, 1, function (done) { console.log(done) })
-    // }
-    const qnSet = [{section: 'Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
-    {section: 'Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
-    let qn = qnSet[trial - 1]
-    Experiments.getCustomSet(userId, 1, function (items) {
-      console.log(items)
-      let now = new Date()
-      res.render('experiment1-2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn})
-    })
-  }
   showItemsPreEnv (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
     const env = req.params.env
     if (env !== 'inw' && env !== 'se') res.end()
-    // if (Number(trial) === 1) {
-    //   Surveys.checkGroup(userId, 1, function (done) { console.log(done) })
-    // }
     const qnSet = [{section: 'Trial - 1', description: 'Please use the cards above and sort the items to a list below by ascending health score, i.e. right side is larger than the left.'},
     {section: 'Trial - 2', description: 'Please use the cards above and sort the items to a list below by descending taste score, i.e. right side is smaller than the left.'}]
     if (env === 'inw') {
@@ -127,35 +109,6 @@ class ExperimentsController {
     }
   }
 
-  submitSortingPre (req, res) {
-    let trial = Number(req.body.trial)
-    const userId = req.body.userId
-    let sorts = JSON.parse('[' + req.body.sorts + ']')
-    let ordering = []
-    for (let item of sorts) {
-      ordering.push(item.foodId)
-    }
-    console.log(ordering)
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    console.log('timeUsed', timeUsed)
-    let details = {
-      ordering: ordering,
-      tracking: JSON.parse('[' + req.body.tracking + ']'),
-      trial: -trial,
-      userId: userId,
-      timeUsed: timeUsed,
-      startingTime: req.body.startingTime,
-      endTime: now
-    }
-    Experiments.userSorting(details, function (out) { console.log(out) })
-    trial++
-    if (trial <= maxPreTrial) {
-      res.redirect('/experiment1/pre/' + trial + '/' + userId)
-    } else {
-      res.redirect('/experiment1/for/1/' + userId)
-    }
-  }
   submitSortingPreEnv (req, res) {
     let trial = Number(req.body.trial)
     const userId = req.body.userId
@@ -197,31 +150,7 @@ class ExperimentsController {
       }
     }
   }
-  /**
-  * @api {get} /experiment1/:trial experiment1ShowingData
-  * @apiName Experiment1Init
-  * @apiGroup Experiments
-  * @apiDescription Showing all data waiting to be sorted
-  *
-  * @apiParam {Number} trial number of the trials
-  *
-  * @apiUse arrayOfItemData
-  */
-  // experiment 1
-  showItems (req, res) {
-    const trial = req.params.trial
-    const userId = req.params.userId
-    const qn = {
-      section: 'Trial - ' + (Number(trial) + maxPreTrial),
-      description: 'Please use the cards above and sort the items to a list below by descending taste score and ascending health score, i.e. right side has smaller taste score and larger health score than the left.'
-    }
-    Experiments.getCustomSet(userId, trial, function (items) {
-      console.log(items)
-      let now = new Date()
-      // res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
-      res.render('experiment1-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn})
-    })
-  }
+
   showItemsEnv (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
@@ -244,38 +173,12 @@ class ExperimentsController {
       })
     } else {
       Experiments.getCustomSet(userId, trial, function (items) {
-        // console.log(items)
         let now = new Date()
-        // res.render('experiment1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId})
         res.render('experiment1-1Env', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, qn: qn, env: env})
       })
     }
   }
-  submitSorting (req, res) {
-    let sorts = JSON.parse('[' + req.body.sorts + ']')
-    let ordering = []
-    for (let item of sorts) {
-      ordering.push(item.foodId)
-    }
-    console.log(ordering)
-    console.log(sorts)
-    let trial = Number(req.body.trial)
-    const userId = req.body.userId
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    console.log('timeUsed', timeUsed)
-    let details = {
-      ordering: ordering,
-      tracking: JSON.parse('[' + req.body.tracking + ']'),
-      trial: trial,
-      userId: userId,
-      timeUsed: timeUsed,
-      startingTime: req.body.startingTime,
-      endTime: now
-    }
-    Experiments.userSorting(details, function (out) { console.log(out) })
-    res.redirect('/survey4/' + trial + '/' + userId) // go to post-survey
-  }
+
   submitSortingEnv (req, res) {
     let sorts = JSON.parse('[' + req.body.sorts + ']')
     let ordering = []
@@ -354,32 +257,6 @@ class ExperimentsController {
     return obj
   }
 
-  showItemsExp2 (req, res) {
-    const trial = req.params.trial
-    const userId = req.params.userId
-    const algorithm = req.params.alg
-    Experiments.getCustomSet(userId, Number(trial), function (items) {
-    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-    // Experiments.getCustomSet(userId, Number(maskTrial), function (items) {
-    // HpbData.getTrialSet(Number(trial) + 3, function (items) {
-      let obj = module.exports.sortByAssignedAlgo(items, algorithm)
-      items = obj.data
-      let defaultPoint = obj.defaultPoint
-      let defaultIndex = _.findIndex(items, defaultPoint)
-      console.log(items.length)
-      let now = new Date()
-      if (algorithm === 'taste' || algorithm === 'health') {
-        res.render('experiment2-1', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      } else if (algorithm === 'heuristic' || algorithm === 'pareto' || algorithm === 'genetic') {
-        res.render('experiment2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      } else if (algorithm === 'scatterPlot') {
-        res.render('experiment2-2', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      } else if (algorithm === 'spreadsheet') {
-        res.render('experiment2-3', {data: items, trial: trial, startingTime: now.getTime(), userId: userId, defaultIndex: defaultIndex})
-      }
-    })
-  }
-
   showItemsExp2Env (req, res) {
     const trial = req.params.trial // trail --> customized item set
     const userId = req.params.userId
@@ -438,31 +315,7 @@ class ExperimentsController {
       })
     }
   }
-  submitPicked (req, res) {
-    console.log(req.body)
-    let picked = JSON.parse(req.body.picked)
-    console.log(picked)
-    let trial = Number(req.body.trial)
-    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-    const userId = req.body.userId
-    let now = new Date()
-    let start = new Date(Number(req.body.startingTime))
-    const timeUsed = now.getTime() - start // msec
-    console.log('timeUsed', timeUsed)
-    let details = {
-      userId: userId,
-      // trial: maskTrial,
-      trial: trial,
-      item: picked,
-      startingTime: start,
-      endTime: now,
-      timeUsed: timeUsed,
-      tracking: ('tracking' in req.body) ? JSON.parse(req.body.tracking) : [],
-      defaultIndex: req.body.defaultIndex
-    }
-    Experiments.insertUserChoice(details, function (out) { console.log(out) })
-    res.redirect('/survey5/' + trial + '/' + userId) // go to post-survey
-  }
+
   submitPickedEnv (req, res) {
     console.log(req.body)
     let picked = JSON.parse(req.body.picked)

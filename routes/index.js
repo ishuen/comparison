@@ -4,7 +4,6 @@ const usersController = require('../controllers/users')
 const surveys = require('../controllers/surveys')
 
 /* GET home page. */
-router.get('/', usersController.getNewUser)
 router.get('/sg/', usersController.registrationIVLE) // register point
 router.get('/sf/', usersController.getNewUserIVLE) // exp 2 entry
 router.get('/se/', usersController.getNewUserIVLE) // exp 1 entry
@@ -12,7 +11,6 @@ router.get('/int/', usersController.getNewUserMTurk) // exp1 mturk
 router.get('/ins/', usersController.getNewUserMTurk) // exp2 mturk
 router.get('/inu/', usersController.getNewUserMTurk) // newExp2 mturk
 router.get('/inw/', usersController.getNewUserMTurk) // newExp1 mturk
-router.get('/end/:userId', surveys.endOfExp)
 router.get('/end/:env/:userId', surveys.endOfExp)
 
 router.use('/topologicalSort', require('./topologicalSort'))
