@@ -23,15 +23,6 @@ global.groups = ['heuristic', 'pareto', 'taste', 'health', 'scatterPlot', 'sprea
 
 class Survey1Controller {
   // survey page for dietary restriction
-  showDietaryConstraint (req, res) {
-    const userId = req.params.userId
-    const setNum = [4, 5]
-    Survey1.getQnSets(setNum, function (qnSet) {
-      let now = new Date()
-      res.render('survey0', {data: qnSet, userId: userId, startingTime: now.getTime()})
-      // res.send({data: qnSet})
-    })
-  }
   showDietaryConstraintEnv (req, res) {
     const env = req.params.env // sg or int
     if (env !== 'inu' && env !== 'sf' && env !== 'se' && env !== 'sf') res.end()
@@ -44,35 +35,6 @@ class Survey1Controller {
     })
   }
 
-  dietSubmit (req, res) {
-    console.log(req.body)
-    const userId = req.body.userId
-    let combinedForm = JSON.parse(JSON.stringify(req.body))
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    const timeDetail = {
-      userId: userId,
-      trial: 0,
-      startingTime: req.body.startingTime,
-      timeUsed: timeUsed,
-      endTime: now,
-      surveyName: 'diet'
-    }
-    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    if (combinedForm.hasOwnProperty('others')) {
-      combinedForm['qn24'] = combinedForm['qn24'] + '-' + combinedForm.others
-    }
-    let qn = getQnAns(combinedForm)
-    Experiments.insertQnAns(qn, function (done) { console.log(done) })
-    // if (userId % 8 === 0) {
-    //   res.redirect('/survey1/1/' + userId)
-    // } else {
-    //   let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    //   res.redirect('/survey1/' + tr + '/' + userId)
-    // }
-    let tr = maxTrialEx1 + 1 // exp 2 start from trial 4
-    res.redirect('/survey1/' + tr + '/' + userId)
-  }
   dietSubmitEnv (req, res) {
     console.log(req.body)
     let secretKey = '6LdeoHMUAAAAAKzBnzqsemfNtPVX7ONCVx98SYpJ' // local
