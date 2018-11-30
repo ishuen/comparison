@@ -295,33 +295,6 @@ class Survey1Controller {
     res.redirect('/survey6/' + env + '/' + trial + '/' + userId)
   }
 
-  showSatisfaction (req, res) {
-    const trial = req.params.trial
-    const userId = req.params.userId
-    Survey1.getUserGroup(userId, function (expGroup) {
-      let category = expGroup.slice(-1)
-      let algorithm = groups[category]
-      // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-      // HpbData.getTrialSet(Number(maskTrial), function (items) {
-      Experiments.getCustomSet(userId, Number(trial), function (items) {
-        let obj = experiments.sortByAssignedAlgo(items, algorithm)
-        items = obj.data
-        let defaultPoint = obj.defaultPoint
-        let left = items[0] // tastiest
-        let right = items[items.length - 1] // healthiest
-        defaultPoint.state = 'defaultPoint'
-        left.state = 'tastiest/first'
-        right.state = 'healthiest/last'
-        // Experiments.getUserChoice(userId, maskTrial, function (userChoice) {
-        Experiments.getUserChoice(userId, trial, function (userChoice) {
-          userChoice.state = 'userChoice'
-          let now = new Date()
-          // res.send({defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, userId: userId, trial: trial})
-          res.render('survey6', {defaultPoint: defaultPoint, left: left, right: right, userChoice: userChoice, startingTime: now.getTime(), userId: userId, trial: trial})
-        })
-      })
-    })
-  }
   showSatisfactionEnv (req, res) {
     const trial = req.params.trial
     const userId = req.params.userId
@@ -388,45 +361,6 @@ class Survey1Controller {
     })
   }
 
-  satisfactionSubmit (req, res) {
-    console.log(req.body)
-    let userId = req.body.userId
-    let trial = req.body.trial
-    let now = new Date()
-    const timeUsed = now.getTime() - Number(req.body.startingTime) // msec
-    const timeDetail = {
-      userId: userId,
-      trial: trial,
-      startingTime: req.body.startingTime,
-      timeUsed: timeUsed,
-      endTime: now,
-      surveyName: 'exp2Satisfaction'
-    }
-    Survey1.surveyTimeRecord(timeDetail, function (done) { console.log(done) })
-    // let maskTrial = (trial > 6) ? (trial - maxTrialEx2) : trial
-    Survey1.userSatisfaction(req.body, function (done) { console.log(done) })
-    if (trial < maxTrialEx1 + maxTrialEx2) {
-      trial++
-      // res.redirect('/survey2/' + trial + '/1/' + userId)
-      res.redirect('/survey1/' + trial + '/' + userId)
-    } else {
-      res.redirect('/end/' + userId)
-    }
-    // if (maskTrial < maxTrialEx1 + maxTrialEx2) {
-    //   trial++
-    //   // res.redirect('/survey2/' + trial + '/1/' + userId)
-    //   res.redirect('/survey1/' + trial + '/' + userId)
-    // } else {
-    //   Survey1.getUserGroup(userId, function (expGroup) {
-    //     console.log('expGroup***', expGroup.slice(0, 4))
-    //     if (expGroup.slice(0, 4) !== 'both') {
-    //       res.redirect('/survey3/' + userId) // go to demographic
-    //     } else {
-    //       res.redirect('/end/' + userId) // end of experiment
-    //     }
-    //   })
-    // }
-  }
   satisfactionSubmitEnv (req, res) {
     console.log(req.body)
     let userId = req.body.userId
